@@ -1,4 +1,10 @@
+"use strict";
 // Enable chromereload by uncommenting this line:
 // import 'chromereload/devonly'
 
-console.log(`'Allo 'Allo! Content script`);
+import * as $ from "jquery";
+
+console.log(`'Allo 'Allo! Content script s`);
+
+let $hallDedamaActionForm = $('form[name=HallDedamaActionForm]');
+console.log($hallDedamaActionForm);
