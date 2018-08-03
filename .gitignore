@@ -6,3 +6,6 @@ npm-debug.log
 
 dist/
 packages/
+
+node_modules
+.idea
