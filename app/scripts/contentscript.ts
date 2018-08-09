@@ -8,7 +8,7 @@ let promise:Promise<any> = Promise.resolve();
 
 start();
 
-$('#ata0 .ind .det a').each((i, elem) => {
+$('#ata0 .ind .det a').first().each((i, elem) => {
   const $elem = $(elem);
   let href = $elem.attr('href') || '';
   eval(href);
@@ -84,19 +84,33 @@ function end() {
 }
 
 function getForm() {
-  return $('form[name=TableSelectActionForm]');
+  const formName = 'Table' +
+    'Select' +
+    'Action' +
+    'Form';
+
+  return $(`form[name=${formName}]`);
 }
 
 function openDedamaDetail(cd:any,num:any) {
+  const formName = 'Table' +
+    'Select' +
+    'Action' +
+    'Form';
+  const forwardValue = 'K' +
+    'AK' +
+    'IN_' +
+    'TABLE' +
+    'SELECT';
   const $form = getForm();
-  const tableSelectActionForm = document.querySelector('[name=TableSelectActionForm]') as any;
-  tableSelectActionForm.tablenum.value=num;
-  tableSelectActionForm.forward.value = "KAKIN_TABLESELECT";
+  const form = document.querySelector(`[name=${formName}]`) as any;
+  form.tablenum.value=num;
+  form.forward.value = forwardValue;
 
   if (cd == 1){
-    tableSelectActionForm.actiontype.value="12";
+    form.actiontype.value='12';
   }else{
-    tableSelectActionForm.actiontype.value="14";
+    form.actiontype.value='14';
   }
 
   $form.trigger('submit');
