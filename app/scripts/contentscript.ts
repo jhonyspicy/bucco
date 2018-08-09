@@ -8,7 +8,7 @@ let promise:Promise<any> = Promise.resolve();
 
 start();
 
-$('#ata0 .ind .det a').first().each((i, elem) => {
+$('#ata0 .ind .det a').each((i, elem) => {
   const $elem = $(elem);
   let href = $elem.attr('href') || '';
   eval(href);
@@ -21,7 +21,9 @@ promise.then((value) => {
 end();
 
 function start() {
-  let $form = getForm();
+  const $form = getForm();
+  const type = $form.attr('method') || '';
+  const url = $form.attr('action') || '';
 
   console.log('start');
 
@@ -38,16 +40,43 @@ function start() {
     });
 
     promise = promise.then(value => new Promise((resolve, reject) => {
-      setTimeout(()=> {
-        console.log(data);
-        resolve();
-      }, Math.random() * 3000);
+      const doGet = () => {
+        $.ajax({
+          type,
+          url,
+          data,
+          dataType: 'html',
+          success: (html) => {
+            const $html = $(html);
+            const imgSrcWeek = $html.find('#dedama_8days img').attr('src');
+            if (!imgSrcWeek) {
+              setTimeout(()=> {
+                doGet();
+              }, 60000);
+              return;
+            }
+            console.log(imgSrcWeek);
+
+            setTimeout(()=> {
+              resolve();
+            }, Math.random() * 3000);
+          },
+          error: () => {
+            setTimeout(()=> {
+              doGet();
+            }, 60000);
+            console.log('error');
+          },
+        });
+      };
+
+      doGet();
     }));
   });
 }
 
 function end() {
-  let $form = getForm();
+  const $form = getForm();
 
   $form.off('submit');
 
@@ -58,9 +87,9 @@ function getForm() {
   return $('form[name=TableSelectActionForm]');
 }
 
-function openDedamaDetail(cd,num) {
-  let $form = getForm();
-  const tableSelectActionForm = document.querySelector('[name=TableSelectActionForm]');
+function openDedamaDetail(cd:any,num:any) {
+  const $form = getForm();
+  const tableSelectActionForm = document.querySelector('[name=TableSelectActionForm]') as any;
   tableSelectActionForm.tablenum.value=num;
   tableSelectActionForm.forward.value = "KAKIN_TABLESELECT";
 
