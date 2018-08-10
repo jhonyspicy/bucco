@@ -22,7 +22,7 @@ if ($('#dedama_table').length) {
   });
 
   promise.then((value) => {
-    console.log('done');
+    alert('done');
   });
 
   end();
