@@ -42,8 +42,8 @@ function start() {
           success: (html) => {
             const $html = $(html);
             if (!$html.find('#machine_name').length) {
+              console.log('Too many request wait a moment');
               setTimeout(()=> {
-                console.log('Too many request wait a moment');
                 doGet();
               }, 60000);
               return;
@@ -52,15 +52,16 @@ function start() {
             callback($html);
             setTimeout(()=> {
               resolve();
-            }, Math.random() * 5000);
+            }, Math.random() * 4000);
           },
           error: () => {
+            console.log('something wrong');
             setTimeout(()=> {
               doGet();
             }, 60000);
           },
         });
-      }
+      };
       doGet();
     }));
   };
@@ -84,10 +85,21 @@ function start() {
       const $dataElem = getDataElem(data.tablenum);
       // const imgWeekSrc = $html.find('#dedama_8days a').attr('href');
       const imgWeekSrc = $html.find('#dedama_8days img').attr('src');
+      const machineNumber = $html.find('#dedama_detail_table .left h4').first().text();
+      const smallGraphs = $html.find('#graph_list dd').map((i, elem)=>{
+        const $elem = $(elem);
+        return $elem.find('img').attr('src') || '';
+      }).get();
+
+      $dataElem.find('.machineNumber').text(machineNumber);
+      smallGraphs.forEach((src)=>{
+        $dataElem.find('.smallGraphs').append(`<li><img src="${src}"></li>`);
+      });
       $dataElem.find('.bigGraph').append(`<img src="${imgWeekSrc}">`);
-      console.log($html);
+      // console.log($html);
     });
   });
+
   getForm('his').on('submit', (e) => {
     const $form = $(e.currentTarget);
     const method = $form.attr('method') || '';
@@ -103,10 +115,10 @@ function start() {
       data[name] = value;
     });
 
-    addQue(method, url, data, ($html:JQuery) => {
-      const $dataElem = getDataElem(data.tablenum);
-      console.log($html);
-    });
+    // addQue(method, url, data, ($html:JQuery) => {
+    //   const $dataElem = getDataElem(data.tablenum);
+    //   console.log($html);
+    // });
   });
 }
 
@@ -123,12 +135,15 @@ function getDataElem(tablenum:string):JQuery {
     $dataElem = $(`
 <div class="machineData">
   <h3 class="machineNumber"></h3>
-  <div class="wrap">
+  <div class="infoWrap">
     <div class="bigGraph"></div>
     <ul class="smallGraphs"></ul>
   </div>
 </div>
 `);
+    $dataElem.find('.machineNumber').on('click', (e:any)=>{
+      $dataElem.find('.infoWrap').toggle();
+    });
     $dataElems[tablenum] = $dataElem;
     $content.append($dataElem);
   }

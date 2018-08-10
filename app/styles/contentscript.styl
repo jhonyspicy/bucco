@@ -3,9 +3,22 @@
   padding: 30px 0
 
   .machineData
-    .machineNumber
+    &.close
       .wrap
-        .bigGraph
-          margin: 0
-        .smallGraphs
-          margin: 0
+        display: none
+    .machineNumber
+      font-size: 30px
+    .infoWrap
+      .bigGraph
+        margin: 0
+      .smallGraphs
+        counter-reset: days -1
+        li
+          counter-increment: days;
+          display: inline-block
+          padding: 5px
+          &:before
+            content: counter(days) '日前';
+            display: block
+            font-size: 15px
+            font-weight: bold
