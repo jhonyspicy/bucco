@@ -12,7 +12,7 @@ if ($('#dedama_table').length) {
 
   start();
 
-  $('#ata0 .ind').first().each((i, elem) => {
+  $('#ata0 .ind').each((i, elem) => {
     const $elem = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
@@ -83,19 +83,30 @@ function start() {
 
     addQue(method, url, data, ($html:JQuery) => {
       const $dataElem = getDataElem(data.tablenum);
-      // const imgWeekSrc = $html.find('#dedama_8days a').attr('href');
-      const imgWeekSrc = $html.find('#dedama_8days img').attr('src');
+      // const bigGraph = $html.find('#dedama_8days a').attr('href');
+      const bigGraph = $html.find('#dedama_8days img').attr('src');
       const machineNumber = $html.find('#dedama_detail_table .left h4').first().text();
       const smallGraphs = $html.find('#graph_list dd').map((i, elem)=>{
         const $elem = $(elem);
         return $elem.find('img').attr('src') || '';
+      }).get();
+      const resultData = $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem)=>{
+        const $elem = $(elem);
+        return [
+          $elem.find('td').eq(1).text(),
+          $elem.find('td').eq(2).text(),
+          $elem.find('td').eq(3).text(),
+          $elem.find('td').eq(4).text(),
+          $elem.find('td').eq(5).text(),
+        ];
       }).get();
 
       $dataElem.find('.machineNumber').text(machineNumber);
       smallGraphs.forEach((src)=>{
         $dataElem.find('.smallGraphs').append(`<li><img src="${src}"></li>`);
       });
-      $dataElem.find('.bigGraph').append(`<img src="${imgWeekSrc}">`);
+      $dataElem.find('.bigGraph').append(`<img src="${bigGraph}">`);
+      $dataElem.find('.tableWrap').append($html.find('#dedama_kind_table'));
       // console.log($html);
     });
   });
@@ -114,11 +125,6 @@ function start() {
 
       data[name] = value;
     });
-
-    // addQue(method, url, data, ($html:JQuery) => {
-    //   const $dataElem = getDataElem(data.tablenum);
-    //   console.log($html);
-    // });
   });
 }
 
@@ -136,7 +142,10 @@ function getDataElem(tablenum:string):JQuery {
 <div class="machineData">
   <h3 class="machineNumber"></h3>
   <div class="infoWrap">
-    <div class="bigGraph"></div>
+    <div class="wrap">
+      <div class="bigGraph"></div>
+      <div class="tableWrap"></div>
+    </div>
     <ul class="smallGraphs"></ul>
   </div>
 </div>
