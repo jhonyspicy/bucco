@@ -6,9 +6,10 @@ import * as $ from "jquery";
 
 let promise:Promise<any> = Promise.resolve();
 const $content = $('<div id="allMachineDataList">');
+// const $status = $('<div id="allMachineDataList-status">');
 const $dataElems = {} as any;
 if ($('#dedama_table').length) {
-  $content.insertAfter('#machine_name');
+  $content.insertAfter('#pankuzu');
 
   start();
 
