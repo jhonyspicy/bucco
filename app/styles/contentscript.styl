@@ -2,46 +2,51 @@
   background-color: #000
   padding: 30px 0
 
-  .machineData
-    color: #fff
-    padding: 10px 0
-    .machineNumber
-      font-size: 30px
-    .infoWrap
-      .wrap
-        font-size: 0
-        .bigGraph
-          display: inline-block
-          vertical-align: top
-          img
+  >.wrap
+    .machineData
+      color: #fff
+      padding: 10px 0
+      .machineNumber
+        font-size: 30px
+      .infoWrap
+        .wrap
+          font-size: 0
+          .bigGraph
+            display: inline-block
+            vertical-align: top
+            img
+              width: 420px
+              height: auto
+          .tableWrap
+            color #000
+            vertical-align: top
+            display: inline-block
+            font-size: 13px
             width: 420px
-            height: auto
-        .tableWrap
-          color #000
-          vertical-align: top
-          display: inline-block
-          font-size: 13px
-          width: 420px
-          #dedama_ki
-            &nd_table
-              margin: 0
-          td
-            padding: 0
-      .smallGraphs
-        counter-reset: days -1
-        li
-          counter-increment: days;
-          display: inline-block
-          padding: 2px
-          &:before
-            content: counter(days) '日前';
-            display: block
-            font-size: 15px
-            font-weight: bold
+            #dedama_ki
+              &nd_table
+                margin: 0
+            td
+              padding: 0
+        .smallGraphs
+          counter-reset: days -1
+          li
+            counter-increment: days;
+            display: inline-block
+            padding: 2px
+            &:before
+              content: counter(days) '日前';
+              display: block
+              font-size: 15px
+              font-weight: bold
 
-          &:first-child:before
-            content '本日'
+            &:first-child:before
+              content '本日'
 
-          img
-            width: 100px
-            height: auto
+            img
+              width: 100px
+              height: auto
+
+  #allMachineDataList-status
+    color #fff
+    font-size: 17px

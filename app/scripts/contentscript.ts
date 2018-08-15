@@ -5,15 +5,15 @@
 import * as $ from "jquery";
 
 let promise:Promise<any> = Promise.resolve();
-const $content = $('<div id="allMachineDataList">');
-// const $status = $('<div id="allMachineDataList-status">');
+const $content = $('<div id="allMachineDataList"><div class="wrap"></div><div id="allMachineDataList-status"></div></div>');
+const $status = $content.find('#allMachineDataList-status');
 const $dataElems = {} as any;
 if ($('#dedama_table').length) {
   $content.insertAfter('#pankuzu');
 
   start();
 
-  $('#ata0 .ind').each((i, elem) => {
+  $('#ata0 .ind').first().each((i, elem) => {
     const $elem = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
@@ -23,14 +23,14 @@ if ($('#dedama_table').length) {
   });
 
   promise.then((value) => {
-    alert('done');
+    $status.text('終了。');
   });
 
   end();
 }
 
 function start() {
-  console.log('start');
+  $status.text('開始');
 
   const addQue = (method:string, url:string, data:any, callback:(html:JQuery)=>void) => {
     promise = promise.then(value => new Promise((resolve, reject) => {
@@ -55,8 +55,8 @@ function start() {
               resolve();
             }, Math.random() * 4000);
           },
-          error: () => {
-            console.log('something wrong');
+          error: (e) => {
+            console.log('something wrong', e);
             setTimeout(()=> {
               doGet();
             }, 60000);
@@ -82,7 +82,7 @@ function start() {
       data[name] = value;
     });
 
-    addQue(method, url, data, ($html:JQuery) => {
+    addQue(method, location.href.replace(/\/[^\/]*$/, '/') + url, data, ($html:JQuery) => {
       const $dataElem = getDataElem(data.tablenum);
       // const bigGraph = $html.find('#dedama_8days a').attr('href');
       const bigGraph = $html.find('#dedama_8days img').attr('src');
@@ -91,16 +91,45 @@ function start() {
         const $elem = $(elem);
         return $elem.find('img').attr('src') || '';
       }).get();
-      const resultData = $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem)=>{
-        const $elem = $(elem);
-        return [
-          $elem.find('td').eq(1).text(),
-          $elem.find('td').eq(2).text(),
-          $elem.find('td').eq(3).text(),
-          $elem.find('td').eq(4).text(),
-          $elem.find('td').eq(5).text(),
-        ];
-      }).get();
+      // const resultData = $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem)=>{
+      //   const $elem = $(elem);
+      //   return [
+      //     $elem.find('td').eq(1).text(),
+      //     $elem.find('td').eq(2).text(),
+      //     $elem.find('td').eq(3).text(),
+      //     $elem.find('td').eq(4).text(),
+      //     $elem.find('td').eq(5).text(),
+      //   ];
+      // }).get();
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', smallGraphs[0], true);
+      xhr.responseType = 'arraybuffer';
+      xhr.onload = function(e) {
+        // ArrayBufferで返ってくる
+        console.log(this.response.byteLength);
+        const dataURIFromArrayBuffer = (ab:any) => {
+          return "data:image/png;base64," +
+            btoa(Array.from(new Uint8Array(ab), e => String.fromCharCode(e)).join(""));
+        };
+
+        const img = new Image();
+        img.onload = ()=> {
+          const cv = document.createElement('canvas');
+          cv.width = img.naturalWidth;
+          cv.height = img.naturalHeight;
+
+          const ct = cv.getContext('2d') as CanvasRenderingContext2D;
+          ct.drawImage(img, 0, 0);
+
+          const data = ct.getImageData(0, 0, cv.width, cv.height);
+          // console.log(data);
+        };
+
+        img.src = dataURIFromArrayBuffer(this.response);
+      };
+
+      xhr.send();
 
       $dataElem.find('.machineNumber').text(machineNumber);
       smallGraphs.forEach((src)=>{
@@ -133,7 +162,7 @@ function end():void {
   getForm('dat').off('submit');
   getForm('his').off('submit');
 
-  console.log('end');
+  $status.text('読み込み中...');
 }
 
 function getDataElem(tablenum:string):JQuery {
@@ -155,7 +184,7 @@ function getDataElem(tablenum:string):JQuery {
       $dataElem.find('.infoWrap').toggle();
     });
     $dataElems[tablenum] = $dataElem;
-    $content.append($dataElem);
+    $content.find('>.wrap').append($dataElem);
   }
 
   return $dataElem;
