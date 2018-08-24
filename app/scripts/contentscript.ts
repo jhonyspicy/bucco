@@ -13,7 +13,7 @@ if ($('#dedama_table').length) {
 
   start();
 
-  $('#ata0 .ind').first().each((i, elem) => {
+  $('#ata0 .ind').each((i, elem) => {
     const $elem = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
@@ -32,9 +32,10 @@ if ($('#dedama_table').length) {
 function start() {
   $status.text('開始');
 
-  const addQue = (method:string, url:string, data:any, callback:(html:JQuery)=>void) => {
+  const addQue = (method:string, url:string, data:any, callback:($html:JQuery)=>void) => {
     promise = promise.then(value => new Promise((resolve, reject) => {
       const doGet = () => {
+        $status.text('読み込み中...');
         $.ajax({
           method,
           url,
@@ -44,6 +45,7 @@ function start() {
             const $html = $(html);
             if (!$html.find('#machine_name').length) {
               console.log('Too many request wait a moment');
+              $status.text('待機中...(リミット)');
               setTimeout(()=> {
                 doGet();
               }, 60000);
@@ -53,10 +55,11 @@ function start() {
             callback($html);
             setTimeout(()=> {
               resolve();
-            }, Math.random() * 4000);
+            }, Math.random() * 5000);
           },
           error: (e) => {
             console.log('something wrong', e);
+            $status.text('待機中...(通信エラー)');
             setTimeout(()=> {
               doGet();
             }, 60000);
@@ -67,6 +70,9 @@ function start() {
     }));
   };
 
+  /**
+   * 詳細の取得
+   */
   getForm('dat').on('submit', (e) => {
     const $form = $(e.currentTarget);
     const method = $form.attr('method') || '';
@@ -123,6 +129,7 @@ function start() {
           ct.drawImage(img, 0, 0);
 
           const data = ct.getImageData(0, 0, cv.width, cv.height);
+
           // console.log(data);
         };
 
@@ -141,6 +148,10 @@ function start() {
     });
   });
 
+
+  /**
+   * 履歴の取得
+   */
   getForm('his').on('submit', (e) => {
     const $form = $(e.currentTarget);
     const method = $form.attr('method') || '';
@@ -162,7 +173,7 @@ function end():void {
   getForm('dat').off('submit');
   getForm('his').off('submit');
 
-  $status.text('読み込み中...');
+  $status.text('キュー追加終了');
 }
 
 function getDataElem(tablenum:string):JQuery {
