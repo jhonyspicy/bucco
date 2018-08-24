@@ -13,7 +13,7 @@ if ($('#dedama_table').length) {
 
   start();
 
-  $('#ata0 .ind').each((i, elem) => {
+  $('#ata0 .ind').first().each((i, elem) => {
     const $elem = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
@@ -97,46 +97,79 @@ function start() {
         const $elem = $(elem);
         return $elem.find('img').attr('src') || '';
       }).get();
-      // const resultData = $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem)=>{
-      //   const $elem = $(elem);
-      //   return [
-      //     $elem.find('td').eq(1).text(),
-      //     $elem.find('td').eq(2).text(),
-      //     $elem.find('td').eq(3).text(),
-      //     $elem.find('td').eq(4).text(),
-      //     $elem.find('td').eq(5).text(),
-      //   ];
-      // }).get();
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', smallGraphs[0], true);
-      xhr.responseType = 'arraybuffer';
-      xhr.onload = function(e) {
-        // ArrayBufferで返ってくる
-        console.log(this.response.byteLength);
-        const dataURIFromArrayBuffer = (ab:any) => {
-          return "data:image/png;base64," +
-            btoa(Array.from(new Uint8Array(ab), e => String.fromCharCode(e)).join(""));
+      /**
+       * 画像データを含めた解析
+       */
+      (() => {
+        const dayGraphs = $html.find('#graph_list dd').map((i, elem)=>{
+          const $elem = $(elem);
+          return $elem.find('a').attr('href') || '';
+        }).get();
+
+        const resultData:any = [];
+        $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem)=>{
+          const $elem = $(elem);
+          resultData.push([
+            $elem.find('td').eq(1).text(),
+            $elem.find('td').eq(2).text(),
+            $elem.find('td').eq(3).text(),
+            $elem.find('td').eq(4).text(),
+            $elem.find('td').eq(5).text(),
+          ]);
+        });
+
+        // console.log(dayGraphs);
+        // console.log(resultData);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', dayGraphs[0], true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function(e) {
+          // ArrayBufferで返ってくる
+          // console.log(this.response.byteLength);
+          const dataURIFromArrayBuffer = (ab:any) => {
+            return "data:image/png;base64," +
+              btoa(Array.from(new Uint8Array(ab), e => String.fromCharCode(e)).join(""));
+          };
+
+          const img = new Image();
+          img.onload = ()=> {
+            const cv = document.createElement('canvas');
+            cv.width = img.naturalWidth;
+            cv.height = img.naturalHeight;
+
+            const ct = cv.getContext('2d') as CanvasRenderingContext2D;
+            ct.drawImage(img, 0, 0);
+
+            const data:any = ct.getImageData(0, 0, cv.width, cv.height);
+            const resultData:any = [];
+            for (let i = 0; i < cv.height; i++) {
+              resultData[i] = [];
+              for (let j = 0; j < cv.width; j++) {
+                const n = ((i * cv.width) + j) * 4;
+                const r = data.data[n];
+                const g = data.data[n + 1];
+                const b = data.data[n + 2];
+                const a = data.data[n + 3];
+                const sum = r + g + b;
+
+                if (650 < sum) {
+                  // 背景でしょう。
+                  sum = 0;
+                }
+
+                resultData[i][j] = sum;
+              }
+            }
+            console.log(resultData);
+          };
+
+          img.src = dataURIFromArrayBuffer(this.response);
         };
 
-        const img = new Image();
-        img.onload = ()=> {
-          const cv = document.createElement('canvas');
-          cv.width = img.naturalWidth;
-          cv.height = img.naturalHeight;
-
-          const ct = cv.getContext('2d') as CanvasRenderingContext2D;
-          ct.drawImage(img, 0, 0);
-
-          const data = ct.getImageData(0, 0, cv.width, cv.height);
-
-          // console.log(data);
-        };
-
-        img.src = dataURIFromArrayBuffer(this.response);
-      };
-
-      xhr.send();
+        xhr.send();
+      })();
 
       $dataElem.find('.machineNumber').text(machineNumber);
       smallGraphs.forEach((src)=>{
