@@ -6,8 +6,7 @@ export default class Machine {
     number: number;
     $elem: JQuery;
 
-    constructor(num: number, $elem: JQuery) {
-        this.number = num;
+    constructor($elem: JQuery) {
         this.$elem = $elem;
     }
 

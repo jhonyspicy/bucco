@@ -1,19 +1,23 @@
+import Machine from './Machine';
+
 export default class Hall {
   private _name: string;
-  private _date: string;
+  private _date: Date;
+  private _machines: [Machine];
 
-  constructor() {
-  }
+  constructor() {}
 
   set name(name: string) {
     this._name = name;
   }
 
   set date(date: string) {
-    this._date = date;
+    this._date = new Date(date);
   }
 
-  addMachine() {}
+  addMachine(machine: Machine) {
+    this._machines.push(machine);
+  }
 
-  update(){}
+  update() {}
 }

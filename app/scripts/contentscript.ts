@@ -12,8 +12,9 @@ const $status             = $content.find('#allMachineDataList-status');
 const $dataElems          = {} as any;
 const hall                = new Hall();
 if ($('#dedama_table').length) {
-  $content.insertAfter('#pankuzu');
   hall.name = $('#hall_name').text();
+  hall.date = $('#hall_date').text().split('|')[1].trim().split('：')[1];
+  $content.insertAfter('#pankuzu');
 
   start();
 
@@ -93,6 +94,7 @@ function start() {
     });
 
     addQue(method, location.href.replace(/\/[^\/]*$/, '/') + url, data, ($html: JQuery) => {
+      const machine = new Machine($html);
       const $dataElem     = getDataElem(data.tablenum);
       // const bigGraph = $html.find('#dedama_8days a').attr('href');
       const bigGraph      = $html.find('#dedama_8days img').attr('src');
@@ -117,8 +119,6 @@ function start() {
           $elem.find('td').eq(5).text(),
         ]);
       });
-
-      new Machine(1, $(''));
 
       /**
        * 画像データを含めた解析
