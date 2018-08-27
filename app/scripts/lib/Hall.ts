@@ -1,15 +1,19 @@
 export default class Hall {
-    private _name: string;
-    private _date: string;
+  private _name: string;
+  private _date: string;
 
-    constructor() {
-    }
+  constructor() {
+  }
 
-    set name(name: string) {
-        this._name = name;
-    }
+  set name(name: string) {
+    this._name = name;
+  }
 
-    set date(date: string) {
-        this._date = date;
-    }
+  set date(date: string) {
+    this._date = date;
+  }
+
+  addMachine() {}
+
+  update(){}
 }

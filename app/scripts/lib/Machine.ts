@@ -18,4 +18,8 @@ export default class Machine {
     set date(date: string) {
         this._date = date;
     }
+
+    setDetail(){}
+    setHistory(){}
+    update() {}
 }

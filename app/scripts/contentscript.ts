@@ -7,218 +7,218 @@ import Hall from './lib/Hall';
 import Machine from './lib/Machine';
 
 let promise: Promise<any> = Promise.resolve();
-const $content = $('<div id="allMachineDataList"><div class="wrap"></div><div id="allMachineDataList-status"></div></div>');
-const $status = $content.find('#allMachineDataList-status');
-const $dataElems = {} as any;
-const hall = new Hall();
+const $content            = $('<div id="allMachineDataList"><div class="wrap"></div><div id="allMachineDataList-status"></div></div>');
+const $status             = $content.find('#allMachineDataList-status');
+const $dataElems          = {} as any;
+const hall                = new Hall();
 if ($('#dedama_table').length) {
-    $content.insertAfter('#pankuzu');
-    hall.name = $('#hall_name').text();
+  $content.insertAfter('#pankuzu');
+  hall.name = $('#hall_name').text();
 
-    start();
+  start();
 
-    $('#ata0 .ind').first().each((i, elem) => {
-        const $elem = $(elem);
-        const datHref = $elem.find('.det a').attr('href') || '';
-        const hisHref = $elem.find('.his a').attr('href') || '';
+  $('#ata0 .ind').first().each((i, elem) => {
+    const $elem   = $(elem);
+    const datHref = $elem.find('.det a').attr('href') || '';
+    const hisHref = $elem.find('.his a').attr('href') || '';
 
-        eval(datHref);
-        eval(hisHref);
-    });
+    eval(datHref);
+    eval(hisHref);
+  });
 
-    promise.then((value) => {
-        $status.text('終了。');
-    });
+  promise.then((value) => {
+    $status.text('終了。');
+  });
 
-    end();
+  end();
 }
 
 function start() {
-    $status.text('開始');
+  $status.text('開始');
 
-    const addQue = (method: string, url: string, data: any, callback: ($html: JQuery) => void) => {
-        promise = promise.then(value => new Promise((resolve, reject) => {
-            const doGet = () => {
-                $status.text('読み込み中...');
-                $.ajax({
-                    method,
-                    url,
-                    data,
-                    dataType: 'html',
-                    success: (html) => {
-                        const $html = $(html);
-                        if (!$html.find('#machine_name').length) {
-                            console.log('Too many request wait a moment');
-                            $status.text('待機中...(リミット)');
-                            setTimeout(() => {
-                                doGet();
-                            }, 60000);
-                            return;
-                        }
+  const addQue = (method: string, url: string, data: any, callback: ($html: JQuery) => void) => {
+    promise = promise.then(value => new Promise((resolve, reject) => {
+      const doGet = () => {
+        $status.text('読み込み中...');
+        $.ajax({
+          method,
+          url,
+          data,
+          dataType: 'html',
+          success: (html) => {
+            const $html = $(html);
+            if (!$html.find('#machine_name').length) {
+              console.log('Too many request wait a moment');
+              $status.text('待機中...(リミット)');
+              setTimeout(() => {
+                doGet();
+              }, 60000);
+              return;
+            }
 
-                        callback($html);
-                        setTimeout(() => {
-                            resolve();
-                        }, Math.random() * 5000);
-                    },
-                    error: (e) => {
-                        console.log('something wrong', e);
-                        $status.text('待機中...(通信エラー)');
-                        setTimeout(() => {
-                            doGet();
-                        }, 60000);
-                    },
-                });
-            };
-            doGet();
-        }));
-    };
-
-    /**
-     * 詳細の取得
-     */
-    getForm('dat').on('submit', (e) => {
-        const $form = $(e.currentTarget);
-        const method = $form.attr('method') || '';
-        const url = $form.attr('action') || '';
-        const data = {} as any;
-        e.preventDefault();
-
-        $form.find('[name]').each((i, elem) => {
-            const $elem = $(elem);
-            const name = $elem.attr('name') || '';
-            const value = $elem.attr('value') || '';
-
-            data[name] = value;
+            callback($html);
+            setTimeout(() => {
+              resolve();
+            }, Math.random() * 5000);
+          },
+          error: (e) => {
+            console.log('something wrong', e);
+            $status.text('待機中...(通信エラー)');
+            setTimeout(() => {
+              doGet();
+            }, 60000);
+          },
         });
+      };
+      doGet();
+    }));
+  };
 
-        addQue(method, location.href.replace(/\/[^\/]*$/, '/') + url, data, ($html: JQuery) => {
-            const $dataElem = getDataElem(data.tablenum);
-            // const bigGraph = $html.find('#dedama_8days a').attr('href');
-            const bigGraph = $html.find('#dedama_8days img').attr('src');
-            const machineNumber = $html.find('#dedama_detail_table .left h4').first().text();
-            const smallGraphs = $html.find('#graph_list dd').map((i, elem) => {
-                const $elem = $(elem);
-                return $elem.find('img').attr('src') || '';
-            }).get();
-            const dayGraphs = $html.find('#graph_list dd').map((i, elem) => {
-                const $elem = $(elem);
-                return $elem.find('a').attr('href') || '';
-            }).get();
+  /**
+   * 詳細の取得
+   */
+  getForm('dat').on('submit', (e) => {
+    const $form  = $(e.currentTarget);
+    const method = $form.attr('method') || '';
+    const url    = $form.attr('action') || '';
+    const data   = {} as any;
+    e.preventDefault();
 
+    $form.find('[name]').each((i, elem) => {
+      const $elem = $(elem);
+      const name  = $elem.attr('name') || '';
+      const value = $elem.attr('value') || '';
+
+      data[name] = value;
+    });
+
+    addQue(method, location.href.replace(/\/[^\/]*$/, '/') + url, data, ($html: JQuery) => {
+      const $dataElem     = getDataElem(data.tablenum);
+      // const bigGraph = $html.find('#dedama_8days a').attr('href');
+      const bigGraph      = $html.find('#dedama_8days img').attr('src');
+      const machineNumber = $html.find('#dedama_detail_table .left h4').first().text();
+      const smallGraphs   = $html.find('#graph_list dd').map((i, elem) => {
+        const $elem = $(elem);
+        return $elem.find('img').attr('src') || '';
+      }).get();
+      const dayGraphs     = $html.find('#graph_list dd').map((i, elem) => {
+        const $elem = $(elem);
+        return $elem.find('a').attr('href') || '';
+      }).get();
+
+      const resultData: any = [];
+      $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem) => {
+        const $elem = $(elem);
+        resultData.push([
+          $elem.find('td').eq(1).text(),
+          $elem.find('td').eq(2).text(),
+          $elem.find('td').eq(3).text(),
+          $elem.find('td').eq(4).text(),
+          $elem.find('td').eq(5).text(),
+        ]);
+      });
+
+      new Machine(1, $(''));
+
+      /**
+       * 画像データを含めた解析
+       */
+      (() => {
+
+        // console.log(dayGraphs);
+        // console.log(resultData);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', dayGraphs[0], true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload       = function (e) {
+          // ArrayBufferで返ってくる
+          // console.log(this.response.byteLength);
+          const dataURIFromArrayBuffer = (ab: any) => {
+            return 'data:image/png;base64,' +
+              btoa(Array.from(new Uint8Array(ab), e => String.fromCharCode(e)).join(''));
+          };
+
+          const img  = new Image();
+          img.onload = () => {
+            const cv  = document.createElement('canvas');
+            cv.width  = img.naturalWidth;
+            cv.height = img.naturalHeight;
+
+            const ct = cv.getContext('2d') as CanvasRenderingContext2D;
+            ct.drawImage(img, 0, 0);
+
+            const data: any       = ct.getImageData(0, 0, cv.width, cv.height);
             const resultData: any = [];
-            $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem) => {
-                const $elem = $(elem);
-                resultData.push([
-                    $elem.find('td').eq(1).text(),
-                    $elem.find('td').eq(2).text(),
-                    $elem.find('td').eq(3).text(),
-                    $elem.find('td').eq(4).text(),
-                    $elem.find('td').eq(5).text(),
-                ]);
-            });
+            for (let i = 0; i < cv.height; i++) {
+              resultData[i] = [];
+              for (let j = 0; j < cv.width; j++) {
+                const n = ((i * cv.width) + j) * 4;
+                const r = data.data[n];
+                const g = data.data[n + 1];
+                const b = data.data[n + 2];
+                const a = data.data[n + 3];
+                let sum = r + g + b;
 
-            new Machine(1, $(''));
+                if (650 < sum) {
+                  // 背景でしょう。
+                  sum = 999;
+                }
 
-            /**
-             * 画像データを含めた解析
-             */
-            (() => {
+                resultData[i][j] = sum;
+              }
+            }
+            console.log(resultData);
+          };
 
-                // console.log(dayGraphs);
-                // console.log(resultData);
+          img.src = dataURIFromArrayBuffer(this.response);
+        };
 
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', dayGraphs[0], true);
-                xhr.responseType = 'arraybuffer';
-                xhr.onload = function (e) {
-                    // ArrayBufferで返ってくる
-                    // console.log(this.response.byteLength);
-                    const dataURIFromArrayBuffer = (ab: any) => {
-                        return 'data:image/png;base64,' +
-                            btoa(Array.from(new Uint8Array(ab), e => String.fromCharCode(e)).join(''));
-                    };
+        xhr.send();
+      })();
 
-                    const img = new Image();
-                    img.onload = () => {
-                        const cv = document.createElement('canvas');
-                        cv.width = img.naturalWidth;
-                        cv.height = img.naturalHeight;
-
-                        const ct = cv.getContext('2d') as CanvasRenderingContext2D;
-                        ct.drawImage(img, 0, 0);
-
-                        const data: any = ct.getImageData(0, 0, cv.width, cv.height);
-                        const resultData: any = [];
-                        for (let i = 0; i < cv.height; i++) {
-                            resultData[i] = [];
-                            for (let j = 0; j < cv.width; j++) {
-                                const n = ((i * cv.width) + j) * 4;
-                                const r = data.data[n];
-                                const g = data.data[n + 1];
-                                const b = data.data[n + 2];
-                                const a = data.data[n + 3];
-                                let sum = r + g + b;
-
-                                if (650 < sum) {
-                                    // 背景でしょう。
-                                    sum = 999;
-                                }
-
-                                resultData[i][j] = sum;
-                            }
-                        }
-                        console.log(resultData);
-                    };
-
-                    img.src = dataURIFromArrayBuffer(this.response);
-                };
-
-                xhr.send();
-            })();
-
-            $dataElem.find('.machineNumber').text(machineNumber);
-            smallGraphs.forEach((src) => {
-                $dataElem.find('.smallGraphs').append(`<li><img src="${src}"></li>`);
-            });
-            $dataElem.find('.bigGraph').append(`<img src="${bigGraph}">`);
-            $dataElem.find('.tableWrap').append($html.find('#dedama_kind_table'));
-            // console.log($html);
-        });
+      $dataElem.find('.machineNumber').text(machineNumber);
+      smallGraphs.forEach((src) => {
+        $dataElem.find('.smallGraphs').append(`<li><img src="${src}"></li>`);
+      });
+      $dataElem.find('.bigGraph').append(`<img src="${bigGraph}">`);
+      $dataElem.find('.tableWrap').append($html.find('#dedama_kind_table'));
+      // console.log($html);
     });
+  });
 
 
-    /**
-     * 履歴の取得
-     */
-    getForm('his').on('submit', (e) => {
-        const $form = $(e.currentTarget);
-        const method = $form.attr('method') || '';
-        const url = $form.attr('action') || '';
-        const data = {} as any;
-        e.preventDefault();
+  /**
+   * 履歴の取得
+   */
+  getForm('his').on('submit', (e) => {
+    const $form  = $(e.currentTarget);
+    const method = $form.attr('method') || '';
+    const url    = $form.attr('action') || '';
+    const data   = {} as any;
+    e.preventDefault();
 
-        $form.find('[name]').each((i, elem) => {
-            const $elem = $(elem);
-            const name = $elem.attr('name') || '';
-            const value = $elem.attr('value') || '';
+    $form.find('[name]').each((i, elem) => {
+      const $elem = $(elem);
+      const name  = $elem.attr('name') || '';
+      const value = $elem.attr('value') || '';
 
-            data[name] = value;
-        });
+      data[name] = value;
     });
+  });
 }
 
 function end(): void {
-    getForm('dat').off('submit');
-    getForm('his').off('submit');
+  getForm('dat').off('submit');
+  getForm('his').off('submit');
 
-    $status.text('キュー追加終了');
+  $status.text('キュー追加終了');
 }
 
 function getDataElem(tablenum: string): JQuery {
-    let $dataElem = $dataElems[tablenum];
-    if (!$dataElem) {
-        $dataElem = $(`
+  let $dataElem = $dataElems[tablenum];
+  if (!$dataElem) {
+    $dataElem = $(`
 <div class="machineData">
   <h3 class="machineNumber"></h3>
   <div class="infoWrap">
@@ -230,63 +230,63 @@ function getDataElem(tablenum: string): JQuery {
   </div>
 </div>
 `);
-        $dataElem.find('.machineNumber').on('click', (e: any) => {
-            $dataElem.find('.infoWrap').toggle();
-        });
-        $dataElems[tablenum] = $dataElem;
-        $content.find('>.wrap').append($dataElem);
-    }
+    $dataElem.find('.machineNumber').on('click', (e: any) => {
+      $dataElem.find('.infoWrap').toggle();
+    });
+    $dataElems[tablenum] = $dataElem;
+    $content.find('>.wrap').append($dataElem);
+  }
 
-    return $dataElem;
+  return $dataElem;
 }
 
 function getFormName(name: string): string {
-    if (name === 'dat') {
-        return 'Table' +
-            'Select' +
-            'Action' +
-            'Form';
-    } else {
-        return 'Table' +
-            'History' +
-            'Action' +
-            'Form';
-    }
+  if (name === 'dat') {
+    return 'Table' +
+      'Select' +
+      'Action' +
+      'Form';
+  } else {
+    return 'Table' +
+      'History' +
+      'Action' +
+      'Form';
+  }
 }
 
 function getForm(name: string): JQuery {
-    const formName = getFormName(name);
-    return $(`form[name=${formName}]`);
+  const formName = getFormName(name);
+  return $(`form[name=${formName}]`);
 }
 
 function openDedamaDetail(cd: any, num: any) {
-    const formName = getFormName('dat');
-    const $form = getForm('dat');
-    const form = document.querySelector(`[name=${formName}]`) as any;
+  const formName = getFormName('dat');
+  const $form    = getForm('dat');
+  const form     = document.querySelector(`[name=${formName}]`) as any;
 
-    form.tablenum.value = num;
-    form.forward.value = 'K' +
-        'AK' +
-        'IN_' +
-        'TABLE' +
-        'SELECT';
+  form.tablenum.value = num;
+  form.forward.value  = 'K' +
+    'AK' +
+    'IN_' +
+    'TABLE' +
+    'SELECT';
 
-    if (cd == 1) {
-        form.actiontype.value = '12';
-    } else {
-        form.actiontype.value = '14';
-    }
+  if (cd == 1) {
+    form.actiontype.value = '12';
+  } else {
+    form.actiontype.value = '14';
+  }
 
-    $form.trigger('submit');
+  $form.trigger('submit');
 }
 
 function tableHistoryClick(num: any) {
-    const tableName = 'his';
-    const formName = getFormName(tableName);
-    const $form = getForm(tableName);
-    const form = document.querySelector(`[name=${formName}]`) as any;
+  const tableName = 'his';
+  const formName  = getFormName(tableName);
+  const $form     = getForm(tableName);
+  const form      = document.querySelector(`[name=${formName}]`) as any;
 
-    form.tablenum.value = num;
-    $form.trigger('submit');
+  form.tablenum.value = num;
+  $form.trigger('submit');
 }
 
