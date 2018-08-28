@@ -1,52 +1,43 @@
-#allMachineDataList
-  background-color: #000
+.buccoHall
+  background-color: #fff
   padding: 30px 0
 
-  >.wrap
-    .machineData
-      color: #fff
-      padding: 10px 0
-      .machineNumber
-        font-size: 30px
-      .infoWrap
-        .wrap
-          font-size: 0
-          .bigGraph
-            display: inline-block
-            vertical-align: top
-            img
-              width: 420px
-              height: auto
-          .tableWrap
-            color #000
-            vertical-align: top
-            display: inline-block
-            font-size: 13px
-            width: 420px
-            #dedama_ki
-              &nd_table
-                margin: 0
-            td
-              padding: 0
-        .smallGraphs
-          counter-reset: days -1
-          li
-            counter-increment: days;
-            display: inline-block
-            padding: 2px
-            &:before
-              content: counter(days) '日前';
-              display: block
-              font-size: 15px
-              font-weight: bold
+  &__content
+      display: block
 
-            &:first-child:before
-              content '本日'
+  &__status
+      display: block
 
-            img
-              width: 100px
-              height: auto
+.buccoMachine
+  &__info
+    &__bigGraph img
+      size 100% auto
 
-  #allMachineDataList-status
-    color #fff
-    font-size: 17px
+    &__smallGraphs
+      counter-reset: days -1
+      font-size: 0
+      display: flex;
+      flex-direction: row-reverse;
+      li
+        counter-increment: days;
+        display: inline-block
+        width:12.5%
+        img
+          width: 100%
+          height: auto
+        &:before
+          content: counter(days) '日前';
+          display: block
+          font-size: 15px
+          font-weight: bold
+          text-align: center
+          padding: 20px 0 5px
+
+        &:first-child:before
+          content '当日'
+        &:nth-child(2):before
+          content '前日'
+    &__detail
+      &#dedama_kind_table
+        margin: 0
+
