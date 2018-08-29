@@ -1,5 +1,4 @@
-import Graph from './Graph';
-import * as $ from "jquery";
+import * as $ from 'jquery';
 import {Chart} from 'chart.js';
 
 export default class Machine {
@@ -11,13 +10,16 @@ export default class Machine {
   public data: {
     number: number
     detail: any
-    history: any
+    history: {
+      bonusType: string,
+      rotate: number,
+    }[]
     bigGraph: string
     smallGraphs: string[]
   } = {
     number     : 0,
     detail     : undefined,
-    history    : undefined,
+    history    : [],
     bigGraph   : '',
     smallGraphs: [],
   };
@@ -36,7 +38,9 @@ export default class Machine {
         </header>
 
         <div class="buccoMachine__info">
-          <div class="buccoMachine__info__chart"><canvas></canvas></div>
+          <div class="buccoMachine__info__mixChart"><canvas></canvas></div>
+          <div class="buccoMachine__info__bigChart"><canvas></canvas></div>
+          <div class="buccoMachine__info__regChart"><canvas></canvas></div>
           <div class="buccoMachine__info__bigGraph"></div>
           <ul class="buccoMachine__info__smallGraphs"></ul>
           <div class="buccoMachine__info__detail" id="dedama_kind_table"></div>
@@ -144,45 +148,10 @@ export default class Machine {
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${bigGraph}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
 
-    const canvas = this.$dom.find('.buccoMachine__info__chart canvas').get(0) as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    const chart = new Chart(ctx, {
-      type   : "horizontalBar",
-      data   : {
-        labels  : ["RB 1205", "2月", "3月", "4月", "5月", "6月", "7月"],
-        datasets: [{
-          label          : "スランプ",
-          data           : [65, 59, 80, 81, 56, 55, 40],
-          fill           : false,
-          backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
-          borderColor    : ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
-          borderWidth    : 1
-        }]
-      },
-      options: {
-        responsive         : true,
-        maintainAspectRatio: false,
-        scales             : {
-          xAxes: [{
-            stacked: true,
-            ticks  : {
-              beginAtZero: true,
-              min        : 0,
-              max        : 1000
-            }
-          }]
-        }
-      }
-    });
-
-    this.$dom.find('.buccoMachine__info__chart').height(75 + 25 * 7);
-    chart.resize();
-
     this._resolve.detail();
   }
 
   convertHistoryHtml($html: JQuery) {
-    this.data.history = [];
     $($html.find('#dedama_past_table tr:nth-child(n + 2)').get().reverse()).map((i, elem) => {
       const $elem = $(elem);
       let bonus = $elem.find('td').eq(0).text().trim();
@@ -196,13 +165,82 @@ export default class Machine {
 
       this.data.history.push({
         bonusType: bonus,
-        rotate: $elem.find('td').eq(2).text().trim(),
+        rotate: parseInt($elem.find('td').eq(2).text().trim()),
       });
     });
 
     this.$dom.find('.buccoMachine__info__history').append($html.find('#dedama_past_table table'));
 
+    const mixChart = this.getChart(
+      this.getCTX('.buccoMachine__info__mixChart canvas')
+    );
+
+    const bigChart = this.getChart(
+      this.getCTX('.buccoMachine__info__bigChart canvas')
+    );
+
+    const regChart = this.getChart(
+      this.getCTX('.buccoMachine__info__regChart canvas')
+    );
+
+    this.data.history.forEach((val, i) => {
+      // if (typeof mixChart.data.labels === 'object') {
+      //   mixChart.data.labels.push(val.bonusType);
+      // }
+      // if (typeof mixChart.data.datasets === 'object' && typeof mixChart.data.datasets[0].data === 'object') {
+      //   mixChart.data.datasets[0].data.push(val.rotate);
+      // }
+    });
+
+
+
+    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * 2);
+    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * 2);
+    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * 2);
+
     this._resolve.history();
+  }
+
+  getCTX(selector: string): CanvasRenderingContext2D {
+    const canvas = this.$dom.find(selector).get(0) as HTMLCanvasElement;
+    return canvas.getContext('2d') as CanvasRenderingContext2D;
+  }
+
+  getChart(ctx: CanvasRenderingContext2D): Chart {
+    return new Chart(ctx, {
+      type: 'horizontalBar',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            fill: false,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              stacked: true,
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 1000
+              }
+            }
+          ]
+        }
+      }
+    });
   }
 
   set number(n: number) {
