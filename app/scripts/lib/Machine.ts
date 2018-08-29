@@ -1,5 +1,6 @@
 import Graph from './Graph';
 import * as $ from "jquery";
+import {Chart} from 'chart.js';
 
 export default class Machine {
   private _name: string;
@@ -35,6 +36,7 @@ export default class Machine {
         </header>
 
         <div class="buccoMachine__info">
+          <div class="buccoMachine__info__chart"><canvas></canvas></div>
           <div class="buccoMachine__info__bigGraph"></div>
           <ul class="buccoMachine__info__smallGraphs"></ul>
           <div class="buccoMachine__info__detail" id="dedama_kind_table"></div>
@@ -141,6 +143,40 @@ export default class Machine {
     });
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${bigGraph}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
+
+    const canvas = this.$dom.find('.buccoMachine__info__chart canvas').get(0) as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const chart = new Chart(ctx, {
+      type   : "horizontalBar",
+      data   : {
+        labels  : ["RB 1205", "2月", "3月", "4月", "5月", "6月", "7月"],
+        datasets: [{
+          label          : "スランプ",
+          data           : [65, 59, 80, 81, 56, 55, 40],
+          fill           : false,
+          backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+          borderColor    : ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+          borderWidth    : 1
+        }]
+      },
+      options: {
+        responsive         : true,
+        maintainAspectRatio: false,
+        scales             : {
+          xAxes: [{
+            stacked: true,
+            ticks  : {
+              beginAtZero: true,
+              min        : 0,
+              max        : 1000
+            }
+          }]
+        }
+      }
+    });
+
+    this.$dom.find('.buccoMachine__info__chart').height(75 + 25 * 7);
+    chart.resize();
 
     this._resolve.detail();
   }

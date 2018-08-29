@@ -23,6 +23,7 @@
     ]
   },
   "devDependencies": {
+    "@types/chart.js": "^2.7.31",
     "@types/chrome": "^0.x.x",
     "@types/jquery": "^3.3.5",
     "babel-cli": "6.x.x",
@@ -30,6 +31,7 @@
     "babel-loader": "7.x.x",
     "babel-preset-env": "1.x.x",
     "chai": "4.x.x",
+    "chart.js": "^2.7.2",
     "chromereload": "0.x.x",
     "debounce": "1.x.x",
     "del": "3.x.x",
@@ -64,5 +66,6 @@
     "webpack": "3.x.x",
     "webpack-stream": "3.x.x",
     "yargs": "^8.x.x"
-  }
+  },
+  "dependencies": {}
 }
