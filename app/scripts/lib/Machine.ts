@@ -1,5 +1,6 @@
 import * as $ from 'jquery';
-import {Chart} from 'chart.js';
+// import {Chart} from 'chart.js';
+import Chart = require( "chart.js" );
 
 export default class Machine {
   private _name: string;
@@ -156,11 +157,11 @@ export default class Machine {
       const $elem = $(elem);
       let bonus = $elem.find('td').eq(0).text().trim();
       if (bonus == 'RB') {
-        bonus = 'reg';
+        bonus = 'REG';
       } else if (bonus == '--') {
-        bonus = '';
+        bonus = '現在';
       } else {
-        bonus = 'big';
+        bonus = 'BIG';
       }
 
       this.data.history.push({
@@ -172,31 +173,75 @@ export default class Machine {
     this.$dom.find('.buccoMachine__info__history').append($html.find('#dedama_past_table table'));
 
     const mixChart = this.getChart(
-      this.getCTX('.buccoMachine__info__mixChart canvas')
+      this.getCTX('.buccoMachine__info__mixChart canvas'),
+      '合算'
     );
 
     const bigChart = this.getChart(
-      this.getCTX('.buccoMachine__info__bigChart canvas')
+      this.getCTX('.buccoMachine__info__bigChart canvas'),
+      'ビッグ'
     );
 
     const regChart = this.getChart(
-      this.getCTX('.buccoMachine__info__regChart canvas')
+      this.getCTX('.buccoMachine__info__regChart canvas'),
+      'ベイビー'
     );
 
+    let bigRotate = 0;
+    let regRotate = 0;
+    let bigCount = 0;
+    let regCount = 0;
     this.data.history.forEach((val, i) => {
-      // if (typeof mixChart.data.labels === 'object') {
-      //   mixChart.data.labels.push(val.bonusType);
-      // }
-      // if (typeof mixChart.data.datasets === 'object' && typeof mixChart.data.datasets[0].data === 'object') {
-      //   mixChart.data.datasets[0].data.push(val.rotate);
-      // }
+      const mixData = mixChart.data as any;
+      const bigData = bigChart.data as any;
+      const regData = regChart.data as any;
+
+      bigRotate += val.rotate;
+      regRotate += val.rotate;
+      if (val.bonusType === 'BIG') {
+        bigCount++;
+
+        mixData.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
+        mixData.datasets[0].borderColor.push('rgb(255, 27, 75)');
+
+        bigData.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
+        bigData.datasets[0].borderColor.push('rgb(255, 27, 75)');
+        bigData.labels.push(`${bigRotate} ${val.bonusType}`);
+        bigData.datasets[0].data.push(bigRotate);
+        bigRotate = 0;
+      } else if (val.bonusType === 'REG') {
+        regCount++;
+
+        mixData.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
+        mixData.datasets[0].borderColor.push('rgb(200, 200, 80)');
+
+        regData.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
+        regData.datasets[0].borderColor.push('rgb(200, 200, 80)');
+        regData.labels.push(`${regRotate} ${val.bonusType}`);
+        regData.datasets[0].data.push(regRotate);
+        regRotate = 0;
+      } else {
+        mixData.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
+        mixData.datasets[0].borderColor.push('rgb(0, 0, 0)');
+
+        bigData.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
+        bigData.datasets[0].borderColor.push('rgb(0, 0, 0)');
+        bigData.labels.push(`${bigRotate} ${val.bonusType}`);
+        bigData.datasets[0].data.push(bigRotate);
+
+        regData.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
+        regData.datasets[0].borderColor.push('rgb(0, 0, 0)');
+        regData.labels.push(`${regRotate} ${val.bonusType}`);
+        regData.datasets[0].data.push(regRotate);
+      }
+
+      mixData.labels.push(`${val.rotate} ${val.bonusType}`);
+      mixData.datasets[0].data.push(val.rotate);
     });
 
-
-
-    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * 2);
-    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * 2);
-    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * 2);
+    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * this.data.history.length);
+    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * bigCount);
+    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * regCount);
 
     this._resolve.history();
   }
@@ -206,35 +251,47 @@ export default class Machine {
     return canvas.getContext('2d') as CanvasRenderingContext2D;
   }
 
-  getChart(ctx: CanvasRenderingContext2D): Chart {
+  getChart(ctx: CanvasRenderingContext2D, title: string): Chart {
     return new Chart(ctx, {
       type: 'horizontalBar',
+
       data: {
         labels: [],
+
         datasets: [
           {
-            data: [],
-            fill: false,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgb(255, 99, 132)',
-            borderWidth: 1
+            data           : [],
+            fill           : false,
+            backgroundColor: [],
+            borderColor    : [],
+            borderWidth    : 1
           }
         ]
       },
+
       options: {
+        title: {
+          display  : true,
+          position : 'top',
+          fontColor: '#333',
+          text     : title,
+        },
+
         legend: {
           display: false
         },
-        responsive: true,
+
+        responsive         : true,
         maintainAspectRatio: false,
+
         scales: {
           xAxes: [
             {
               stacked: true,
-              ticks: {
+              ticks  : {
                 beginAtZero: true,
-                min: 0,
-                max: 1000
+                min        : 0,
+                max        : 1000
               }
             }
           ]
