@@ -137,18 +137,14 @@ export default class Machine {
 
     let bigRotate = 0;
     let regRotate = 0;
-    let bigCount = 0;
-    let regCount = 0;
-    this.data.history.forEach((val, i) => {
-      const mixData = mixChart.data as any;
-      const bigData = bigChart.data as any;
-      const regData = regChart.data as any;
+    const mixData = mixChart.data as any;
+    const bigData = bigChart.data as any;
+    const regData = regChart.data as any;
 
+    this.data.history.forEach((val, i) => {
       bigRotate += val.rotate;
       regRotate += val.rotate;
       if (val.bonusType === 'BIG') {
-        bigCount++;
-
         mixData.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
         mixData.datasets[0].borderColor.push('rgb(255, 27, 75)');
 
@@ -158,8 +154,6 @@ export default class Machine {
         bigData.datasets[0].data.push(bigRotate);
         bigRotate = 0;
       } else if (val.bonusType === 'REG') {
-        regCount++;
-
         mixData.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
         mixData.datasets[0].borderColor.push('rgb(200, 200, 80)');
 
@@ -187,9 +181,9 @@ export default class Machine {
       mixData.datasets[0].data.push(val.rotate);
     });
 
-    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * this.data.history.length);
-    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * bigCount);
-    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * regCount);
+    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * mixData.labels.length);
+    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * bigData.labels.length);
+    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * regData.labels.length);
 
     mixChart.update();
     bigChart.update();
