@@ -15,7 +15,7 @@ if ($('#dedama_table').length) {
 
   start();
 
-  $('#ata0 .ind').each((i, elem) => {
+  $('#ata0 .ind').first().each((i, elem) => {
     const $elem   = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';

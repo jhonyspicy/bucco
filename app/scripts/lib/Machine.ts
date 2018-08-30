@@ -52,7 +52,7 @@ export default class Machine {
     Promise.all([
       new Promise(resolve => this._resolve.detail = resolve),
       new Promise(resolve => this._resolve.history = resolve),
-    ]).then(() => this.loadComplete())
+    ]).then(() => this.loadComplete());
   }
 
   loadComplete() {

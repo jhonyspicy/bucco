@@ -47,9 +47,10 @@ export default class Graph {
 
     const data: any       = ct.getImageData(0, 0, cv.width, cv.height);
     const resultData: any = [];
-    for (let i = 0; i < cv.height; i++) {
+    // あらかじめ、左と下の余白を除外しておく(どうせ使わない)
+    for (let i = 0; i < cv.height - 80; i++) {
       resultData[i] = [];
-      for (let j = 0; j < cv.width; j++) {
+      for (let j = 51; j < cv.width - 34; j++) {
         const n = ((i * cv.width) + j) * 4;
         const r = data.data[n];
         const g = data.data[n + 1];
@@ -62,7 +63,7 @@ export default class Graph {
           sum = 999;
         }
 
-        resultData[i][j] = sum;
+        resultData[i][j - 51] = sum;
       }
     }
 
@@ -73,14 +74,15 @@ export default class Graph {
   analytics(data: number[][]): number[] {
     const result = [0];
     let goUp = false;
-    for (let i = 51; i < data.length; i++) {
+    for (let i = 0; i < data[0].length; i++) {
       let darkest = 999;
-      for (let j = 0; j < data[i].length; j++) {
-        let color = data[i][j];
-        if (color < darkest) {
+      for (let j = 0; j < data.length; j++) {
+        let color = data[j][i];
+        if (color < darkest && color != 308) {
           darkest = color;
         }
       }
+      console.log(darkest);
     }
     return result;
   }
