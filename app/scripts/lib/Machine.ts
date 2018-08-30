@@ -191,6 +191,10 @@ export default class Machine {
     this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * bigCount);
     this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * regCount);
 
+    mixChart.update();
+    bigChart.update();
+    regChart.update();
+
     this._resolve.history();
   }
 
