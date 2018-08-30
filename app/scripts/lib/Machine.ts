@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
-// import {Chart} from 'chart.js';
 import Chart = require( "chart.js" );
+import Graph from "./Graph";
 
 export default class Machine {
   private _name: string;
@@ -45,7 +45,6 @@ export default class Machine {
           <div class="buccoMachine__info__bigGraph"></div>
           <ul class="buccoMachine__info__smallGraphs"></ul>
           <div class="buccoMachine__info__detail" id="dedama_kind_table"></div>
-          <div class="buccoMachine__info__history" id="dedama_past_table"></div>
         </div>
       </div>
       `);
@@ -57,7 +56,7 @@ export default class Machine {
   }
 
   loadComplete() {
-    console.log(this.data);
+    // console.log(this.data);
   }
 
   convertDetailHtml($html: JQuery) {
@@ -85,62 +84,13 @@ export default class Machine {
       });
     });
 
-    /**
-     * 画像データを含めた解析
-     */
-    (() => {
+    const graph = new Graph();
+    graph
+      .analyticsImage(this.data.smallGraphs[0])
+      .then(() => {
+        console.log(graph);
+      });
 
-      // console.log(dayGraphs);
-      // console.log(resultData);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', this.data.smallGraphs[0], true);
-      xhr.responseType = 'arraybuffer';
-      xhr.onload       = function (e) {
-        // ArrayBufferで返ってくる
-        // console.log(this.response.byteLength);
-        const dataURIFromArrayBuffer = (ab: any) => {
-          return 'data:image/png;base64,' +
-            btoa(Array.from(new Uint8Array(ab), e => String.fromCharCode(e)).join(''));
-        };
-
-        const img  = new Image();
-        img.onload = () => {
-          const cv  = document.createElement('canvas');
-          cv.width  = img.naturalWidth;
-          cv.height = img.naturalHeight;
-
-          const ct = cv.getContext('2d') as CanvasRenderingContext2D;
-          ct.drawImage(img, 0, 0);
-
-          const data: any       = ct.getImageData(0, 0, cv.width, cv.height);
-          const resultData: any = [];
-          for (let i = 0; i < cv.height; i++) {
-            resultData[i] = [];
-            for (let j = 0; j < cv.width; j++) {
-              const n = ((i * cv.width) + j) * 4;
-              const r = data.data[n];
-              const g = data.data[n + 1];
-              const b = data.data[n + 2];
-              const a = data.data[n + 3];
-              let sum = r + g + b;
-
-              if (650 < sum) {
-                // 背景でしょう。
-                sum = 999;
-              }
-
-              resultData[i][j] = sum;
-            }
-          }
-          // console.log(resultData);
-        };
-
-        img.src = dataURIFromArrayBuffer(this.response);
-      };
-
-      xhr.send();
-    })();
 
     this.number = parseInt(machineNumber);
     smallGraphs.forEach((src) => {
@@ -169,8 +119,6 @@ export default class Machine {
         rotate: parseInt($elem.find('td').eq(2).text().trim()),
       });
     });
-
-    this.$dom.find('.buccoMachine__info__history').append($html.find('#dedama_past_table table'));
 
     const mixChart = this.getChart(
       this.getCTX('.buccoMachine__info__mixChart canvas'),
