@@ -2,6 +2,11 @@ import * as $ from 'jquery';
 import Chart = require( "chart.js" );
 import Graph from "./Graph";
 
+interface History {
+  bonusType: string,
+  rotate: number,
+}
+
 export default class Machine {
   private _name: string;
   private _date: string;
@@ -12,18 +17,9 @@ export default class Machine {
     number: number
     detail: any
     history: {
-      mix: {
-        bonusType: string,
-        rotate: number,
-      }[],
-      big: {
-        bonusType: string,
-        rotate: number,
-      }[],
-      reg: {
-        bonusType: string,
-        rotate: number,
-      }[]
+      mix: History[],
+      big: History[],
+      reg: History[]
     }
     bigGraph: string
     smallGraphs: string[]
@@ -113,7 +109,7 @@ export default class Machine {
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${bigGraph}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
 
-    this._resolve.detail();
+    this._resolve.detail(); // 詳細データの処理終了
   }
 
   convertHistoryHtml($html: JQuery) {
@@ -189,7 +185,7 @@ export default class Machine {
     bigChart.update();
     regChart.update();
 
-    this._resolve.history();
+    this._resolve.history(); // 履歴の処理終了
   }
 
   private getCTX(selector: string): CanvasRenderingContext2D {

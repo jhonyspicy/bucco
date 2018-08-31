@@ -80,6 +80,7 @@ export default class Graph {
         let color = data[j][i];
         if (color < darkest && color != 308) {
           darkest = color;
+          console.log('上から', j);
         }
       }
       console.log(darkest);
