@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import Chart = require( "chart.js" );
 import Graph from "./Graph";
+import Hall from "./Hall";
 
 interface History {
   bonusType: string,
@@ -39,7 +40,7 @@ export default class Machine {
     smallGraphs: [],
   };
 
-  constructor() {
+  constructor(private hall: Hall) {
     this._$dom = $(`
       <div class="buccoMachine">
         <header class="buccoMachine__header">

@@ -56,7 +56,7 @@ export default class Hall {
   getMachine(tablenum: string): Machine {
     let machine = this._machines[tablenum];
     if (!machine) {
-      machine = new Machine();
+      machine = new Machine(this);
       machine.callback = ()=> {
         this.addScatterData({
           x: machine.coinRate,
