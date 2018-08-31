@@ -12,15 +12,29 @@ export default class Machine {
     number: number
     detail: any
     history: {
-      bonusType: string,
-      rotate: number,
-    }[]
+      mix: {
+        bonusType: string,
+        rotate: number,
+      }[],
+      big: {
+        bonusType: string,
+        rotate: number,
+      }[],
+      reg: {
+        bonusType: string,
+        rotate: number,
+      }[]
+    }
     bigGraph: string
     smallGraphs: string[]
   } = {
     number     : 0,
     detail     : undefined,
-    history    : [],
+    history    : {
+      mix: [],
+      big: [],
+      reg: []
+    },
     bigGraph   : '',
     smallGraphs: [],
   };
@@ -103,9 +117,38 @@ export default class Machine {
   }
 
   convertHistoryHtml($html: JQuery) {
+    let bigRotate = 0;
+    let regRotate = 0;
+    const mixChart = this.getChart(this.getCTX('.buccoMachine__info__mixChart canvas'), '合算');
+    const bigChart = this.getChart(this.getCTX('.buccoMachine__info__bigChart canvas'), 'ビッグ');
+    const regChart = this.getChart(this.getCTX('.buccoMachine__info__regChart canvas'), 'ベイビー');
+    const mixData = mixChart.data as any;
+    const bigData = bigChart.data as any;
+    const regData = regChart.data as any;
+    const initGraph = (data: any, bonusList: { bonusType: string, rotate: number }[]) => {
+      bonusList.forEach((val, i) => {
+        if (val.bonusType === 'BIG') {
+          data.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
+          data.datasets[0].borderColor.push('rgb(255, 27, 75)');
+        } else if (val.bonusType === 'REG') {
+          data.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
+          data.datasets[0].borderColor.push('rgb(200, 200, 80)');
+        } else {
+          data.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
+          data.datasets[0].borderColor.push('rgb(0, 0, 0)');
+        }
+        data.labels.push(`${val.rotate} ${val.bonusType}`);
+        data.datasets[0].data.push(val.rotate);
+      });
+    };
+
     $($html.find('#dedama_past_table tr:nth-child(n + 2)').get().reverse()).map((i, elem) => {
       const $elem = $(elem);
       let bonus = $elem.find('td').eq(0).text().trim();
+      let rotate = parseInt($elem.find('td').eq(2).text().trim());
+      bigRotate += rotate;
+      regRotate += rotate;
+
       if (bonus == 'RB') {
         bonus = 'REG';
       } else if (bonus == '--') {
@@ -114,72 +157,31 @@ export default class Machine {
         bonus = 'BIG';
       }
 
-      this.data.history.push({
+      this.data.history.mix.push({
         bonusType: bonus,
         rotate: parseInt($elem.find('td').eq(2).text().trim()),
       });
-    });
 
-    const mixChart = this.getChart(
-      this.getCTX('.buccoMachine__info__mixChart canvas'),
-      '合算'
-    );
-
-    const bigChart = this.getChart(
-      this.getCTX('.buccoMachine__info__bigChart canvas'),
-      'ビッグ'
-    );
-
-    const regChart = this.getChart(
-      this.getCTX('.buccoMachine__info__regChart canvas'),
-      'ベイビー'
-    );
-
-    let bigRotate = 0;
-    let regRotate = 0;
-    const mixData = mixChart.data as any;
-    const bigData = bigChart.data as any;
-    const regData = regChart.data as any;
-
-    this.data.history.forEach((val, i) => {
-      bigRotate += val.rotate;
-      regRotate += val.rotate;
-      if (val.bonusType === 'BIG') {
-        mixData.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
-        mixData.datasets[0].borderColor.push('rgb(255, 27, 75)');
-
-        bigData.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
-        bigData.datasets[0].borderColor.push('rgb(255, 27, 75)');
-        bigData.labels.push(`${bigRotate} ${val.bonusType}`);
-        bigData.datasets[0].data.push(bigRotate);
+      if (bonus == 'BIG' || bonus == '現在') {
+        this.data.history.big.push({
+          bonusType: bonus,
+          rotate: bigRotate,
+        });
         bigRotate = 0;
-      } else if (val.bonusType === 'REG') {
-        mixData.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
-        mixData.datasets[0].borderColor.push('rgb(200, 200, 80)');
-
-        regData.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
-        regData.datasets[0].borderColor.push('rgb(200, 200, 80)');
-        regData.labels.push(`${regRotate} ${val.bonusType}`);
-        regData.datasets[0].data.push(regRotate);
-        regRotate = 0;
-      } else {
-        mixData.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
-        mixData.datasets[0].borderColor.push('rgb(0, 0, 0)');
-
-        bigData.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
-        bigData.datasets[0].borderColor.push('rgb(0, 0, 0)');
-        bigData.labels.push(`${bigRotate} ${val.bonusType}`);
-        bigData.datasets[0].data.push(bigRotate);
-
-        regData.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
-        regData.datasets[0].borderColor.push('rgb(0, 0, 0)');
-        regData.labels.push(`${regRotate} ${val.bonusType}`);
-        regData.datasets[0].data.push(regRotate);
       }
 
-      mixData.labels.push(`${val.rotate} ${val.bonusType}`);
-      mixData.datasets[0].data.push(val.rotate);
+      if (bonus == 'REG' || bonus == '現在') {
+        this.data.history.reg.push({
+          bonusType: bonus,
+          rotate: regRotate,
+        });
+        regRotate = 0;
+      }
     });
+
+    initGraph(mixData, this.data.history.mix);
+    initGraph(bigData, this.data.history.big);
+    initGraph(regData, this.data.history.reg);
 
     this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * mixData.labels.length);
     this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * bigData.labels.length);
