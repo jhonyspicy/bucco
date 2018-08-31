@@ -50,7 +50,7 @@ export default class Graph {
     // あらかじめ、左と下の余白を除外しておく(どうせ使わない)
     for (let i = 0; i < cv.height - 80; i++) {
       resultData[i] = [];
-      for (let j = 51; j < cv.width - 34; j++) {
+      for (let j = 51; j < cv.width; j++) {
         const n = ((i * cv.width) + j) * 4;
         const r = data.data[n];
         const g = data.data[n + 1];
@@ -60,6 +60,12 @@ export default class Graph {
 
         if (650 < sum) {
           // 背景でしょう。
+          sum = 999;
+        }
+
+        if (166 < j && j < 175 && 356 < i && i < 383) {
+          // 30000と言う数字が書いてあるのでこのエリアはとりあえず背景で塗りつぶす
+          // マイナス行ってて10000回転はそうそうないでしょう。
           sum = 999;
         }
 
@@ -79,11 +85,20 @@ export default class Graph {
       for (let j = 0; j < data.length; j++) {
         let color = data[j][i];
         if (color < darkest && color != 308) {
-          darkest = color;
-          console.log('上から', j);
+          darkest = color; // その列でもっともくらい色
         }
       }
-      console.log(darkest);
+      if (darkest == 999) {
+        // 該当データなし
+        continue;
+      }
+      for (let j = 0; j < data.length; j++) {
+        let color = data[j][i];
+        if (color == darkest) {
+          console.log(348 - j);
+        }
+      }
+      console.log('次！');
     }
     return result;
   }
