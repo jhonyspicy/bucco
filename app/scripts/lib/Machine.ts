@@ -122,10 +122,8 @@ export default class Machine {
     const mixChart = this.getChart(this.getCTX('.buccoMachine__info__mixChart canvas'), '合算');
     const bigChart = this.getChart(this.getCTX('.buccoMachine__info__bigChart canvas'), 'ビッグ');
     const regChart = this.getChart(this.getCTX('.buccoMachine__info__regChart canvas'), 'ベイビー');
-    const mixData = mixChart.data as any;
-    const bigData = bigChart.data as any;
-    const regData = regChart.data as any;
-    const initGraph = (data: any, bonusList: { bonusType: string, rotate: number }[]) => {
+    const initGraph = (chart: any, bonusList: { bonusType: string, rotate: number }[]) => {
+      const data = chart.data;
       bonusList.forEach((val, i) => {
         if (val.bonusType === 'BIG') {
           data.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
@@ -179,13 +177,13 @@ export default class Machine {
       }
     });
 
-    initGraph(mixData, this.data.history.mix);
-    initGraph(bigData, this.data.history.big);
-    initGraph(regData, this.data.history.reg);
+    initGraph(mixChart, this.data.history.mix);
+    initGraph(bigChart, this.data.history.big);
+    initGraph(regChart, this.data.history.reg);
 
-    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * mixData.labels.length);
-    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * bigData.labels.length);
-    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * regData.labels.length);
+    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * this.data.history.mix.length);
+    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * this.data.history.big.length);
+    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * this.data.history.reg.length);
 
     mixChart.update();
     bigChart.update();
@@ -194,12 +192,12 @@ export default class Machine {
     this._resolve.history();
   }
 
-  getCTX(selector: string): CanvasRenderingContext2D {
+  private getCTX(selector: string): CanvasRenderingContext2D {
     const canvas = this.$dom.find(selector).get(0) as HTMLCanvasElement;
     return canvas.getContext('2d') as CanvasRenderingContext2D;
   }
 
-  getChart(ctx: CanvasRenderingContext2D, title: string): Chart {
+  private getChart(ctx: CanvasRenderingContext2D, title: string): Chart {
     return new Chart(ctx, {
       type: 'horizontalBar',
 
