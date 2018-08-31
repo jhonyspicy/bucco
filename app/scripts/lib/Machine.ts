@@ -12,6 +12,10 @@ export default class Machine {
   private _date: string;
   private readonly _$dom: JQuery;
   private _resolve: { detail: any, history: any } = {detail: undefined, history: undefined};
+  private _coinRate: number = 0;
+  private _graph: Graph;
+
+  public callback: ()=>void = ()=>{};
 
   public data: {
     number: number
@@ -44,7 +48,7 @@ export default class Machine {
             <dt class="buccoMachine__header__setting__key">設定</dt>
             <dd class="buccoMachine__header__setting__level"></dd>
             <dt class="buccoMachine__header__setting__key">球持</dt>
-            <dd class="buccoMachine__header__setting__per"></dd>
+            <dd class="buccoMachine__header__setting__coinRate"></dd>
           </dl>
         </header>
 
@@ -66,11 +70,14 @@ export default class Machine {
   }
 
   loadComplete() {
-    // console.log(this.data);
+    this.callback();
   }
 
+  /**
+   * 詳細
+   * @param $html
+   */
   convertDetailHtml($html: JQuery) {
-    // const bigGraph = $html.find('#dedama_8days a').attr('href');
     const bigGraph        = $html.find('#dedama_8days img').attr('src');
     const machineNumber   = $html.find('#dedama_detail_table .left h4').first().text();
     const smallGraphs     = $html.find('#graph_list dd').map((i, elem) => {
@@ -94,11 +101,18 @@ export default class Machine {
       });
     });
 
-    const graph = new Graph();
-    graph
+    // 画像の解析
+    this._graph = new Graph();
+    this._graph
       .analyticsImage(this.data.smallGraphs[0])
       .then(() => {
-        console.log(graph);
+        const detail = this.data.detail[0] as any;
+        let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - this._graph.nowCoin)) * 50;
+        coinRate = parseFloat(coinRate.toFixed(2));
+
+        this.coinRate = coinRate;
+
+        this._resolve.detail(); // 詳細データの処理終了
       });
 
 
@@ -108,10 +122,12 @@ export default class Machine {
     });
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${bigGraph}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
-
-    this._resolve.detail(); // 詳細データの処理終了
   }
 
+  /**
+   * 履歴
+   * @param $html
+   */
   convertHistoryHtml($html: JQuery) {
     let bigRotate = 0;
     let regRotate = 0;
@@ -255,8 +271,21 @@ export default class Machine {
     this._date = date;
   }
 
+  set coinRate(n: number) {
+    this._coinRate = n;
+    this.$dom.find('.buccoMachine__header__setting__coinRate').text(this._coinRate);
+  }
+
+  get coinRate() {
+    return this._coinRate;
+  }
+
   get $dom() {
     return this._$dom;
+  }
+
+  get nowCoin() {
+    return this._graph.nowCoin;
   }
 
   setDetail() {

@@ -1,20 +1,22 @@
 
 export default class Graph {
   data:number[] = [];
-  width: number = 0;
-  height: number = 0;
+  src: string = '';
+  perCoin = 53; // 1pxあたりのコイン数
+  perRotate = 75.7; // 1pxあたりの回転数
 
   constructor() {
   }
 
   analyticsImage(src: string) {
-    console.log(src);
+    this.src = src;
     return new Promise((resolve, reject) => {
       this
         .loadImage(src)
         .then((img: HTMLImageElement) => {
           const data = this.imageToArray(img);
-          resolve(this.analytics(data));
+          this.data = this.analytics(data);
+          resolve(this.data);
         });
     });
   }
@@ -73,15 +75,14 @@ export default class Graph {
       }
     }
 
-    console.log(resultData);
     return resultData;
   }
 
   analytics(data: number[][]): number[] {
     const result = [0];
-    let goUp = false;
     for (let i = 0; i < data[0].length; i++) {
       let darkest = 999;
+      let candidate: number[] = [];
       for (let j = 0; j < data.length; j++) {
         let color = data[j][i];
         if (color < darkest && color != 308) {
@@ -95,11 +96,49 @@ export default class Graph {
       for (let j = 0; j < data.length; j++) {
         let color = data[j][i];
         if (color == darkest) {
-          console.log(348 - j);
+          candidate.push(348 - j);
         }
       }
-      console.log('次！');
+      if (result[i] < this.average(candidate)) {
+        result.push(candidate[0]);
+      } else {
+        result.push(candidate[candidate.length - 1]);
+      }
     }
+
     return result;
+  }
+
+  /**
+   * 数字の配列の合計値
+   * @param data
+   */
+  private sum(data: number[]): number {
+    return data.reduce((prev, current, i, arr) => {
+      return prev + current;
+    });
+  }
+
+  /**
+   * 数字の配列の平均値
+   * @param data
+   */
+  private average(data: number[]): number {
+    if (data.length) {
+      return this.sum(data) / data.length;
+    }
+
+    return 0;
+  }
+
+  /**
+   * 現在の予想差枚数
+   */
+  get nowCoin(): number {
+    if (this.data.length === 0) {
+      return 0;
+    }
+
+    return this.data[this.data.length - 1] * this.perCoin;
   }
 }
