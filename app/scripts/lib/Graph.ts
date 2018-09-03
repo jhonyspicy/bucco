@@ -16,7 +16,7 @@ export default class Graph {
         .then((img: HTMLImageElement) => {
           const data = this.imageToArray(img);
           this.data = this.analytics(data);
-          resolve(this.data);
+          resolve(this);
         });
     });
   }

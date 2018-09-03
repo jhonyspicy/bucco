@@ -47,9 +47,9 @@ export default class Machine {
           <h3 class="buccoMachine__header__number"></h3>
           <dl class="buccoMachine__header__setting">
             <dt class="buccoMachine__header__setting__key">設定</dt>
-            <dd class="buccoMachine__header__setting__level"></dd>
+            <dd class="buccoMachine__header__setting__level">--</dd>
             <dt class="buccoMachine__header__setting__key">球持</dt>
-            <dd class="buccoMachine__header__setting__coinRate"></dd>
+            <dd class="buccoMachine__header__setting__coinRate">--</dd>
           </dl>
         </header>
 
@@ -103,19 +103,52 @@ export default class Machine {
     });
 
     // 画像の解析
-    this._graph = new Graph();
-    this._graph
-      .analyticsImage(this.data.smallGraphs[0])
-      .then(() => {
-        const detail = this.data.detail[0] as any;
-        let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - this._graph.nowCoin)) * 50;
-        coinRate = parseFloat(coinRate.toFixed(2));
+    // this._graph = new Graph();
+    // this._graph
+    //   .analyticsImage(this.data.smallGraphs[0])
+    //   .then(() => {
+    //     const detail = this.data.detail[0] as any;
+    //     const nowCoin = this._graph.nowCoin;
+    //     let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - this._graph.nowCoin)) * 50;
+    //     coinRate = parseFloat(coinRate.toFixed(2));
+    //
+    //     this.coinRate = coinRate;
+    //
+    //     this.hall.addScatterData({
+    //       x: coinRate,
+    //       y: nowCoin
+    //     });
+    //
+    //     this._resolve.detail(); // 詳細データの処理終了
+    //   });
 
-        this.coinRate = coinRate;
 
-        this._resolve.detail(); // 詳細データの処理終了
-      });
+    // 画像の解析
+    for (let i = 0; i < this.data.smallGraphs.length; i++) {
+      const detail = this.data.detail[i] as any;
+      const smallGraph = this.data.smallGraphs[i];
+      if (detail.total < 1000) {continue;}
 
+      const graph = new Graph();
+      graph
+        .analyticsImage(smallGraph)
+        .then((g: Graph) => {
+          const nowCoin = g.nowCoin;
+          let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - g.nowCoin)) * 50;
+          coinRate = parseFloat(coinRate.toFixed(2));
+
+          if (i == 0) {
+            this.coinRate = coinRate;
+          }
+
+          this.hall.addScatterData({
+            x: coinRate,
+            y: nowCoin
+          });
+
+          this._resolve.detail(); // 詳細データの処理終了
+        });
+    }
 
     this.number = parseInt(machineNumber);
     smallGraphs.forEach((src) => {
@@ -135,7 +168,7 @@ export default class Machine {
     const mixChart = this.getChart(this.getCTX('.buccoMachine__info__mixChart canvas'), '合算');
     const bigChart = this.getChart(this.getCTX('.buccoMachine__info__bigChart canvas'), 'ビッグ');
     const regChart = this.getChart(this.getCTX('.buccoMachine__info__regChart canvas'), 'ベイビー');
-    const initGraph = (chart: any, bonusList: { bonusType: string, rotate: number }[]) => {
+    const initChart = (chart: any, bonusList: { bonusType: string, rotate: number }[]) => {
       const data = chart.data;
       bonusList.forEach((val, i) => {
         if (val.bonusType === 'BIG') {
@@ -190,9 +223,9 @@ export default class Machine {
       }
     });
 
-    initGraph(mixChart, this.data.history.mix);
-    initGraph(bigChart, this.data.history.big);
-    initGraph(regChart, this.data.history.reg);
+    initChart(mixChart, this.data.history.mix);
+    initChart(bigChart, this.data.history.big);
+    initChart(regChart, this.data.history.reg);
 
     this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * this.data.history.mix.length);
     this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * this.data.history.big.length);
