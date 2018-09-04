@@ -1,11 +1,50 @@
+import * as $ from "jquery";
 
 export default class Graph {
+  private readonly _$dom: JQuery;
   data:number[] = [];
-  src: string = '';
+  private _src: string = '';
+  private _nowCoin: number = 0; // 獲得枚数
+  private _coinRate: number = 0; // 球持
+  private _min: number = 0; // 最低点
+  private _max: number = 0; // 最高点
+  private _rangePlus: number = 0; // プラス方向のレンジ
+  private _rangeMinus: number = 0; // マイナス方向のレンジ
   perCoin = 53; // 1pxあたりのコイン数
   perRotate = 75.7; // 1pxあたりの回転数
 
   constructor() {
+    this._$dom = $(`
+      <li class="buccoGraph">
+        <img class="buccoGraph__image">
+        <div class="buccoGraph__info">
+          <dl class="buccoGraph__info__coinRate">
+            <dt class="buccoGraph__info__coinRate__key">球持: </dt>
+            <dd class="buccoGraph__info__coinRate__value">--</dd>
+          </dl>
+          <dl class="buccoGraph__info__nowCoin">
+            <dt class="buccoGraph__info__nowCoin__key">獲得: </dt>
+            <dd class="buccoGraph__info__nowCoin__value">--</dd>
+          </dl>
+          <dl class="buccoGraph__info__min">
+            <dt class="buccoGraph__info__min__key">獲得: </dt>
+            <dd class="buccoGraph__info__min__value">--</dd>
+          </dl>
+          <dl class="buccoGraph__info__max">
+            <dt class="buccoGraph__info__max__key">獲得: </dt>
+            <dd class="buccoGraph__info__max__value">--</dd>
+          </dl>
+          <dl class="buccoGraph__info__rangePlus">
+            <dt class="buccoGraph__info__rangePlus__key">獲得: </dt>
+            <dd class="buccoGraph__info__rangePlus__value">--</dd>
+          </dl>
+          <dl class="buccoGraph__info__rangeMinus">
+            <dt class="buccoGraph__info__rangeMinus__key">獲得: </dt>
+            <dd class="buccoGraph__info__rangeMinus__value">--</dd>
+          </dl>
+        </div>
+      </li>
+    `);
   }
 
   analyticsImage(src: string) {
@@ -14,8 +53,26 @@ export default class Graph {
       this
         .loadImage(src)
         .then((img: HTMLImageElement) => {
-          const data = this.imageToArray(img);
-          this.data = this.analytics(data);
+          const imageData = this.imageToArray(img);
+          this.data = this.analytics(imageData);
+          if (this.data.length === 0) {
+            this.nowCoin = 0;
+          } else {
+            this.nowCoin = this.data[this.data.length - 1] * this.perCoin;
+          }
+
+          this.data.forEach((value, index, array) => {
+            if (this.max < value) {
+              // 最高点
+              this.max = value;
+            }
+
+            if (value < this.min) {
+              // 最低点
+              this.min = value;
+            }
+          });
+
           resolve(this);
         });
     });
@@ -135,10 +192,75 @@ export default class Graph {
    * 現在の予想差枚数
    */
   get nowCoin(): number {
-    if (this.data.length === 0) {
-      return 0;
-    }
+    return this._nowCoin;
+  }
 
-    return this.data[this.data.length - 1] * this.perCoin;
+  set nowCoin(nowCoin: number) {
+    this._nowCoin = nowCoin;
+    this.$dom.find('.buccoGraph__info__nowCoin__value').text(nowCoin);
+  }
+
+  get $dom() {
+    return this._$dom;
+  }
+
+  set src(src:string) {
+    this._src = src;
+    this.$dom.find('.buccoGraph__image').attr('src', src)
+  }
+
+  get coinRate(): number {
+    return this._coinRate;
+  }
+  set coinRate(coinRate: number) {
+    this._coinRate = coinRate;
+    if (40 < coinRate && coinRate < 100) {
+      this.$dom.addClass('coinRate40');
+    } else if (39 < coinRate) {
+      this.$dom.addClass('coinRate39');
+    } else if (38 < coinRate) {
+      this.$dom.addClass('coinRate38');
+    } else if (37 < coinRate) {
+      this.$dom.addClass('coinRate37');
+    } else if (36 < coinRate) {
+      this.$dom.addClass('coinRate36');
+    } else if (35 < coinRate) {
+      this.$dom.addClass('coinRate35');
+    } else if (34 < coinRate) {
+      this.$dom.addClass('coinRate34');
+    } else if (33 < coinRate) {
+      this.$dom.addClass('coinRate33');
+    } else {
+      this.$dom.addClass('coinRate00');
+    }
+    this.$dom.find('.buccoGraph__info__coinRate__value').text(coinRate);
+  }
+
+  get max(): number {
+    return this._max;
+  }
+  set max(max: number) {
+    this._max = max;
+  }
+
+  get min(): number {
+    return this._min;
+  }
+  set min(min: number) {
+    this._min = min;
+  }
+
+  get rangePlus(): number {
+    return this._rangePlus;
+  }
+  set rangePlus(rangePlus: number) {
+    this._rangePlus = rangePlus;
+  }
+
+  get rangeMinus(): number {
+    return this._rangeMinus;
+  }
+  set rangeMinus(rangeMinus: number) {
+    this._rangeMinus = rangeMinus;
   }
 }

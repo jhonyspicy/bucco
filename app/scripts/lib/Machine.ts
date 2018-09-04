@@ -14,7 +14,7 @@ export default class Machine {
   private readonly _$dom: JQuery;
   private _resolve: { detail: any, history: any } = {detail: undefined, history: undefined};
   private _coinRate: number = 0;
-  private _graph: Graph;
+  private _graphs: Graph[] = [];
 
   public callback: ()=>void = ()=>{};
 
@@ -124,38 +124,39 @@ export default class Machine {
 
 
     // 画像の解析
+    const promisses:Promise<any>[] = [];
     for (let i = 0; i < this.data.smallGraphs.length; i++) {
       const detail = this.data.detail[i] as any;
       const smallGraph = this.data.smallGraphs[i];
-      if (detail.total < 1000) {continue;}
 
       const graph = new Graph();
-      graph
+      this._graphs.push(graph);
+      this.$dom.find('.buccoMachine__info__smallGraphs').append(graph.$dom);
+      let promise = graph
         .analyticsImage(smallGraph)
         .then((g: Graph) => {
-          const nowCoin = g.nowCoin;
-          let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - g.nowCoin)) * 50;
-          coinRate = parseFloat(coinRate.toFixed(2));
+          return new Promise((resolve, reject) => {
+            const nowCoin = g.nowCoin;
+            let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - g.nowCoin)) * 50;
+            coinRate = parseFloat(coinRate.toFixed(2));
+            g.coinRate = coinRate;
 
-          if (i == 0) {
-            this.coinRate = coinRate;
-          }
-
-          this.hall.addScatterData({
-            x: coinRate,
-            y: nowCoin
+            if (2000 < detail.total) {
+              this.hall.addScatterData({
+                x: coinRate,
+                y: nowCoin
+              });
+            }
           });
-
-          this._resolve.detail(); // 詳細データの処理終了
         });
+      promisses.push(promise);
     }
 
     this.number = parseInt(machineNumber);
-    smallGraphs.forEach((src) => {
-      this.$dom.find('.buccoMachine__info__smallGraphs').append(`<li><img src="${src}"></li>`);
-    });
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${bigGraph}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
+
+    Promise.all(promisses).then(() => this._resolve.detail());// 詳細データの処理終了
   }
 
   /**
@@ -319,7 +320,7 @@ export default class Machine {
   }
 
   get nowCoin() {
-    return this._graph.nowCoin;
+    return this._graphs[0].nowCoin;
   }
 
   setDetail() {
