@@ -24,23 +24,23 @@ export default class Graph {
           </dl>
           <dl class="buccoGraph__info__nowCoin">
             <dt class="buccoGraph__info__nowCoin__key">獲得: </dt>
-            <dd class="buccoGraph__info__nowCoin__value">--</dd>
+            <dd class="buccoGraph__info__nowCoin__value">0</dd>
           </dl>
           <dl class="buccoGraph__info__min">
             <dt class="buccoGraph__info__min__key">最下: </dt>
-            <dd class="buccoGraph__info__min__value">--</dd>
+            <dd class="buccoGraph__info__min__value">0</dd>
           </dl>
           <dl class="buccoGraph__info__max">
             <dt class="buccoGraph__info__max__key">最高: </dt>
-            <dd class="buccoGraph__info__max__value">--</dd>
+            <dd class="buccoGraph__info__max__value">0</dd>
           </dl>
           <dl class="buccoGraph__info__rangePlus">
             <dt class="buccoGraph__info__rangePlus__key">正幅: </dt>
-            <dd class="buccoGraph__info__rangePlus__value">--</dd>
+            <dd class="buccoGraph__info__rangePlus__value">0</dd>
           </dl>
           <dl class="buccoGraph__info__rangeMinus">
             <dt class="buccoGraph__info__rangeMinus__key">負幅: </dt>
-            <dd class="buccoGraph__info__rangeMinus__value">--</dd>
+            <dd class="buccoGraph__info__rangeMinus__value">0</dd>
           </dl>
         </div>
       </li>

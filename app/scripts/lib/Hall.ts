@@ -57,12 +57,6 @@ export default class Hall {
     let machine = this._machines[tablenum];
     if (!machine) {
       machine = new Machine(this);
-      // machine.callback = ()=> {
-      //   this.addScatterData({
-      //     x: machine.coinRate,
-      //     y: machine.nowCoin
-      //   });
-      // };
       this._machines[tablenum] = machine;
 
       this.$dom.find('.buccoHall__content').append(machine.$dom);
