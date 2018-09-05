@@ -1,7 +1,7 @@
 import * as $ from "jquery";
 
 export default class Graph {
-  private readonly _$dom: JQuery;
+  readonly $dom: JQuery;
   data:number[] = [];
   private _src: string = '';
   private _nowCoin: number = 0; // 獲得枚数
@@ -10,11 +10,11 @@ export default class Graph {
   private _max: number = 0; // 最高点
   private _rangePlus: number = 0; // プラス方向のレンジ
   private _rangeMinus: number = 0; // マイナス方向のレンジ
-  perCoin = 53; // 1pxあたりのコイン数
-  perRotate = 75.7; // 1pxあたりの回転数
+  private perCoin = 55; // 1pxあたりのコイン数
+  private perRotate = 75.7; // 1pxあたりの回転数
 
   constructor() {
-    this._$dom = $(`
+    this.$dom = $(`
       <li class="buccoGraph">
         <img class="buccoGraph__image">
         <div class="buccoGraph__info">
@@ -27,19 +27,19 @@ export default class Graph {
             <dd class="buccoGraph__info__nowCoin__value">--</dd>
           </dl>
           <dl class="buccoGraph__info__min">
-            <dt class="buccoGraph__info__min__key">獲得: </dt>
+            <dt class="buccoGraph__info__min__key">最下: </dt>
             <dd class="buccoGraph__info__min__value">--</dd>
           </dl>
           <dl class="buccoGraph__info__max">
-            <dt class="buccoGraph__info__max__key">獲得: </dt>
+            <dt class="buccoGraph__info__max__key">最高: </dt>
             <dd class="buccoGraph__info__max__value">--</dd>
           </dl>
           <dl class="buccoGraph__info__rangePlus">
-            <dt class="buccoGraph__info__rangePlus__key">獲得: </dt>
+            <dt class="buccoGraph__info__rangePlus__key">正幅: </dt>
             <dd class="buccoGraph__info__rangePlus__value">--</dd>
           </dl>
           <dl class="buccoGraph__info__rangeMinus">
-            <dt class="buccoGraph__info__rangeMinus__key">獲得: </dt>
+            <dt class="buccoGraph__info__rangeMinus__key">負幅: </dt>
             <dd class="buccoGraph__info__rangeMinus__value">--</dd>
           </dl>
         </div>
@@ -61,16 +61,30 @@ export default class Graph {
             this.nowCoin = this.data[this.data.length - 1] * this.perCoin;
           }
 
+          let rangeMinusBase = 0;
+          let rangePlusBase = 0;
           this.data.forEach((value, index, array) => {
-            if (this.max < value) {
+            const coin = value  * this.perCoin;
+            if (this.max < coin) {
               // 最高点
-              this.max = value;
+              this.max = coin;
+              rangeMinusBase = coin;
             }
 
-            if (value < this.min) {
+            if (coin < this.min) {
               // 最低点
-              this.min = value;
+              this.min = coin;
+              rangePlusBase = coin;
             }
+
+            if (coin - rangeMinusBase < this.rangeMinus) {
+              this.rangeMinus = coin - rangeMinusBase;
+            }
+
+            if (this.rangePlus < coin - rangePlusBase) {
+              this.rangePlus = coin - rangePlusBase;
+            }
+
           });
 
           resolve(this);
@@ -188,27 +202,25 @@ export default class Graph {
     return 0;
   }
 
+  set src(src:string) {
+    this._src = src;
+    this.$dom.find('.buccoGraph__image').attr('src', src)
+  }
+
   /**
    * 現在の予想差枚数
    */
   get nowCoin(): number {
     return this._nowCoin;
   }
-
   set nowCoin(nowCoin: number) {
     this._nowCoin = nowCoin;
     this.$dom.find('.buccoGraph__info__nowCoin__value').text(nowCoin);
   }
 
-  get $dom() {
-    return this._$dom;
-  }
-
-  set src(src:string) {
-    this._src = src;
-    this.$dom.find('.buccoGraph__image').attr('src', src)
-  }
-
+  /**
+   * 球持ち
+   */
   get coinRate(): number {
     return this._coinRate;
   }
@@ -241,6 +253,7 @@ export default class Graph {
   }
   set max(max: number) {
     this._max = max;
+    this.$dom.find('.buccoGraph__info__max__value').text(max);
   }
 
   get min(): number {
@@ -248,6 +261,7 @@ export default class Graph {
   }
   set min(min: number) {
     this._min = min;
+    this.$dom.find('.buccoGraph__info__min__value').text(min);
   }
 
   get rangePlus(): number {
@@ -255,6 +269,7 @@ export default class Graph {
   }
   set rangePlus(rangePlus: number) {
     this._rangePlus = rangePlus;
+    this.$dom.find('.buccoGraph__info__rangePlus__value').text(rangePlus);
   }
 
   get rangeMinus(): number {
@@ -262,5 +277,6 @@ export default class Graph {
   }
   set rangeMinus(rangeMinus: number) {
     this._rangeMinus = rangeMinus;
+    this.$dom.find('.buccoGraph__info__rangeMinus__value').text(rangeMinus);
   }
 }

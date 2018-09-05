@@ -9,9 +9,9 @@ interface History {
 }
 
 export default class Machine {
+  readonly $dom: JQuery;
   private _name: string;
   private _date: string;
-  private readonly _$dom: JQuery;
   private _resolve: { detail: any, history: any } = {detail: undefined, history: undefined};
   private _coinRate: number = 0;
   private _graphs: Graph[] = [];
@@ -41,7 +41,7 @@ export default class Machine {
   };
 
   constructor(private hall: Hall) {
-    this._$dom = $(`
+    this.$dom = $(`
       <div class="buccoMachine">
         <header class="buccoMachine__header">
           <h3 class="buccoMachine__header__number"></h3>
@@ -75,6 +75,19 @@ export default class Machine {
   }
 
   /**
+   * 週間データを舐める
+   * @param callback
+   */
+  map(callback: (detail: any, history: History, graph: Graph)=>{}) {
+    for(let i = 0; i < this.data.detail.length; i++) {
+      const detail = this.data.detail[i];
+      const history = this.data.history.mix[i];
+      const graph = this._graphs[i];
+      callback(detail, history, graph);
+    }
+  }
+
+  /**
    * 詳細
    * @param $html
    */
@@ -103,28 +116,7 @@ export default class Machine {
     });
 
     // 画像の解析
-    // this._graph = new Graph();
-    // this._graph
-    //   .analyticsImage(this.data.smallGraphs[0])
-    //   .then(() => {
-    //     const detail = this.data.detail[0] as any;
-    //     const nowCoin = this._graph.nowCoin;
-    //     let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - this._graph.nowCoin)) * 50;
-    //     coinRate = parseFloat(coinRate.toFixed(2));
-    //
-    //     this.coinRate = coinRate;
-    //
-    //     this.hall.addScatterData({
-    //       x: coinRate,
-    //       y: nowCoin
-    //     });
-    //
-    //     this._resolve.detail(); // 詳細データの処理終了
-    //   });
-
-
-    // 画像の解析
-    const promisses:Promise<any>[] = [];
+    const promisses: Promise<any>[] = [];
     for (let i = 0; i < this.data.smallGraphs.length; i++) {
       const detail = this.data.detail[i] as any;
       const smallGraph = this.data.smallGraphs[i];
@@ -147,6 +139,8 @@ export default class Machine {
                 y: nowCoin
               });
             }
+
+            resolve();
           });
         });
       promisses.push(promise);
@@ -298,6 +292,10 @@ export default class Machine {
     this.$dom.find('.buccoMachine__header__number').text(this.data.number);
   }
 
+  get number() {
+    return this.data.number;
+  }
+
   set name(name: string) {
     this._name = name;
   }
@@ -315,29 +313,7 @@ export default class Machine {
     return this._coinRate;
   }
 
-  get $dom() {
-    return this._$dom;
-  }
-
   get nowCoin() {
     return this._graphs[0].nowCoin;
-  }
-
-  setDetail() {
-  }
-
-  setHistory() {
-  }
-
-  update() {
-  }
-
-  next() {
-  }
-
-  prev() {
-  }
-
-  isCorner() {
   }
 }
