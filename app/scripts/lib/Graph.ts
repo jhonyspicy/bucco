@@ -12,6 +12,7 @@ export default class Graph {
   private _rangeMinus: number = 0; // マイナス方向のレンジ
   private perCoin = 55; // 1pxあたりのコイン数
   private perRotate = 75.7; // 1pxあたりの回転数
+  dayBefore: number = 0; // 何日前
 
   constructor() {
     this.$dom = $(`

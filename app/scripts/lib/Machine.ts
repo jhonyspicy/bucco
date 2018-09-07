@@ -40,7 +40,7 @@ export default class Machine {
     smallGraphs: [],
   };
 
-  constructor(private hall: Hall) {
+  constructor(private _hall: Hall) {
     this.$dom = $(`
       <div class="buccoMachine">
         <header class="buccoMachine__header">
@@ -123,22 +123,29 @@ export default class Machine {
 
       const graph = new Graph();
       this._graphs.push(graph);
+      graph.dayBefore = i;
       this.$dom.find('.buccoMachine__info__smallGraphs').append(graph.$dom);
       let promise = graph
         .analyticsImage(smallGraph)
         .then((g: Graph) => {
           return new Promise((resolve, reject) => {
             const nowCoin = g.nowCoin;
-            let coinRate: number = (detail.total / (312 * detail.big + 130 * detail.reg - g.nowCoin)) * 50;
-            coinRate = parseFloat(coinRate.toFixed(2));
+            const spendCoin = (312 * detail.big + 130 * detail.reg - g.nowCoin);
+            let coinRate: number = 0;
+            if (spendCoin !== 0) {
+              coinRate = (detail.total / spendCoin) * 50;
+              coinRate = parseFloat(coinRate.toFixed(2));
+            }
             g.coinRate = coinRate;
 
-            if (2000 < detail.total) {
-              this.hall.addScatterData({
+            if (3000 < detail.total && 36 < g.coinRate) {
+              this._hall.addScatterData({
                 x: coinRate,
                 y: nowCoin
               });
             }
+
+            this._hall.addSale(g.dayBefore, nowCoin);
 
             resolve();
           });

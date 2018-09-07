@@ -1,8 +1,38 @@
+body
+  user-select: auto !important
+  vendor('user-drag', auto) !important
+
 .buccoHall
   background-color: #fff
   padding: 30px 0
 
-  &__chart
+  &__info
+    &__title
+      font-size: 25px
+      font-weight: bold
+
+    &__sales
+      counter-reset: days -1
+      &__sale
+        counter-increment: days;
+        font-size: 18px
+        text-align: right
+        width: 200px
+        &:before
+          float: left
+          content: counter(days) '日前';
+          display: inline-block
+          font-size: 15px
+          padding: 0 5px
+          box-sizing border-box
+          width: 60px
+
+        &:first-child:before
+          content '当日'
+        &:nth-child(2):before
+          content '前日'
+
+  &__chartCoinRate
     size 100% 420px
 
   &__content
