@@ -138,7 +138,7 @@ export default class Machine {
             }
             g.coinRate = coinRate;
 
-            if (3000 < detail.total && 36 < g.coinRate) {
+            if (3000 < detail.total) {
               this._hall.addScatterData({
                 x: coinRate,
                 y: nowCoin
