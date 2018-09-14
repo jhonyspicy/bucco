@@ -118,11 +118,11 @@ function start() {
       data[name] = value;
     });
 
-    addQue(method, baseUrl + url, data, ($html: JQuery) => {
-      // const machine = new Machine($html);
-      const machine = hall.getMachine(data.tablenum);
-      machine.convertHistoryHtml($html);
-    });
+    // addQue(method, baseUrl + url, data, ($html: JQuery) => {
+    //   // const machine = new Machine($html);
+    //   const machine = hall.getMachine(data.tablenum);
+    //   machine.convertHistoryHtml($html);
+    // });
   });
 }
 
