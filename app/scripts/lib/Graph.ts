@@ -85,7 +85,6 @@ export default class Graph {
             if (this.rangePlus < coin - rangePlusBase) {
               this.rangePlus = coin - rangePlusBase;
             }
-
           });
 
           resolve(this);

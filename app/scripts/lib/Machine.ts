@@ -14,6 +14,7 @@ export default class Machine {
   private _date: string;
   private _resolve: { detail: any, history: any } = {detail: undefined, history: undefined};
   private _coinRate: number = 0;
+  private _sale: number = 0;
   private _graphs: Graph[] = [];
 
   public callback: ()=>void = ()=>{};
@@ -46,8 +47,8 @@ export default class Machine {
         <header class="buccoMachine__header">
           <h3 class="buccoMachine__header__number"></h3>
           <dl class="buccoMachine__header__setting">
-            <dt class="buccoMachine__header__setting__key">設定</dt>
-            <dd class="buccoMachine__header__setting__level">--</dd>
+            <dt class="buccoMachine__header__setting__key">獲得</dt>
+            <dd class="buccoMachine__header__setting__nowCoin">--</dd>
             <dt class="buccoMachine__header__setting__key">球持</dt>
             <dd class="buccoMachine__header__setting__coinRate">--</dd>
           </dl>
@@ -78,11 +79,11 @@ export default class Machine {
    * 週間データを舐める
    * @param callback
    */
-  map(callback: (detail: any, history: History, graph: Graph)=>{}) {
-    for(let i = 0; i < this.data.detail.length; i++) {
-      const detail = this.data.detail[i];
+  map(callback: (detail: any, history: History, graph: Graph) => {}) {
+    for (let i = 0; i < this.data.detail.length; i++) {
+      const detail  = this.data.detail[i];
       const history = this.data.history.mix[i];
-      const graph = this._graphs[i];
+      const graph   = this._graphs[i];
       callback(detail, history, graph);
     }
   }
@@ -144,6 +145,8 @@ export default class Machine {
                 y: nowCoin
               });
             }
+
+            this.sale += g.nowCoin;
 
             this._hall.addSale(g.dayBefore, nowCoin);
 
@@ -320,7 +323,15 @@ export default class Machine {
     return this._coinRate;
   }
 
-  get nowCoin() {
-    return this._graphs[0].nowCoin;
+  get sale(): number {
+    return this._sale;
   }
+  set sale(sale: number) {
+    this._sale = sale;
+    this.$dom.find('.buccoMachine__header__setting__nowCoin').text(this._sale);
+  }
+
+  // get nowCoin() {
+  //   return this._graphs[0].nowCoin;
+  // }
 }
