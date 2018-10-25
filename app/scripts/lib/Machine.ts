@@ -79,11 +79,11 @@ export default class Machine {
    * 週間データを舐める
    * @param callback
    */
-  map(callback: (detail: any, history: History, graph: Graph)=>{}) {
-    for(let i = 0; i < this.data.detail.length; i++) {
-      const detail = this.data.detail[i];
+  map(callback: (detail: any, history: History, graph: Graph) => {}) {
+    for (let i = 0; i < this.data.detail.length; i++) {
+      const detail  = this.data.detail[i];
       const history = this.data.history.mix[i];
-      const graph = this._graphs[i];
+      const graph   = this._graphs[i];
       callback(detail, history, graph);
     }
   }
