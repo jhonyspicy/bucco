@@ -14,6 +14,7 @@ export default class Machine {
   private _date: string;
   private _resolve: { detail: any, history: any } = {detail: undefined, history: undefined};
   private _coinRate: number = 0;
+  private _sale: number = 0;
   private _graphs: Graph[] = [];
 
   public callback: ()=>void = ()=>{};
@@ -46,17 +47,17 @@ export default class Machine {
         <header class="buccoMachine__header">
           <h3 class="buccoMachine__header__number"></h3>
           <dl class="buccoMachine__header__setting">
-            <dt class="buccoMachine__header__setting__key">設定</dt>
-            <dd class="buccoMachine__header__setting__level">--</dd>
+            <dt class="buccoMachine__header__setting__key">獲得</dt>
+            <dd class="buccoMachine__header__setting__sale">0</dd>
             <dt class="buccoMachine__header__setting__key">球持</dt>
             <dd class="buccoMachine__header__setting__coinRate">--</dd>
           </dl>
         </header>
 
         <div class="buccoMachine__info">
-          <div class="buccoMachine__info__mixChart"><canvas></canvas></div>
-          <div class="buccoMachine__info__bigChart"><canvas></canvas></div>
-          <div class="buccoMachine__info__regChart"><canvas></canvas></div>
+          <!--<div class="buccoMachine__info__mixChart"><canvas></canvas></div>-->
+          <!--<div class="buccoMachine__info__bigChart"><canvas></canvas></div>-->
+          <!--<div class="buccoMachine__info__regChart"><canvas></canvas></div>-->
           <div class="buccoMachine__info__bigGraph"></div>
           <ul class="buccoMachine__info__smallGraphs"></ul>
           <div class="buccoMachine__info__detail" id="dedama_kind_table"></div>
@@ -66,7 +67,7 @@ export default class Machine {
 
     Promise.all([
       new Promise(resolve => this._resolve.detail = resolve),
-      new Promise(resolve => this._resolve.history = resolve),
+      // new Promise(resolve => this._resolve.history = resolve),
     ]).then(() => this.loadComplete());
   }
 
@@ -138,7 +139,7 @@ export default class Machine {
             }
             g.coinRate = coinRate;
 
-            if (3000 < detail.total && 36 < g.coinRate) {
+            if (3000 < detail.total) {
               this._hall.addScatterData({
                 x: coinRate,
                 y: nowCoin
@@ -146,6 +147,7 @@ export default class Machine {
             }
 
             this._hall.addSale(g.dayBefore, nowCoin);
+            this.addSale(nowCoin);
 
             resolve();
           });
@@ -294,6 +296,16 @@ export default class Machine {
     });
   }
 
+  /**
+   * 売り上げ
+   * @param sale
+   */
+  addSale(sale: number) {
+    this._sale += sale;
+
+    this.$dom.find('.buccoMachine__header__setting__sale').text(this._sale);
+  }
+
   set number(n: number) {
     this.data.number = n;
     this.$dom.find('.buccoMachine__header__number').text(this.data.number);
@@ -318,9 +330,5 @@ export default class Machine {
 
   get coinRate() {
     return this._coinRate;
-  }
-
-  get nowCoin() {
-    return this._graphs[0].nowCoin;
   }
 }

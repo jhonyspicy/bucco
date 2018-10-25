@@ -34,6 +34,9 @@ if ($('#dedama_table').length) {
 
 function start() {
   hall.status = '開始';
+  $.ajaxSetup({
+    crossDomain: true
+  });
 
   const addQue = (method: string, url: string, data: any, callback: ($html: JQuery) => void) => {
     promise = promise.then(value => new Promise((resolve, reject) => {
@@ -118,11 +121,13 @@ function start() {
       data[name] = value;
     });
 
+/*
     addQue(method, baseUrl + url, data, ($html: JQuery) => {
       // const machine = new Machine($html);
       const machine = hall.getMachine(data.tablenum);
       machine.convertHistoryHtml($html);
     });
+*/
   });
 }
 
