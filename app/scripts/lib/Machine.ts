@@ -93,7 +93,7 @@ export default class Machine {
    * @param $html
    */
   convertDetailHtml($html: JQuery) {
-    const bigGraph        = $html.find('#dedama_8days img').attr('src');
+    const bigGraph        = $html.find('#dedama_8days a').attr('href');
     const machineNumber   = $html.find('#dedama_detail_table .left h4').first().text();
     const smallGraphs     = $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
@@ -197,9 +197,9 @@ export default class Machine {
       bigRotate += rotate;
       regRotate += rotate;
 
-      if (bonus == 'RB') {
+      if (bonus === 'RB') {
         bonus = 'REG';
-      } else if (bonus == '--') {
+      } else if (bonus === '--') {
         bonus = '現在';
       } else {
         bonus = 'BIG';
@@ -210,7 +210,7 @@ export default class Machine {
         rotate: parseInt($elem.find('td').eq(2).text().trim()),
       });
 
-      if (bonus == 'BIG' || bonus == '現在') {
+      if (bonus === 'BIG' || bonus === '現在') {
         this.data.history.big.push({
           bonusType: bonus,
           rotate: bigRotate,
@@ -218,7 +218,7 @@ export default class Machine {
         bigRotate = 0;
       }
 
-      if (bonus == 'REG' || bonus == '現在') {
+      if (bonus === 'REG' || bonus === '現在') {
         this.data.history.reg.push({
           bonusType: bonus,
           rotate: regRotate,
