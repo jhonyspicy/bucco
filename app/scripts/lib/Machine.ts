@@ -8,6 +8,11 @@ interface History {
   rotate: number,
 }
 
+interface SmallGraph {
+  src: string,
+  thumb: string,
+}
+
 export default class Machine {
   readonly $dom: JQuery;
   private _name: string;
@@ -28,7 +33,7 @@ export default class Machine {
       reg: History[]
     }
     bigGraph: string
-    smallGraphs: string[]
+    smallGraphs: SmallGraph[]
   } = {
     number     : 0,
     detail     : undefined,
@@ -95,14 +100,17 @@ export default class Machine {
   convertDetailHtml($html: JQuery) {
     const bigGraph        = $html.find('#dedama_8days a').attr('href');
     const machineNumber   = $html.find('#dedama_detail_table .left h4').first().text();
-    const smallGraphs     = $html.find('#graph_list dd').map((i, elem) => {
-      const $elem = $(elem);
-      return $elem.find('img').attr('src') || '';
-    }).get();
+    // const smallGraphs     = $html.find('#graph_list dd').map((i, elem) => {
+    //   const $elem = $(elem);
+    //   return $elem.find('img').attr('src') || '';
+    // }).get();
     this.data.bigGraph = $html.find('#dedama_8days a').attr('href') || '';
     this.data.smallGraphs = $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
-      return $elem.find('a').attr('href') || '';
+      return {
+        src:$elem.find('a').attr('href') || '',
+        thumb:$elem.find('img').attr('src') || ''
+      };
     }).get();
 
     this.data.detail = [];
@@ -125,9 +133,10 @@ export default class Machine {
       const graph = new Graph();
       this._graphs.push(graph);
       graph.dayBefore = i;
+      graph.src = smallGraph.thumb;
       this.$dom.find('.buccoMachine__info__smallGraphs').append(graph.$dom);
       let promise = graph
-        .analyticsImage(smallGraph)
+        .analyticsImage(smallGraph.src)
         .then((graph: Graph) => {
           return new Promise((resolve, reject) => {
             const nowCoin = graph.nowCoin;

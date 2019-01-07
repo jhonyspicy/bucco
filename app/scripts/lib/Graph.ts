@@ -49,7 +49,7 @@ export default class Graph {
   }
 
   analyticsImage(src: string) {
-    this.src = src;
+    // this.src = src;
     return new Promise((resolve, reject) => {
       this
         .loadImage(src)
