@@ -4,12 +4,14 @@ import Chart = require("chart.js");
 
 export default class Hall {
   private _machineName:string;
+  private _hallName:string;
   private _name: string;
   private _date: Date;
   private _machines = {} as any;
   private _sales: number[] = [];
   private readonly _$dom: JQuery;
   private _chartCoinRate: Chart;
+  private _showIndex: number = 0;
 
   constructor() {
     this._$dom = $(`
@@ -57,6 +59,18 @@ export default class Hall {
         maintainAspectRatio: false,
       }
     });
+
+    $('html').on('keyup', (e) => {
+        switch (e.which) {
+          case 39: // Key[→]
+            this.showNext();
+            break;
+          case 37: // Key[←]
+            this.showPrev();
+            break;
+        }
+      }
+    );
   }
 
   set name(name: string) {
@@ -71,6 +85,14 @@ export default class Hall {
     return this._machineName;
   }
 
+  set hallName(hallName: string) {
+    this._hallName = hallName;
+  }
+
+  get hallName() {
+    return this._hallName;
+  }
+
   set date(date: string) {
     this._date = new Date(date);
   }
@@ -81,6 +103,38 @@ export default class Hall {
 
   get $dom() {
     return this._$dom;
+  }
+
+  private showNext() {
+    this._showIndex++;
+    const max = this._$dom.find('.buccoMachine').length - 1;
+
+    if (max < 0) {
+      return;
+    }
+
+    if (max < this._showIndex) {
+      this._showIndex = 0;
+    }
+
+    let $target = this._$dom.find('.buccoMachine').eq(this._showIndex);
+    $('html').scrollTop($target.position().top);
+  }
+
+  private showPrev() {
+    this._showIndex--;
+    const max = this._$dom.find('.buccoMachine').length - 1;
+
+    if (max < 0) {
+      return;
+    }
+
+    if (this._showIndex < 0) {
+      this._showIndex = max;
+    }
+
+    let $target = this._$dom.find('.buccoMachine').eq(this._showIndex);
+    $('html').scrollTop($target.position().top);
   }
 
   getMachine(tablenum: string): Machine {
@@ -120,6 +174,40 @@ export default class Hall {
 
   isTriple() {
     return this.machineName.indexOf('トリプルクラウン') !== -1;
+  }
+
+  isCorner(num: number) {
+    switch (this.hallName) {
+      case ('Ｍ’ｓニューポート'):
+        return -1 !== $.inArray(num, [
+          156,
+          178,
+          180,
+          212,
+          271,
+          303,
+          305,
+          327,
+          328,
+          361,
+          362,
+          385,
+          386,
+          518,
+          520,
+          552,
+          553,
+          576,
+          577,
+          610,
+          611,
+          633,
+          635,
+          667
+        ]);
+      default:
+        return false;
+    }
   }
 
   pickup() {}

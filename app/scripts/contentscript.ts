@@ -10,6 +10,7 @@ const hall                = new Hall();
 if ($('#dedama_table').length) {
   hall.name = $('#hall_name').text();
   hall.machineName = $('#machine_name a').text();
+  hall.hallName = $('#hall_name').text();
   hall.date = $('#hall_date').text().split('|')[1].trim().split('：')[1];
   hall.$dom.insertAfter('#pankuzu');
 

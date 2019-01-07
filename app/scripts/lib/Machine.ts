@@ -323,6 +323,9 @@ export default class Machine {
   set number(n: number) {
     this.data.number = n;
     this.$dom.find('.buccoMachine__header__number').text(this.data.number);
+    if (this._hall.isCorner(this.data.number)) {
+      this.$dom.addClass('corner');
+    }
   }
 
   get number() {

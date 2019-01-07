@@ -45,9 +45,9 @@ export default class Graph {
             <dt class="buccoGraph__info__rangeMinus__key">負幅: </dt>
             <dd class="buccoGraph__info__rangeMinus__value">0</dd>
           </dl>
-          <dl class="buccoGraph__info__regularProportion">
-            <dt class="buccoGraph__info__regularProportion__key">Reg率: </dt>
-            <dd class="buccoGraph__info__regularProportion__value">0</dd>
+          <dl class="buccoGraph__info__regularRate">
+            <dt class="buccoGraph__info__regularRate__key">Reg率: </dt>
+            <dd class="buccoGraph__info__regularRate__value">0</dd>
           </dl>
         </div>
       </li>
@@ -223,27 +223,27 @@ export default class Graph {
     this._nowCoin = nowCoin;
 
     let className = 'hoge';
-    if (6000 < nowCoin) {
+    if (6000 <= nowCoin) {
       className = 'nowCoin6000';
-    } else if (5000 < nowCoin) {
+    } else if (5000 <= nowCoin) {
       className = 'nowCoin5000';
-    } else if (4000 < nowCoin) {
+    } else if (4000 <= nowCoin) {
       className = 'nowCoin4000';
-    } else if (3000 < nowCoin) {
+    } else if (3000 <= nowCoin) {
       className = 'nowCoin3000';
-    } else if (2000 < nowCoin) {
+    } else if (2000 <= nowCoin) {
       className = 'nowCoin2000';
-    } else if (1000 < nowCoin) {
+    } else if (1000 <= nowCoin) {
       className = 'nowCoin1000';
-    } else if (0 < nowCoin) {
+    } else if (0 <= nowCoin) {
       className = 'nowCoin0';
-    } else if (-1000 < nowCoin) {
+    } else if (-1000 <= nowCoin) {
       className = 'nowCoin_1000';
-    } else if (-2000 < nowCoin) {
+    } else if (-2000 <= nowCoin) {
       className = 'nowCoin_2000';
-    } else if (-3000 < nowCoin) {
+    } else if (-3000 <= nowCoin) {
       className = 'nowCoin_3000';
-    } else if (-4000 < nowCoin) {
+    } else if (-4000 <= nowCoin) {
       className = 'nowCoin_4000';
     } else {
       className = 'nowCoin_0000';
@@ -263,21 +263,21 @@ export default class Graph {
     this._coinRate = coinRate;
 
     let className = 'hoge';
-    if (40 < coinRate) {
+    if (40 <= coinRate) {
       className = 'coinRate40';
-    } else if (39 < coinRate) {
+    } else if (39 <= coinRate) {
       className = 'coinRate39';
-    } else if (38 < coinRate) {
+    } else if (38 <= coinRate) {
       className = 'coinRate38';
-    } else if (37 < coinRate) {
+    } else if (37 <= coinRate) {
       className = 'coinRate37';
-    } else if (36 < coinRate) {
+    } else if (36 <= coinRate) {
       className = 'coinRate36';
-    } else if (35 < coinRate) {
+    } else if (35 <= coinRate) {
       className = 'coinRate35';
-    } else if (34 < coinRate) {
+    } else if (34 <= coinRate) {
       className = 'coinRate34';
-    } else if (33 < coinRate) {
+    } else if (33 <= coinRate) {
       className = 'coinRate33';
     } else {
       className = 'coinRate00';
@@ -326,12 +326,40 @@ export default class Graph {
    */
   set detail(detail:any) {
     this._detail = detail;
-    let proportion = 0;
-    if (this._detail.big !== 0 && this._detail.reg !== 0) {
-      proportion = parseFloat((this._detail.reg / this._detail.big).toFixed(2));
+    let regularRate = 0;
+    const big = parseInt(this._detail.big);
+    const reg = parseInt(this._detail.reg);
+    if (big !== 0 && reg !== 0) {
+      regularRate = parseFloat((this._detail.reg / this._detail.big).toFixed(2));
+    }
+
+    let className = 'hoge';
+    if (1 <= regularRate) {
+      className = 'regularRate1';
+    } else if (0.9 <= regularRate) {
+      className = 'regularRate09';
+    } else if (0.8 <= regularRate) {
+      className = 'regularRate08';
+    } else if (0.7 <= regularRate) {
+      className = 'regularRate07';
+    } else if (0.6 <= regularRate) {
+      className = 'regularRate06';
+    } else if (0.5 <= regularRate) {
+      className = 'regularRate05';
+    } else if (0.4 <= regularRate) {
+      className = 'regularRate04';
+    } else if (0.3 <= regularRate) {
+      className = 'regularRate03';
+    } else if (0.2 <= regularRate) {
+      className = 'regularRate02';
+    } else if (0.1 <= regularRate) {
+      className = 'regularRate01';
+    } else {
+      className = 'regularRate00';
     }
 
     // ついでにレギュラーの割合を掲載する
-    this.$dom.find('.buccoGraph__info__regularProportion__value').text(proportion);
+    this.$dom.find('.buccoGraph__info__regularRate').addClass(className);
+    this.$dom.find('.buccoGraph__info__regularRate__value').text(regularRate);
   }
 }

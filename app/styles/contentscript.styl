@@ -43,6 +43,19 @@ body
       display: block
 
 .buccoMachine
+  &.corner
+    relative()
+    &:after
+      absolute(right 10px top 10px)
+      content: '角'
+      transform rotate(30deg)
+      border 5px solid #ff0000
+      border-radius 50%
+      font-size: 50px
+      font-weight: bold
+      color #ff0000
+      padding: 10px
+
   &__header
     &__number
       font-size: 100px
@@ -115,9 +128,10 @@ body
       //&.coinRate34
       //  color: #FF0000
       &.coinRate33
-        color: #FF0000
+        color: #ff0000
       &.coinRate00
-        color: #FF0000
+        color: #ff0000
+
     &__nowCoin
       &.nowCoin6000
       &.nowCoin5000
@@ -140,14 +154,29 @@ body
       //  background-color: #00FF00
       &.nowCoin_4000
       &.nowCoin_0000
-        background-color: #FF0000
+        background-color: #ff0000
+
+    &__regularRate
+      &.regularRate1
+      &.regularRate09
+      &.regularRate08
+      &.regularRate07
+        color: #7363ff
+      &.regularRate06
+      &.regularRate05
+      &.regularRate04
+        color: #00ff00
+      &.regularRate03
+      &.regularRate02
+      &.regularRate01
+        color: #ff0000
     &__coinRate
     &__nowCoin
     &__min
     &__max
     &__rangePlus
     &__rangeMinus
-    &__regularProportion
+    &__regularRate
       display: block
       padding: 5px 0 0
       &__key
