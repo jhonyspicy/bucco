@@ -3,6 +3,8 @@ import * as $ from "jquery";
 export default class Graph {
   readonly $dom: JQuery;
   data:number[] = [];
+
+  private _detail:any;
   private _src: string = '';
   private _nowCoin: number = 0; // 獲得枚数
   private _coinRate: number = 0; // 球持
@@ -42,6 +44,10 @@ export default class Graph {
           <dl class="buccoGraph__info__rangeMinus">
             <dt class="buccoGraph__info__rangeMinus__key">負幅: </dt>
             <dd class="buccoGraph__info__rangeMinus__value">0</dd>
+          </dl>
+          <dl class="buccoGraph__info__regularProportion">
+            <dt class="buccoGraph__info__regularProportion__key">Reg率: </dt>
+            <dd class="buccoGraph__info__regularProportion__value">0</dd>
           </dl>
         </div>
       </li>
@@ -311,5 +317,21 @@ export default class Graph {
   set rangeMinus(rangeMinus: number) {
     this._rangeMinus = rangeMinus;
     this.$dom.find('.buccoGraph__info__rangeMinus__value').text(rangeMinus);
+  }
+
+  /**
+   * Big数とかReg数とかの詳細情報
+   *
+   * @param detail
+   */
+  set detail(detail:any) {
+    this._detail = detail;
+    let proportion = 0;
+    if (this._detail.big !== 0 && this._detail.reg !== 0) {
+      proportion = parseFloat((this._detail.reg / this._detail.big).toFixed(2));
+    }
+
+    // ついでにレギュラーの割合を掲載する
+    this.$dom.find('.buccoGraph__info__regularProportion__value').text(proportion);
   }
 }

@@ -8,7 +8,7 @@ interface History {
   rotate: number,
 }
 
-interface SmallGraph {
+interface GraphSrc {
   src: string,
   thumb: string,
 }
@@ -32,8 +32,8 @@ export default class Machine {
       big: History[],
       reg: History[]
     }
-    bigGraph: string
-    smallGraphs: SmallGraph[]
+    bigGraph: GraphSrc
+    smallGraphs: GraphSrc[]
   } = {
     number     : 0,
     detail     : undefined,
@@ -42,7 +42,7 @@ export default class Machine {
       big: [],
       reg: []
     },
-    bigGraph   : '',
+    bigGraph   : {src:'', thumb:''},
     smallGraphs: [],
   };
 
@@ -98,13 +98,17 @@ export default class Machine {
    * @param $html
    */
   convertDetailHtml($html: JQuery) {
-    const bigGraph        = $html.find('#dedama_8days a').attr('href');
+    // const bigGraph        = $html.find('#dedama_8days a').attr('href');
     const machineNumber   = $html.find('#dedama_detail_table .left h4').first().text();
     // const smallGraphs     = $html.find('#graph_list dd').map((i, elem) => {
     //   const $elem = $(elem);
     //   return $elem.find('img').attr('src') || '';
     // }).get();
-    this.data.bigGraph = $html.find('#dedama_8days a').attr('href') || '';
+    // this.data.bigGraph = $html.find('#dedama_8days a').attr('href') || '';
+    this.data.bigGraph = {
+      src:$html.find('#dedama_8days a').attr('href') || '',
+      thumb:$html.find('#dedama_8days img').attr('src') || ''
+    };
     this.data.smallGraphs = $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
       return {
@@ -134,6 +138,7 @@ export default class Machine {
       this._graphs.push(graph);
       graph.dayBefore = i;
       graph.src = smallGraph.thumb;
+      graph.detail = detail;
       this.$dom.find('.buccoMachine__info__smallGraphs').append(graph.$dom);
       let promise = graph
         .analyticsImage(smallGraph.src)
@@ -165,7 +170,7 @@ export default class Machine {
     }
 
     this.number = parseInt(machineNumber);
-    this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${bigGraph}">`);
+    this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${this.data.bigGraph.thumb}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
 
     Promise.all(promisses).then(() => this._resolve.detail());// 詳細データの処理終了
