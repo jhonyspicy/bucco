@@ -215,6 +215,35 @@ export default class Graph {
   }
   set nowCoin(nowCoin: number) {
     this._nowCoin = nowCoin;
+
+    let className = 'hoge';
+    if (6000 < nowCoin) {
+      className = 'nowCoin6000';
+    } else if (5000 < nowCoin) {
+      className = 'nowCoin5000';
+    } else if (4000 < nowCoin) {
+      className = 'nowCoin4000';
+    } else if (3000 < nowCoin) {
+      className = 'nowCoin3000';
+    } else if (2000 < nowCoin) {
+      className = 'nowCoin2000';
+    } else if (1000 < nowCoin) {
+      className = 'nowCoin1000';
+    } else if (0 < nowCoin) {
+      className = 'nowCoin0';
+    } else if (-1000 < nowCoin) {
+      className = 'nowCoin_1000';
+    } else if (-2000 < nowCoin) {
+      className = 'nowCoin_2000';
+    } else if (-3000 < nowCoin) {
+      className = 'nowCoin_3000';
+    } else if (-4000 < nowCoin) {
+      className = 'nowCoin_4000';
+    } else {
+      className = 'nowCoin_0000';
+    }
+
+    this.$dom.find('.buccoGraph__info__nowCoin').addClass(className);
     this.$dom.find('.buccoGraph__info__nowCoin__value').text(nowCoin);
   }
 
@@ -226,25 +255,29 @@ export default class Graph {
   }
   set coinRate(coinRate: number) {
     this._coinRate = coinRate;
-    if (40 < coinRate && coinRate < 100) {
-      this.$dom.addClass('coinRate40');
+
+    let className = 'hoge';
+    if (40 < coinRate) {
+      className = 'coinRate40';
     } else if (39 < coinRate) {
-      this.$dom.addClass('coinRate39');
+      className = 'coinRate39';
     } else if (38 < coinRate) {
-      this.$dom.addClass('coinRate38');
+      className = 'coinRate38';
     } else if (37 < coinRate) {
-      this.$dom.addClass('coinRate37');
+      className = 'coinRate37';
     } else if (36 < coinRate) {
-      this.$dom.addClass('coinRate36');
+      className = 'coinRate36';
     } else if (35 < coinRate) {
-      this.$dom.addClass('coinRate35');
+      className = 'coinRate35';
     } else if (34 < coinRate) {
-      this.$dom.addClass('coinRate34');
+      className = 'coinRate34';
     } else if (33 < coinRate) {
-      this.$dom.addClass('coinRate33');
+      className = 'coinRate33';
     } else {
-      this.$dom.addClass('coinRate00');
+      className = 'coinRate00';
     }
+
+    this.$dom.find('.buccoGraph__info__coinRate').addClass(className);
     this.$dom.find('.buccoGraph__info__coinRate__value').text(coinRate);
   }
 

@@ -25,8 +25,7 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "http://*.site777.tv/data/*"
       ],
       "css": [
         "styles/contentscript.css"

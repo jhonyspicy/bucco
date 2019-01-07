@@ -128,16 +128,16 @@ export default class Machine {
       this.$dom.find('.buccoMachine__info__smallGraphs').append(graph.$dom);
       let promise = graph
         .analyticsImage(smallGraph)
-        .then((g: Graph) => {
+        .then((graph: Graph) => {
           return new Promise((resolve, reject) => {
-            const nowCoin = g.nowCoin;
-            const spendCoin = (312 * detail.big + 130 * detail.reg - g.nowCoin);
+            const nowCoin = graph.nowCoin;
+            const spendCoin = (this.spec.big * detail.big + this.spec.reg * detail.reg - graph.nowCoin);
             let coinRate: number = 0;
             if (spendCoin !== 0) {
               coinRate = (detail.total / spendCoin) * 50;
               coinRate = parseFloat(coinRate.toFixed(2));
             }
-            g.coinRate = coinRate;
+            graph.coinRate = coinRate;
 
             if (3000 < detail.total) {
               this._hall.addScatterData({
@@ -146,7 +146,7 @@ export default class Machine {
               });
             }
 
-            this._hall.addSale(g.dayBefore, nowCoin);
+            this._hall.addSale(graph.dayBefore, nowCoin);
             this.addSale(nowCoin);
 
             resolve();
@@ -323,12 +323,35 @@ export default class Machine {
     this._date = date;
   }
 
+  get spec() {
+    if (this._hall.isHana()) {
+      return {
+        big: 312,
+        reg: 130
+      };
+    } else if (this._hall.isTriple()) {
+      return {
+        big: 312,
+        reg: 104
+      };
+    }
+
+    return {
+      big: 312,
+      reg: 130
+    };
+  }
+
+/*
   set coinRate(n: number) {
     this._coinRate = n;
     this.$dom.find('.buccoMachine__header__setting__coinRate').text(this._coinRate);
   }
+*/
 
+/*
   get coinRate() {
     return this._coinRate;
   }
+*/
 }

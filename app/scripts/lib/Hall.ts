@@ -3,6 +3,7 @@ import * as $ from "jquery";
 import Chart = require("chart.js");
 
 export default class Hall {
+  private _machineName:string;
   private _name: string;
   private _date: Date;
   private _machines = {} as any;
@@ -62,6 +63,14 @@ export default class Hall {
     this._name = name;
   }
 
+  set machineName(machineName: string) {
+    this._machineName = machineName;
+  }
+
+  get machineName() {
+    return this._machineName;
+  }
+
   set date(date: string) {
     this._date = new Date(date);
   }
@@ -103,6 +112,14 @@ export default class Hall {
     this._sales[dayBefore] += sale;
 
     this.$dom.find('.buccoHall__info__sales__sale').eq(dayBefore).text(this._sales[dayBefore]);
+  }
+
+  isHana() {
+    return this.machineName.indexOf('ハナハナ') !== -1;
+  }
+
+  isTriple() {
+    return this.machineName.indexOf('トリプルクラウン') !== -1;
   }
 
   pickup() {}
