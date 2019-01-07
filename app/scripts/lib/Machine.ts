@@ -351,6 +351,11 @@ export default class Machine {
         big: 312,
         reg: 104
       };
+    } else if (this._hall.isFestival()) {
+      return {
+        big: 312,
+        reg: 104
+      };
     }
 
     return {

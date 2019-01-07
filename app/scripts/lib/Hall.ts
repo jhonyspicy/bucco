@@ -176,6 +176,10 @@ export default class Hall {
     return this.machineName.indexOf('トリプルクラウン') !== -1;
   }
 
+  isFestival() {
+    return this.machineName.indexOf('フェスティバル') !== -1;
+  }
+
   isCorner(num: number) {
     switch (this.hallName) {
       case ('Ｍ’ｓニューポート'):
