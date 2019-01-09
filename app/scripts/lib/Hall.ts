@@ -144,6 +144,9 @@ export default class Hall {
       this._machines[tablenum] = machine;
 
       this.$dom.find('.buccoHall__content').append(machine.$dom);
+
+      // 読み込んだら追従させたい。
+      $('html').scrollTop(machine.$dom.position().top);
     }
 
     return machine;
