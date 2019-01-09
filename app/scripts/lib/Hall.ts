@@ -11,7 +11,7 @@ export default class Hall {
   private _sales: number[] = [];
   private readonly _$dom: JQuery;
   private _chartCoinRate: Chart;
-  private _showIndex: number = 0;
+  private _showIndex: number = -1;
 
   constructor() {
     this._$dom = $(`
