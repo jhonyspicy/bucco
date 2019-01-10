@@ -55,8 +55,11 @@ body
       font-weight: bold
       color #ff0000
       padding: 10px
-      $size = 30px;
-      box-shadow: 0 $size 0 0 #ff0000, $size 0 0 0 #ff0000, (- $size) 0 0 0 #ff0000, 0 (- $size) 0 0 #ff0000
+      $offset = 30px;
+      $border = 7px;
+      box-shadow: 0 $offset 0 0 #fff, $offset 0 0 0 #fff, (- $offset) 0 0 0 #fff, 0 (- $offset) 0 0 #fff,
+        0 $offset 0 $border #ff0000, $offset 0 0 $border #ff0000, (- $offset) 0 0 $border #ff0000, 0 (- $offset) 0 $border #ff0000
+
 
   &__header
     &__number
