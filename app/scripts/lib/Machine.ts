@@ -98,13 +98,7 @@ export default class Machine {
    * @param $html
    */
   convertDetailHtml($html: JQuery) {
-    // const bigGraph        = $html.find('#dedama_8days a').attr('href');
     const machineNumber   = $html.find('#dedama_detail_table .left h4').first().text();
-    // const smallGraphs     = $html.find('#graph_list dd').map((i, elem) => {
-    //   const $elem = $(elem);
-    //   return $elem.find('img').attr('src') || '';
-    // }).get();
-    // this.data.bigGraph = $html.find('#dedama_8days a').attr('href') || '';
     this.data.bigGraph = {
       src:$html.find('#dedama_8days a').attr('href') || '',
       thumb:$html.find('#dedama_8days img').attr('src') || ''
@@ -158,6 +152,10 @@ export default class Machine {
                 x: coinRate,
                 y: nowCoin
               });
+            }
+
+            if (graph.dayBefore == 0 && nowCoin < -1000 && this.spec.coinRate < coinRate) {
+              graph.$dom.addClass('shrimp');
             }
 
             this._hall.addSale(graph.dayBefore, nowCoin);
@@ -344,36 +342,27 @@ export default class Machine {
     if (this._hall.isHana()) {
       return {
         big: 312,
-        reg: 130
+        reg: 130,
+        coinRate: 36
       };
     } else if (this._hall.isTriple()) {
       return {
         big: 312,
-        reg: 104
+        reg: 104,
+        coinRate: 40
       };
     } else if (this._hall.isFestival()) {
       return {
         big: 312,
-        reg: 104
+        reg: 104,
+        coinRate: 40
       };
     }
 
     return {
       big: 312,
-      reg: 130
+      reg: 130,
+      coinRate: 37
     };
   }
-
-/*
-  set coinRate(n: number) {
-    this._coinRate = n;
-    this.$dom.find('.buccoMachine__header__setting__coinRate').text(this._coinRate);
-  }
-*/
-
-/*
-  get coinRate() {
-    return this._coinRate;
-  }
-*/
 }
