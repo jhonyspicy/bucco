@@ -27,10 +27,5 @@
   "permissions": [
     "tabs",
     "<all_urls>"
-  ],
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "bucco@example.com"
-    }
-  }
+  ]
 }
