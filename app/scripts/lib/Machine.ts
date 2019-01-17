@@ -349,13 +349,13 @@ export default class Machine {
       return {
         big: 312,
         reg: 104,
-        coinRate: 40
+        coinRate: 41
       };
     } else if (this._hall.isFestival()) {
       return {
         big: 312,
         reg: 104,
-        coinRate: 40
+        coinRate: 36
       };
     }
 
