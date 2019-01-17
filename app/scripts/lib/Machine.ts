@@ -355,7 +355,7 @@ export default class Machine {
       return {
         big: 312,
         reg: 104,
-        coinRate: 36
+        coinRate: 36.5
       };
     }
 
