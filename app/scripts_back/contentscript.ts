@@ -1,43 +1,39 @@
 'use strict';
+// Enable chromereload by uncommenting this line:
+// import 'chromereload/devonly'
 
 import * as $ from 'jquery';
 import Hall from './lib/Hall';
 
 let promise: Promise<any> = Promise.resolve();
-const hall = new Hall();
-
+const hall                = new Hall();
 if ($('#dedama_table').length) {
-  hall.convertHtml($('html'));
+  hall.name = $('#hall_name').text();
+  hall.machineName = $('#machine_name a').text();
+  hall.hallName = $('#hall_name').text();
+  hall.date = $('#hall_date').text().split('|')[1].trim().split('：')[1];
   hall.$dom.insertAfter('#pankuzu');
-  run();
-}
 
-function run() {
-  before();
+  start();
 
-  /*
-  各台の「詳細」と「履歴」のボタンを押してゆく
-   */
   $('#ata0 .ind').each((i, elem) => {
     const $elem   = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
 
     eval(datHref);
-    // eval(hisHref);
+    eval(hisHref);
   });
 
   promise.then((value) => {
+    hall.pickup();
     hall.status = '終了';
   });
 
-  after();
+  end();
 }
 
-/**
- * Formの送信をAjaxに入れ替える。
- */
-function before() {
+function start() {
   hall.status = '開始';
   $.ajaxSetup({
     crossDomain: true
@@ -101,6 +97,7 @@ function before() {
     });
 
     addQue(method, baseUrl + url, data, ($html: JQuery) => {
+      // const machine = new Machine($html);
       const machine = hall.getMachine(data.tablenum);
       machine.convertDetailHtml($html);
     });
@@ -125,18 +122,22 @@ function before() {
       data[name] = value;
     });
 
+/*
     addQue(method, baseUrl + url, data, ($html: JQuery) => {
+      // const machine = new Machine($html);
       const machine = hall.getMachine(data.tablenum);
       machine.convertHistoryHtml($html);
     });
+*/
   });
 }
 
-function after(): void {
+function end(): void {
   getForm('dat').off('submit');
   getForm('his').off('submit');
 
   hall.status = 'キュー追加終了';
+
 }
 
 function getFormName(name: string): string {

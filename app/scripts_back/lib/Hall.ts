@@ -3,7 +3,18 @@ import * as $ from "jquery";
 import Chart = require("chart.js");
 
 export default class Hall {
-  public readonly $dom: JQuery = $(`
+  private _machineName:string;
+  private _hallName:string;
+  private _name: string;
+  private _date: Date;
+  private _machines = {} as any;
+  private _sales: number[] = [];
+  private readonly _$dom: JQuery;
+  private _chartCoinRate: Chart;
+  private _showIndex: number = -1;
+
+  constructor() {
+    this._$dom = $(`
       <div class="buccoHall">
         <div class="buccoHall__info">
           <h2 class="buccoHall__info__title">トータル獲得枚数</h2>
@@ -15,19 +26,39 @@ export default class Hall {
       </div>
     `);
 
-  private _machineName:string;
-  private _hallName:string;
-  private _name: string;
-  private _date: Date;
-  private _machines = {} as any;
-  private _sales: number[] = [];
-  private _chartCoinRate: Chart;
-  private _showIndex: number = -1;
-
-  constructor() {
     for (let i = 0; i < $('.past_days_right tr td').length; i++) {
       this.$dom.find('.buccoHall__info__sales').append('<li class="buccoHall__info__sales__sale"></li>')
     }
+
+    const canvas = this.$dom.find('.buccoHall__chartCoinRate canvas').get(0) as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    this._chartCoinRate = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'My First dataset',
+          backgroundColor: 'rgba(255, 27, 75, 0.2)',
+          borderColor: 'rgb(255, 27, 75)',
+          data: []
+        }]
+      },
+      options: {
+        title: {
+          display  : true,
+          position : 'top',
+          fontColor: '#333',
+          fontSize : 30,
+          text     : '球持 - 獲得',
+        },
+
+        legend: {
+          display: false
+        },
+
+        responsive         : true,
+        maintainAspectRatio: false,
+      }
+    });
 
     $('html').on('keyup', (e) => {
         switch (e.which) {
@@ -40,13 +71,6 @@ export default class Hall {
         }
       }
     );
-  }
-
-  convertHtml($html: JQuery) {
-    this.name = $html.find('#hall_name').text();
-    this.machineName = $html.find('#machine_name a').text();
-    this.hallName = $html.find('#hall_name').text();
-    this.date = $html.find('#hall_date').text().split('|')[1].trim().split('：')[1];
   }
 
   set name(name: string) {
@@ -77,9 +101,13 @@ export default class Hall {
     this.$dom.find('.buccoHall__status').text(status);
   }
 
+  get $dom() {
+    return this._$dom;
+  }
+
   private showNext() {
     this._showIndex++;
-    const max = this.$dom.find('.buccoMachine').length - 1;
+    const max = this._$dom.find('.buccoMachine').length - 1;
 
     if (max < 0) {
       return;
@@ -89,13 +117,13 @@ export default class Hall {
       this._showIndex = 0;
     }
 
-    let $target = this.$dom.find('.buccoMachine').eq(this._showIndex);
+    let $target = this._$dom.find('.buccoMachine').eq(this._showIndex);
     $('html').scrollTop($target.position().top);
   }
 
   private showPrev() {
     this._showIndex--;
-    const max = this.$dom.find('.buccoMachine').length - 1;
+    const max = this._$dom.find('.buccoMachine').length - 1;
 
     if (max < 0) {
       return;
@@ -105,7 +133,7 @@ export default class Hall {
       this._showIndex = max;
     }
 
-    let $target = this.$dom.find('.buccoMachine').eq(this._showIndex);
+    let $target = this._$dom.find('.buccoMachine').eq(this._showIndex);
     $('html').scrollTop($target.position().top);
   }
 

@@ -98,7 +98,7 @@ export default class Machine {
    * @param $html
    */
   convertDetailHtml($html: JQuery) {
-    this.number = parseInt($html.find('#dedama_detail_table .left h4').first().text());
+    const machineNumber   = $html.find('#dedama_detail_table .left h4').first().text();
     this.data.bigGraph = {
       src:$html.find('#dedama_8days a').attr('href') || '',
       thumb:$html.find('#dedama_8days img').attr('src') || ''
@@ -167,6 +167,7 @@ export default class Machine {
       promisses.push(promise);
     }
 
+    this.number = parseInt(machineNumber);
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${this.data.bigGraph.thumb}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
 
