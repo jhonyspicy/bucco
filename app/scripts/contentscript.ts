@@ -4,15 +4,14 @@ import * as $ from 'jquery';
 import Hall from './lib/Hall/Hall';
 import Machine from './lib/Machine/Machine';
 
-let hall: Hall;
-
 if ($('#dedama_table').length) {
-  hall = new Hall();
-  hall.$dom.insertAfter('#pankuzu');
   run();
 }
 
 function run() {
+  const hall = new Hall();
+  hall.$dom.insertAfter('#pankuzu');
+
   /*
   台数分実行
    */
@@ -97,9 +96,7 @@ function loadHistory(machine: Machine, num: any) {
   $form.find('[name]').each((i, elem) => {
     const $elem = $(elem);
     const name  = $elem.attr('name') || '';
-    const value = $elem.attr('value') || '';
-
-    data[name] = value;
+    data[name] = $elem.attr('value') || '';
   });
 
   data.tablenum = num;
