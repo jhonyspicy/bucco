@@ -2,12 +2,12 @@
 
 import * as $ from 'jquery';
 import Hall from './lib/Hall/Hall';
+import Machine from './lib/Machine/Machine';
 
-let promise: Promise<any> = Promise.resolve();
-const hall = new Hall();
+let hall: Hall;
 
 if ($('#dedama_table').length) {
-  hall.convertHtml($('html'));
+  hall = new Hall();
   hall.$dom.insertAfter('#pankuzu');
   run();
 }
@@ -19,141 +19,21 @@ function run() {
   $('#ata0 .ind').each((i, elem) => {
     const $elem   = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
-
-    eval(datHref);
-  });
-}
-
-
-/*
-function run() {
-  before();
-
-  /!*
-  各台の「詳細」と「履歴」のボタンを押してゆく
-   *!/
-  $('#ata0 .ind').each((i, elem) => {
-    const $elem   = $(elem);
-    const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
+    const machine = hall.make('machine');
+    const openDedamaDetail = loadDetail.bind(null, machine);
+    const tableHistoryClick = loadHistory.bind(null, machine);
 
-    eval(datHref);
-    // eval(hisHref);
+    eval(datHref); // openDedamaDetail() を実行している。
+    eval(hisHref); // tableHistoryClick() を実行している。
   });
-
-  promise.then((value) => {
-    hall.status = '終了';
-  });
-
-  after();
 }
-*/
 
 /**
- * Formの送信をAjaxに入れ替える。
+ * form の名前を取得する
+ *
+ * @param name
  */
-function before() {
-  hall.status = '開始';
-  $.ajaxSetup({
-    crossDomain: true
-  });
-
-  const addQue = (method: string, url: string, data: any, callback: ($html: JQuery) => void) => {
-    promise = promise.then(value => new Promise((resolve, reject) => {
-      const doGet = () => {
-        hall.status = '読み込み中...';
-        $.ajax({
-          method,
-          url,
-          data,
-          dataType: 'html',
-          success: (html) => {
-            const $html = $(html);
-            if (!$html.find('#machine_name').length) {
-              console.log('Too many request wait a moment');
-              hall.status = '待機中...(リミット)';
-              setTimeout(() => {
-                doGet();
-              }, 60000);
-              return;
-            }
-
-            callback($html);
-            setTimeout(() => {
-              resolve();
-            }, 3000 + Math.random() * 3000);
-          },
-          error: (e) => {
-            console.log('something wrong', e);
-            hall.status = '待機中...(通信エラー)';
-            setTimeout(() => {
-              doGet();
-            }, 60000);
-          },
-        });
-      };
-      doGet();
-    }));
-  };
-
-  /**
-   * 詳細の取得
-   */
-  getForm('dat').on('submit', (e) => {
-    const $form   = $(e.currentTarget);
-    const method  = $form.attr('method') || '';
-    const url     = $form.attr('action') || '';
-    const data    = {} as any;
-    const baseUrl = location.href.replace(/\/[^\/]*$/, '/');
-    e.preventDefault();
-
-    $form.find('[name]').each((i, elem) => {
-      const $elem = $(elem);
-      const name  = $elem.attr('name') || '';
-      const value = $elem.attr('value') || '';
-
-      data[name] = value;
-    });
-
-    addQue(method, baseUrl + url, data, ($html: JQuery) => {
-      const machine = hall.getMachine(data.tablenum);
-      machine.convertDetailHtml($html);
-    });
-  });
-
-  /**
-   * 履歴の取得
-   */
-  getForm('his').on('submit', (e) => {
-    const $form   = $(e.currentTarget);
-    const method  = $form.attr('method') || '';
-    const url     = $form.attr('action') || '';
-    const data    = {} as any;
-    const baseUrl = location.href.replace(/\/[^\/]*$/, '/');
-    e.preventDefault();
-
-    $form.find('[name]').each((i, elem) => {
-      const $elem = $(elem);
-      const name  = $elem.attr('name') || '';
-      const value = $elem.attr('value') || '';
-
-      data[name] = value;
-    });
-
-    addQue(method, baseUrl + url, data, ($html: JQuery) => {
-      const machine = hall.getMachine(data.tablenum);
-      machine.convertHistoryHtml($html);
-    });
-  });
-}
-
-function after(): void {
-  getForm('dat').off('submit');
-  getForm('his').off('submit');
-
-  hall.status = 'キュー追加終了';
-}
-
 function getFormName(name: string): string {
   if (name === 'dat') {
     return 'Table' +
@@ -168,39 +48,60 @@ function getFormName(name: string): string {
   }
 }
 
+/**
+ * ベースのURLを取得する
+ */
+function getBaseUrl(): string {
+  return location.href.replace(/\/[^\/]*$/, '/');
+}
+
 function getForm(name: string): JQuery {
   const formName = getFormName(name);
   return $(`form[name=${formName}]`);
 }
 
-function openDedamaDetail(cd: any, num: any) {
-  const formName = getFormName('dat');
+function loadDetail (machine: Machine, cd: any, num: any) {
   const $form    = getForm('dat');
-  const form     = document.querySelector(`[name=${formName}]`) as any;
+  const method  = $form.attr('method') || '';
+  const url     = $form.attr('action') || '';
+  const action  = getBaseUrl() + url;
+  const data    = {} as any;
 
-  form.tablenum.value = num;
-  form.forward.value  = 'K' +
+  $form.find('[name]').each((i, elem) => {
+    const $elem = $(elem);
+    const name  = $elem.attr('name') || '';
+    data[name] =  $elem.attr('value') || '';
+  });
+
+  data.tablenum = num;
+  data.forward  = 'K' +
     'AK' +
     'IN_' +
     'TABLE' +
     'SELECT';
 
-  if (cd == 1) {
-    form.actiontype.value = '12';
+  if (cd === 1) {
+    data.actiontype = '12';
   } else {
-    form.actiontype.value = '14';
+    data.actiontype = '14';
   }
-
-  $form.trigger('submit');
 }
 
-function tableHistoryClick(num: any) {
-  const tableName = 'his';
-  const formName  = getFormName(tableName);
-  const $form     = getForm(tableName);
-  const form      = document.querySelector(`[name=${formName}]`) as any;
+function loadHistory(machine: Machine, num: any) {
+  const $form     = getForm('his');
+  const method  = $form.attr('method') || '';
+  const url     = $form.attr('action') || '';
+  const data    = {} as any;
+  const action  = getBaseUrl() + url;
 
-  form.tablenum.value = num;
-  $form.trigger('submit');
+  $form.find('[name]').each((i, elem) => {
+    const $elem = $(elem);
+    const name  = $elem.attr('name') || '';
+    const value = $elem.attr('value') || '';
+
+    data[name] = value;
+  });
+
+  data.tablenum = num;
 }
 

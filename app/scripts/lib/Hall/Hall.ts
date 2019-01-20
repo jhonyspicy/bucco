@@ -15,18 +15,23 @@ export default class Hall {
       </div>
     `);
 
-  private _machineName: string;
-  private _hallName: string;
-  private _name: string;
-  private _date: Date;
   private _machines = {} as any;
   private _sales: number[] = [];
   private _chartCoinRate: Chart;
   private _showIndex: number = -1;
 
+  public date: Date;
+  public readonly name: string;
+  public promise: Promise<any> = Promise.resolve();
+
+
   constructor() {
+    const $html = $('html');
+    this.name = $html.find('#hall_name').text();
+    this.date = new Date($html.find('#hall_date').text().split('|')[1].trim().split('：')[1]);
+
     for (let i = 0; i < $('.past_days_right tr td').length; i++) {
-      this.$dom.find('.buccoHall__info__sales').append('<li class="buccoHall__info__sales__sale"></li>')
+      this.$dom.find('.buccoHall__info__sales').append('<li class="buccoHall__info__sales__sale"></li>');
     }
 
     $('html').on('keyup', (e) => {
@@ -40,37 +45,6 @@ export default class Hall {
         }
       }
     );
-  }
-
-  convertHtml($html: JQuery) {
-    this.name = $html.find('#hall_name').text();
-    this.machineName = $html.find('#machine_name a').text();
-    this.hallName = $html.find('#hall_name').text();
-    this.date = $html.find('#hall_date').text().split('|')[1].trim().split('：')[1];
-  }
-
-  set name(name: string) {
-    this._name = name;
-  }
-
-  set machineName(machineName: string) {
-    this._machineName = machineName;
-  }
-
-  get machineName() {
-    return this._machineName;
-  }
-
-  set hallName(hallName: string) {
-    this._hallName = hallName;
-  }
-
-  get hallName() {
-    return this._hallName;
-  }
-
-  set date(date: string) {
-    this._date = new Date(date);
   }
 
   set status(status: string) {
@@ -109,6 +83,15 @@ export default class Hall {
     $('html').scrollTop($target.position().top);
   }
 
+  make(name: string): Machine|boolean {
+    switch (name) {
+      case 'machine':
+        return new Machine(this);
+      default:
+        return false;
+    }
+  }
+
   getMachine(tablenum: string): Machine {
     let machine = this._machines[tablenum];
     if (!machine) {
@@ -143,20 +126,8 @@ export default class Hall {
     this.$dom.find('.buccoHall__info__sales__sale').eq(dayBefore).text(this._sales[dayBefore]);
   }
 
-  isHana() {
-    return this.machineName.indexOf('ハナハナ') !== -1;
-  }
-
-  isTriple() {
-    return this.machineName.indexOf('トリプルクラウン') !== -1;
-  }
-
-  isFestival() {
-    return this.machineName.indexOf('フェスティバル') !== -1;
-  }
-
   isCorner(num: number) {
-    switch (this.hallName) {
+    switch (this.name) {
       case ('Ｍ’ｓニューポート'):
         return -1 !== $.inArray(num, [
           156,
