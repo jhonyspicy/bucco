@@ -1,7 +1,7 @@
 'use strict';
 
 import * as $ from 'jquery';
-import Hall from './lib/Hall';
+import Hall from './lib/Hall/Hall';
 
 let promise: Promise<any> = Promise.resolve();
 const hall = new Hall();
@@ -13,11 +13,25 @@ if ($('#dedama_table').length) {
 }
 
 function run() {
+  /*
+  台数分実行
+   */
+  $('#ata0 .ind').each((i, elem) => {
+    const $elem   = $(elem);
+    const datHref = $elem.find('.det a').attr('href') || '';
+
+    eval(datHref);
+  });
+}
+
+
+/*
+function run() {
   before();
 
-  /*
+  /!*
   各台の「詳細」と「履歴」のボタンを押してゆく
-   */
+   *!/
   $('#ata0 .ind').each((i, elem) => {
     const $elem   = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
@@ -33,6 +47,7 @@ function run() {
 
   after();
 }
+*/
 
 /**
  * Formの送信をAjaxに入れ替える。

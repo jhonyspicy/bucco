@@ -1,16 +1,16 @@
 import * as $ from 'jquery';
-import Chart = require( "chart.js" );
-import Graph from "./Graph";
-import Hall from "./Hall";
+import Chart = require( 'chart.js' );
+import Graph from '../Graph/Graph';
+import Hall from '../Hall/Hall';
 
 interface History {
-  bonusType: string,
-  rotate: number,
+  bonusType: string;
+  rotate: number;
 }
 
 interface GraphSrc {
-  src: string,
-  thumb: string,
+  src: string;
+  thumb: string;
 }
 
 export default class Machine {
@@ -22,7 +22,7 @@ export default class Machine {
   private _sale: number = 0;
   private _graphs: Graph[] = [];
 
-  public callback: ()=>void = ()=>{};
+  public callback: () => void = () => {};
 
   public data: {
     number: number
@@ -42,7 +42,7 @@ export default class Machine {
       big: [],
       reg: []
     },
-    bigGraph   : {src:'', thumb:''},
+    bigGraph   : {src: '', thumb: ''},
     smallGraphs: [],
   };
 
@@ -100,14 +100,14 @@ export default class Machine {
   convertDetailHtml($html: JQuery) {
     this.number = parseInt($html.find('#dedama_detail_table .left h4').first().text());
     this.data.bigGraph = {
-      src:$html.find('#dedama_8days a').attr('href') || '',
-      thumb:$html.find('#dedama_8days img').attr('src') || ''
+      src: $html.find('#dedama_8days a').attr('href') || '',
+      thumb: $html.find('#dedama_8days img').attr('src') || ''
     };
     this.data.smallGraphs = $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
       return {
-        src:$elem.find('a').attr('href') || '',
-        thumb:$elem.find('img').attr('src') || ''
+        src: $elem.find('a').attr('href') || '',
+        thumb: $elem.find('img').attr('src') || ''
       };
     }).get();
 
@@ -170,7 +170,7 @@ export default class Machine {
     this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${this.data.bigGraph.thumb}">`);
     this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
 
-    Promise.all(promisses).then(() => this._resolve.detail());// 詳細データの処理終了
+    Promise.all(promisses).then(() => this._resolve.detail()); // 詳細データの処理終了
   }
 
   /**

@@ -1,6 +1,6 @@
-import Machine from './Machine';
-import * as $ from "jquery";
-import Chart = require("chart.js");
+import Machine from '../Machine/Machine';
+import * as $ from 'jquery';
+import Chart = require('chart.js');
 
 export default class Hall {
   public readonly $dom: JQuery = $(`
@@ -15,8 +15,8 @@ export default class Hall {
       </div>
     `);
 
-  private _machineName:string;
-  private _hallName:string;
+  private _machineName: string;
+  private _hallName: string;
   private _name: string;
   private _date: Date;
   private _machines = {} as any;
