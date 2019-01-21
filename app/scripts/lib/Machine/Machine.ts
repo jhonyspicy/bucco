@@ -1,53 +1,41 @@
 import * as $ from 'jquery';
-import Chart = require( 'chart.js' );
-import Graph from '../Graph/Graph';
 import Hall from '../Hall/Hall';
+import Graph from "../../../scripts_back/lib/Graph";
 
-interface History {
-  bonusType: string;
-  rotate: number;
+interface AjaxParams {
+  method: string
+  url: string
+  data: any
 }
 
 interface GraphSrc {
-  src: string;
-  thumb: string;
+  src: string
+  thumb: string
 }
 
+interface PerDate {
+  nowCoin: number
+  max: number
+  min: number
+  rangePlus: number
+  rangeMinus: number
+  rotate: number
+}
+
+interface DetailData {
+  bigGraph: GraphSrc;
+  perDate: PerDate[];
+}
+
+$.ajaxSetup({
+  crossDomain: true
+});
+
 export default class Machine {
-  readonly $dom: JQuery;
-  private _name: string;
-  private _date: string;
-  private _resolve: { detail: any, history: any } = {detail: undefined, history: undefined};
-  private _coinRate: number = 0;
-  private _sale: number = 0;
-  private _graphs: Graph[] = [];
-
-  public callback: () => void = () => {};
-
-  public data: {
-    number: number
-    detail: any
-    history: {
-      mix: History[],
-      big: History[],
-      reg: History[]
-    }
-    bigGraph: GraphSrc
-    smallGraphs: GraphSrc[]
-  } = {
-    number     : 0,
-    detail     : undefined,
-    history    : {
-      mix: [],
-      big: [],
-      reg: []
-    },
-    bigGraph   : {src: '', thumb: ''},
-    smallGraphs: [],
-  };
-
-  constructor(private _hall: Hall) {
-    this.$dom = $(`
+  private _detailParams: AjaxParams;
+  private _historyParams: AjaxParams;
+  private _detailData: DetailData;
+  public readonly $dom: JQuery = $(`
       <div class="buccoMachine">
         <header class="buccoMachine__header">
           <h3 class="buccoMachine__header__number"></h3>
@@ -70,70 +58,29 @@ export default class Machine {
       </div>
       `);
 
-    Promise.all([
-      new Promise(resolve => this._resolve.detail = resolve),
-      // new Promise(resolve => this._resolve.history = resolve),
-    ]).then(() => this.loadComplete());
+  constructor(private _hall: Hall, public number: number) {
   }
 
-  loadComplete() {
-    this.callback();
-  }
+  convertDetailHtml($html: JQuery): Promise<any> {
+    const promisses: Promise<any>[] = [];
+    let result = {};
 
-  /**
-   * 週間データを舐める
-   * @param callback
-   */
-  map(callback: (detail: any, history: History, graph: Graph) => {}) {
-    for (let i = 0; i < this.data.detail.length; i++) {
-      const detail  = this.data.detail[i];
-      const history = this.data.history.mix[i];
-      const graph   = this._graphs[i];
-      callback(detail, history, graph);
-    }
-  }
-
-  /**
-   * 詳細
-   * @param $html
-   */
-  convertDetailHtml($html: JQuery) {
-    this.number = parseInt($html.find('#dedama_detail_table .left h4').first().text());
-    this.data.bigGraph = {
-      src: $html.find('#dedama_8days a').attr('href') || '',
-      thumb: $html.find('#dedama_8days img').attr('src') || ''
+    const bigGraph = {
+      src:$html.find('#dedama_8days a').attr('href') || '',
+      thumb:$html.find('#dedama_8days img').attr('src') || ''
     };
-    this.data.smallGraphs = $html.find('#graph_list dd').map((i, elem) => {
+    const smallGraphs: GraphSrc[] = $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
       return {
-        src: $elem.find('a').attr('href') || '',
-        thumb: $elem.find('img').attr('src') || ''
+        src:$elem.find('a').attr('href') || '',
+        thumb:$elem.find('img').attr('src') || ''
       };
     }).get();
 
-    this.data.detail = [];
-    $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem) => {
-      const $elem = $(elem);
-      this.data.detail.push({
-        total: $elem.find('td').eq(1).text(),
-        big  : $elem.find('td').eq(2).text(),
-        reg  : $elem.find('td').eq(3).text(),
-        range: $elem.find('td').eq(5).text(),
-      });
-    });
-
-    // 画像の解析
-    const promisses: Promise<any>[] = [];
-    for (let i = 0; i < this.data.smallGraphs.length; i++) {
-      const detail = this.data.detail[i] as any;
-      const smallGraph = this.data.smallGraphs[i];
-
+    smallGraphs.forEach((smallGraph: GraphSrc, index: number) => {
       const graph = new Graph();
-      this._graphs.push(graph);
-      graph.dayBefore = i;
-      graph.src = smallGraph.thumb;
-      graph.detail = detail;
-      this.$dom.find('.buccoMachine__info__smallGraphs').append(graph.$dom);
+
+/*
       let promise = graph
         .analyticsImage(smallGraph.src)
         .then((graph: Graph) => {
@@ -164,204 +111,102 @@ export default class Machine {
             resolve();
           });
         });
+
       promisses.push(promise);
-    }
-
-    this.$dom.find('.buccoMachine__info__bigGraph').append(`<img src="${this.data.bigGraph.thumb}">`);
-    this.$dom.find('.buccoMachine__info__detail').append($html.find('#dedama_kind_table table'));
-
-    Promise.all(promisses).then(() => this._resolve.detail()); // 詳細データの処理終了
-  }
-
-  /**
-   * 履歴
-   * @param $html
-   */
-  convertHistoryHtml($html: JQuery) {
-    let bigRotate = 0;
-    let regRotate = 0;
-    const mixChart = this.getChart(this.getCTX('.buccoMachine__info__mixChart canvas'), '合算');
-    const bigChart = this.getChart(this.getCTX('.buccoMachine__info__bigChart canvas'), 'ビッグ');
-    const regChart = this.getChart(this.getCTX('.buccoMachine__info__regChart canvas'), 'ベイビー');
-    const initChart = (chart: any, bonusList: { bonusType: string, rotate: number }[]) => {
-      const data = chart.data;
-      bonusList.forEach((val, i) => {
-        if (val.bonusType === 'BIG') {
-          data.datasets[0].backgroundColor.push('rgba(255, 27, 75, 0.2)');
-          data.datasets[0].borderColor.push('rgb(255, 27, 75)');
-        } else if (val.bonusType === 'REG') {
-          data.datasets[0].backgroundColor.push('rgba(200, 200, 80, 0.2)');
-          data.datasets[0].borderColor.push('rgb(200, 200, 80)');
-        } else {
-          data.datasets[0].backgroundColor.push('rgba(0, 0, 0, 0.2)');
-          data.datasets[0].borderColor.push('rgb(0, 0, 0)');
-        }
-        data.labels.push(`${val.rotate} ${val.bonusType}`);
-        data.datasets[0].data.push(val.rotate);
-      });
-    };
-
-    $($html.find('#dedama_past_table tr:nth-child(n + 2)').get().reverse()).map((i, elem) => {
-      const $elem = $(elem);
-      let bonus = $elem.find('td').eq(0).text().trim();
-      let rotate = parseInt($elem.find('td').eq(2).text().trim());
-      bigRotate += rotate;
-      regRotate += rotate;
-
-      if (bonus === 'RB') {
-        bonus = 'REG';
-      } else if (bonus === '--') {
-        bonus = '現在';
-      } else {
-        bonus = 'BIG';
-      }
-
-      this.data.history.mix.push({
-        bonusType: bonus,
-        rotate: parseInt($elem.find('td').eq(2).text().trim()),
-      });
-
-      if (bonus === 'BIG' || bonus === '現在') {
-        this.data.history.big.push({
-          bonusType: bonus,
-          rotate: bigRotate,
-        });
-        bigRotate = 0;
-      }
-
-      if (bonus === 'REG' || bonus === '現在') {
-        this.data.history.reg.push({
-          bonusType: bonus,
-          rotate: regRotate,
-        });
-        regRotate = 0;
-      }
+*/
     });
 
-    initChart(mixChart, this.data.history.mix);
-    initChart(bigChart, this.data.history.big);
-    initChart(regChart, this.data.history.reg);
-
-    this.$dom.find('.buccoMachine__info__mixChart').height(75 + 25 * this.data.history.mix.length);
-    this.$dom.find('.buccoMachine__info__bigChart').height(75 + 25 * this.data.history.big.length);
-    this.$dom.find('.buccoMachine__info__regChart').height(75 + 25 * this.data.history.reg.length);
-
-    mixChart.update();
-    bigChart.update();
-    regChart.update();
-
-    this._resolve.history(); // 履歴の処理終了
-  }
-
-  private getCTX(selector: string): CanvasRenderingContext2D {
-    const canvas = this.$dom.find(selector).get(0) as HTMLCanvasElement;
-    return canvas.getContext('2d') as CanvasRenderingContext2D;
-  }
-
-  private getChart(ctx: CanvasRenderingContext2D, title: string): Chart {
-    return new Chart(ctx, {
-      type: 'horizontalBar',
-
-      data: {
-        labels: [],
-
-        datasets: [
-          {
-            data           : [],
-            fill           : false,
-            backgroundColor: [],
-            borderColor    : [],
-            borderWidth    : 1
-          }
-        ]
-      },
-
-      options: {
-        title: {
-          display  : true,
-          position : 'top',
-          fontColor: '#333',
-          text     : title,
-        },
-
-        legend: {
-          display: false
-        },
-
-        responsive         : true,
-        maintainAspectRatio: false,
-
-        scales: {
-          xAxes: [
-            {
-              stacked: true,
-              ticks  : {
-                beginAtZero: true,
-                min        : 0,
-                max        : 1000
-              }
-            }
-          ]
-        }
-      }
+    return new Promise((resolve, reject) => {
+      Promise.all(promisses).then(() => {
+        resolve(result);
+      });
     });
-  }
 
-  /**
-   * 売り上げ
-   * @param sale
-   */
-  addSale(sale: number) {
-    this._sale += sale;
-
-    this.$dom.find('.buccoMachine__header__setting__sale').text(this._sale);
-  }
-
-  set number(n: number) {
-    this.data.number = n;
-    this.$dom.find('.buccoMachine__header__number').text(this.data.number);
-    if (this._hall.isCorner(this.data.number)) {
-      this.$dom.addClass('corner');
-    }
-  }
-
-  get number() {
-    return this.data.number;
-  }
-
-  set name(name: string) {
-    this._name = name;
-  }
-
-  set date(date: string) {
-    this._date = date;
-  }
-
-  get spec() {
-    if (this._hall.isHana()) {
-      return {
-        big: 312,
-        reg: 130,
-        coinRate: 36
-      };
-    } else if (this._hall.isTriple()) {
-      return {
-        big: 312,
-        reg: 104,
-        coinRate: 41
-      };
-    } else if (this._hall.isFestival()) {
-      return {
-        big: 312,
-        reg: 104,
-        coinRate: 36.5
-      };
-    }
-
+    /*
     return {
-      big: 312,
-      reg: 130,
-      coinRate: 37
-    };
+      bigGraph,
+      perDate: [{
+        nowCoin: 0,
+        max: 0,
+        min: 0,
+        rangePlus: 0,
+        rangeMinus: 0,
+        rotate: 0,
+      }, {
+        nowCoin: 0,
+        max: 0,
+        min: 0,
+        rangePlus: 0,
+        rangeMinus: 0,
+        rotate: 0,
+      }]
+    }
+*/
+  }
+
+  convertHistoryHtml($html: JQuery) {
+
+  }
+
+  loadDetail() {
+    this.addQue(this._detailParams.method, this._detailParams.url, this._detailParams.data, ($html: JQuery) => {
+      let _detailData = this.convertDetailHtml($html);
+      // this._detailData = this.convertDetailHtml($html);
+    })
+  }
+
+  loadHistory() {
+
+  }
+
+  setDetailParams(method: string, url: string, data: any) {
+    this._detailParams = {
+      method,
+      url,
+      data,
+    }
+  }
+
+  setHistoryParams(method: string, url: string, data: any) {
+    this._historyParams = {
+      method,
+      url,
+      data,
+    }
+  }
+
+  addQue = (method: string, url: string, data: any, callback: ($html: JQuery) => void) => {
+    this._hall.promise = this._hall.promise.then(value => new Promise((resolve, reject) => {
+      const doGet = () => {
+        $.ajax({
+          method,
+          url,
+          data,
+          dataType: 'html',
+          success: (html) => {
+            const $html = $(html);
+            if (!$html.find('#machine_name').length) {
+              console.log('Too many request wait a moment');
+              setTimeout(() => {
+                doGet();
+              }, 60000);
+              return;
+            }
+
+            callback($html);
+            setTimeout(() => {
+              resolve();
+            }, 3000 + Math.random() * 3000);
+          },
+          error: (e) => {
+            console.log('something wrong', e);
+            setTimeout(() => {
+              doGet();
+            }, 60000);
+          },
+        });
+      };
+      doGet();
+    }));
   }
 }

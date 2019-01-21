@@ -2,14 +2,22 @@
 
 import * as $ from 'jquery';
 import Hall from './lib/Hall/Hall';
+import PtimeOmoro from './lib/Hall/PtimeOmoro';
 import Machine from './lib/Machine/Machine';
 
-if ($('#dedama_table').length) {
-  run();
-}
+run();
 
 function run() {
-  const hall = new Hall();
+  const hall: Hall = makeHall();
+
+  if ($('#dedama_table').length === 0) {
+    // ページが違う
+    return;
+  } else if (hall.isPachinko()) {
+    // パチンコは何もしない
+    return;
+  }
+
   hall.$dom.insertAfter('#pankuzu');
 
   /*
@@ -19,13 +27,29 @@ function run() {
     const $elem   = $(elem);
     const datHref = $elem.find('.det a').attr('href') || '';
     const hisHref = $elem.find('.his a').attr('href') || '';
-    const machine = hall.make('machine');
-    const openDedamaDetail = loadDetail.bind(null, machine);
-    const tableHistoryClick = loadHistory.bind(null, machine);
+    const number = parseInt($elem.find('.num').text());
+    const machine = hall.makeMachine(number);
+    const openDedamaDetail = setDetailParams.bind(null, machine);
+    const tableHistoryClick = setHistoryParams.bind(null, machine);
 
     eval(datHref); // openDedamaDetail() を実行している。
     eval(hisHref); // tableHistoryClick() を実行している。
+
+    machine.loadDetail();
   });
+}
+
+/**
+ * Hall オブジェクトを作る
+ */
+function makeHall(): Hall {
+  const hallName = $('#hall_name').text();
+
+  if (PtimeOmoro.amI(hallName)) {
+    return new PtimeOmoro();
+  } else {
+    return new Hall();
+  }
 }
 
 /**
@@ -47,6 +71,11 @@ function getFormName(name: string): string {
   }
 }
 
+function getForm(name: string): JQuery {
+  const formName = getFormName(name);
+  return $(`form[name=${formName}]`);
+}
+
 /**
  * ベースのURLを取得する
  */
@@ -54,22 +83,24 @@ function getBaseUrl(): string {
   return location.href.replace(/\/[^\/]*$/, '/');
 }
 
-function getForm(name: string): JQuery {
-  const formName = getFormName(name);
-  return $(`form[name=${formName}]`);
-}
-
-function loadDetail (machine: Machine, cd: any, num: any) {
-  const $form    = getForm('dat');
-  const method  = $form.attr('method') || '';
-  const url     = $form.attr('action') || '';
-  const action  = getBaseUrl() + url;
-  const data    = {} as any;
+/**
+ * Ajaxで詳細を取得するためのパラメーターを作る
+ *
+ * @param machine
+ * @param cd
+ * @param num
+ */
+function setDetailParams(machine: Machine, cd: any, num: any) {
+  const $form  = getForm('dat');
+  const method = $form.attr('method') || '';
+  const action = $form.attr('action') || '';
+  const url    = getBaseUrl() + action;
+  const data   = {} as any;
 
   $form.find('[name]').each((i, elem) => {
     const $elem = $(elem);
     const name  = $elem.attr('name') || '';
-    data[name] =  $elem.attr('value') || '';
+    data[name]  = $elem.attr('value') || '';
   });
 
   data.tablenum = num;
@@ -84,21 +115,31 @@ function loadDetail (machine: Machine, cd: any, num: any) {
   } else {
     data.actiontype = '14';
   }
+
+  machine.setDetailParams(method, url, data)
 }
 
-function loadHistory(machine: Machine, num: any) {
-  const $form     = getForm('his');
-  const method  = $form.attr('method') || '';
-  const url     = $form.attr('action') || '';
-  const data    = {} as any;
-  const action  = getBaseUrl() + url;
+/**
+ * Ajaxで履歴を取得するためのパラメーターを作る
+ *
+ * @param machine
+ * @param num
+ */
+function setHistoryParams(machine: Machine, num: any) {
+  const $form  = getForm('his');
+  const method = $form.attr('method') || '';
+  const action = $form.attr('action') || '';
+  const url    = getBaseUrl() + action;
+  const data   = {} as any;
 
   $form.find('[name]').each((i, elem) => {
     const $elem = $(elem);
     const name  = $elem.attr('name') || '';
-    data[name] = $elem.attr('value') || '';
+    data[name]  = $elem.attr('value') || '';
   });
 
   data.tablenum = num;
+
+  machine.setHistoryParams(method, url, data)
 }
 
