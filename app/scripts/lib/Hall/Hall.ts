@@ -58,6 +58,30 @@ export default class Hall {
     return machine;
   }
 
+  getLocalStorage() {
+    // let a = {
+    //   'version': '0.0.1',
+    //   544: {
+    //     'updated': '2019/1/18 20:50:30'
+    //   }
+    // };
+
+    let json = localStorage.getItem(this.name);
+    let data = {} as any;
+
+    if (json) {
+      let manifestData = chrome.runtime.getManifest();
+
+      data = JSON.parse(json);
+
+      if (data.version !== manifestData.version) {
+        data = {}
+      }
+    }
+
+    return data;
+  }
+
   isPachinko() {
     return this.pachinkoOrSlot === PachinkoOrSlot.Pachinko;
   }
