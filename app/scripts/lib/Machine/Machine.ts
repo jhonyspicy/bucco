@@ -1,16 +1,16 @@
 import * as $ from 'jquery';
 import Hall from '../Hall/Hall';
-import Graph from "../../../scripts_back/lib/Graph";
+import Graph from '../../../scripts_back/lib/Graph';
 
 interface AjaxParams {
-  method: string
-  url: string
-  data: any
+  method: string;
+  url: string;
+  data: any;
 }
 
 interface GraphSrc {
-  src: string
-  thumb: string
+  src: string;
+  thumb: string;
 }
 
 $.ajaxSetup({
@@ -53,8 +53,8 @@ export default class Machine {
    */
   private getBigGraphFromDetailHtml($html: JQuery): GraphSrc {
     return {
-      src:$html.find('#dedama_8days a').attr('href') || '',
-      thumb:$html.find('#dedama_8days img').attr('src') || ''
+      src: $html.find('#dedama_8days a').attr('href') || '',
+      thumb: $html.find('#dedama_8days img').attr('src') || ''
     };
   }
 
@@ -67,8 +67,8 @@ export default class Machine {
     return $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
       return {
-        src:$elem.find('a').attr('href') || '',
-        thumb:$elem.find('img').attr('src') || ''
+        src: $elem.find('a').attr('href') || '',
+        thumb: $elem.find('img').attr('src') || ''
       };
     }).get();
   }
@@ -78,13 +78,13 @@ export default class Machine {
    * @param $html
    */
   private getTableDataFromDetailHtml($html: JQuery): any[] {
-    const tableData:any[] = [];
+    const tableData: any[] = [];
     $html.find('#dedama_kind_table tr:nth-child(n + 2)').map((i, elem) => {
       const $elem = $(elem);
       tableData.push({
         total: $elem.find('td').eq(1).text(),
-        big  : $elem.find('td').eq(2).text(),
-        reg  : $elem.find('td').eq(3).text(),
+        big: $elem.find('td').eq(2).text(),
+        reg: $elem.find('td').eq(3).text(),
         range: $elem.find('td').eq(5).text(),
       });
     });
@@ -93,22 +93,22 @@ export default class Machine {
   }
 
   convertDetailHtml($html: JQuery): any {
-    const bigGraph: GraphSrc = this.getBigGraphFromDetailHtml($html);
+    const bigGraph: GraphSrc      = this.getBigGraphFromDetailHtml($html);
     const smallGraphs: GraphSrc[] = this.getSmallGraphsFromDetailHtml($html);
-    const tableData:any[] = this.getTableDataFromDetailHtml($html);
+    const tableData: any[]        = this.getTableDataFromDetailHtml($html);
 
     return {
       bigGraph,
       smallGraphs,
       tableData,
-    }
+    };
   }
 
   convertHistoryHtml($html: JQuery) {
 
   }
 
-  loadHtml(params: AjaxParams) {
+  private loadHtml(params: AjaxParams) {
     return new Promise((resolve, reject) => {
       this._hall.promise = this._hall.promise.then(() => new Promise((resolve2, reject2) => {
         const doGet = () => {
@@ -149,27 +149,14 @@ export default class Machine {
     if (detailData) {
       this._detailData = detailData;
     } else {
-      this.loadHtml(this._detailParams).then(($html: JQuery)=>{
+      this.loadHtml(this._detailParams).then(($html: JQuery) => {
         return new Promise((resolve, reject) => {
-          resolve(this.convertDetailHtml($html))
-        })
+          resolve(this.convertDetailHtml($html));
+        });
       }).then((data) => {
-        this._detailData = data
-      })
+        this._detailData = data;
+      });
     }
-/*    this.addQue(this._detailParams.method, this._detailParams.url, this._detailParams.data, ($html: JQuery) => {
-      let _detailData = this.convertDetailHtml($html);
-      // this._detailData = this.convertDetailHtml($html);
-    })
-
-
-
-
-    this.loadHtml().then(($html: JQuery)=>{
-
-    }).then((data) => {
-      this._detailData = data
-    })*/
   }
 
   loadHistory() {
@@ -181,7 +168,7 @@ export default class Machine {
       method,
       url,
       data,
-    }
+    };
   }
 
   setHistoryParams(method: string, url: string, data: any) {
@@ -189,10 +176,10 @@ export default class Machine {
       method,
       url,
       data,
-    }
+    };
   }
 
-  getDataFromLocalStorage(type: string): any|boolean {
+  getDataFromLocalStorage(type: string): any | boolean {
     // {
     //   501:{
     //     detail:{
