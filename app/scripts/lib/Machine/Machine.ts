@@ -92,6 +92,10 @@ export default class Machine {
     return tableData;
   }
 
+  /**
+   * 詳細ページのhtmlを解析する
+   * @param $html
+   */
   convertDetailHtml($html: JQuery): any {
     const bigGraph: GraphSrc = this.getBigGraphFromDetailHtml($html);
     const smallGraphs: GraphSrc[] = this.getSmallGraphsFromDetailHtml($html);
@@ -153,27 +157,50 @@ export default class Machine {
         return new Promise((resolve, reject) => {
           resolve(this.convertDetailHtml($html))
         })
-      }).then((data) => {
-        this._detailData = data
+      }).then((data:any) => {
+        return new Promise((resolve, reject) => {
+          const promises: Promise<any>[] = [];
+
+          for (let i in data.bigGraph) {
+            const promise: Promise<string> = new Promise((resolve, reject) => {
+              this.imageToBase64(data.bigGraph[i]).then((base64:string)=>{
+                data.bigGraph[i] = base64;
+                resolve()
+              })
+            });
+            promises.push(promise);
+          }
+
+          Promise.all(promises).then(() => {
+            console.log(data);
+            resolve();
+          });
+        })
       })
     }
-/*    this.addQue(this._detailParams.method, this._detailParams.url, this._detailParams.data, ($html: JQuery) => {
-      let _detailData = this.convertDetailHtml($html);
-      // this._detailData = this.convertDetailHtml($html);
-    })
-
-
-
-
-    this.loadHtml().then(($html: JQuery)=>{
-
-    }).then((data) => {
-      this._detailData = data
-    })*/
   }
 
   loadHistory() {
 
+  }
+
+  /**
+   * 画像をbase64に変換する
+   * @param url
+   */
+  imageToBase64(url:string) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.responseType = 'arraybuffer';
+      xhr.onload = (e) => {
+        const base64 = 'data:image/png;base64,' +
+          btoa(Array.from(new Uint8Array(xhr.response), e => String.fromCharCode(e)).join(''));
+
+        resolve(base64);
+      };
+      xhr.send();
+    });
   }
 
   setDetailParams(method: string, url: string, data: any) {
@@ -197,9 +224,11 @@ export default class Machine {
     //   501:{
     //     detail:{
     //       updated:'2019/1/5 12:38:19'
+    //        ......
     //     }
     //     history:{
     //       updated:'2019/1/5 12:38:19'
+    //        ......
     //     }
     //   }
     // }
