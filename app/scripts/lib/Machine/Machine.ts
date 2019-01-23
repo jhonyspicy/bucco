@@ -9,8 +9,13 @@ interface AjaxParams {
 }
 
 interface GraphSrc {
-  src: string;
-  thumb: string;
+  orgSrc: string;
+  thumbSrc: string;
+}
+
+interface GraphData {
+  orgData: string;
+  thumbData: string;
 }
 
 $.ajaxSetup({
@@ -53,8 +58,8 @@ export default class Machine {
    */
   private getBigGraphFromDetailHtml($html: JQuery): GraphSrc {
     return {
-      src: $html.find('#dedama_8days a').attr('href') || '',
-      thumb: $html.find('#dedama_8days img').attr('src') || ''
+      orgSrc: $html.find('#dedama_8days a').attr('href') || '',
+      thumbSrc: $html.find('#dedama_8days img').attr('src') || ''
     };
   }
 
@@ -67,8 +72,8 @@ export default class Machine {
     return $html.find('#graph_list dd').map((i, elem) => {
       const $elem = $(elem);
       return {
-        src: $elem.find('a').attr('href') || '',
-        thumb: $elem.find('img').attr('src') || ''
+        orgSrc: $elem.find('a').attr('href') || '',
+        thumbSrc: $elem.find('img').attr('src') || ''
       };
     }).get();
   }

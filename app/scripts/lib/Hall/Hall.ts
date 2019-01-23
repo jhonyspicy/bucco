@@ -46,10 +46,12 @@ export default class Hall {
   }
 
   makeMachine(number: number) {
-    let machine: Machine = new Machine(this, number);
+    let machine: Machine;
 
     if (Hanahana.amI(this.machineName)) {
       machine = new Hanahana(this, number);
+    } else {
+      machine = new Machine(this, number);
     }
 
     this._machines[number] = machine;
