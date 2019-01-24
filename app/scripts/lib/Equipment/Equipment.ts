@@ -69,20 +69,13 @@ export default class Equipment implements Base {
       data,
     };
   };
-  /**
-   * form の名前を取得する
-   *
-   * @param name
-   */
-  private getFormName(): string {
-    return 'Hall' +
-      'Dedama' +
-      'Action' +
-      'Form';
-  }
 
   private getForm(): JQuery {
-    const formName = this.getFormName();
+    const formName = 'Hall' +
+      'Ded' +
+      'ama' +
+      'Action' +
+      'Form';
     return $(`form[name=${formName}]`);
   }
 }
