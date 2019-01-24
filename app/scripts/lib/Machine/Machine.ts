@@ -11,8 +11,9 @@ export default class Machine implements Base {
   `);
   private _detailParams: AjaxParams;
   private _historyParams: AjaxParams;
+  private _resolve: (value?: any) => void;
 
-  constructor(private _equipment: Equipment| boolean = false) {
+  constructor(private _equipment?: Equipment) {
   }
 
   append(): void {
@@ -86,6 +87,10 @@ export default class Machine implements Base {
       url,
       data,
     };
+  }
+
+  private resolve() {
+    this._resolve();
   }
 
   /**

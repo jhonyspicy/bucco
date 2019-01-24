@@ -13,7 +13,6 @@ export default class Hall implements Base {
 
   private _equipments: Equipment[] = [];
 
-
   append(): void {
     this.$dom.insertAfter('#some_element');
   }
@@ -38,5 +37,6 @@ export default class Hall implements Base {
     return equipment;
   }
 
-
+  private resolve() {
+  }
 }

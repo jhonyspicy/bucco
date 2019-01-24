@@ -13,8 +13,9 @@ export default class Equipment implements Base {
 
   private _machines: Machine[] = [];
   private _params: AjaxParams;
+  private _resolve: (value?: any) => void;
 
-  constructor(private _hall: Hall| boolean = false) {
+  constructor(private _hall?: Hall)  {
   }
 
   append(): void {
@@ -26,22 +27,14 @@ export default class Equipment implements Base {
       const $elem             = $(elem);
       const datHref           = $elem.find('.det a').attr('href') || '';
       const hisHref           = $elem.find('.his a').attr('href') || '';
-      const number            = parseInt($elem.find('.num').text());
-      const machine           = this.makeMachine(number);
+      const num               = parseInt($elem.find('.num').text());
+      const machine           = this.makeMachine(num);
       const openDedamaDetail  = machine.setDetailParams.bind(machine);
       const tableHistoryClick = machine.setHistoryParams.bind(machine);
 
       eval(datHref); // openDedamaDetail() を実行している。
       eval(hisHref); // tableHistoryClick() を実行している。
     });
-  }
-
-  private makeMachine(number: number): Machine {
-    const machine: Machine = new Machine(this);
-    this._machines[number] = machine;
-
-    this.$dom.find('#some_element').append(machine.$dom);
-    return machine;
   }
 
   setParams(kindCode: string, modelCode: string, edaNo: string, actionType: string, uritanka: string): void {
@@ -65,7 +58,6 @@ export default class Equipment implements Base {
       'AK' +
       'IN_' +
       'LIST';
-    data['hallcode']   = ''; // TODO: hallcodeを取得する
     data['uritanka']   = uritanka;
 
     this._params = {
@@ -73,6 +65,18 @@ export default class Equipment implements Base {
       url,
       data,
     };
+  }
+
+  private resolve() {
+    this._resolve();
+  }
+
+  private makeMachine(num: number): Machine {
+    const machine: Machine = new Machine(this);
+    this._machines[num] = machine;
+
+    this.$dom.find('#some_element').append(machine.$dom);
+    return machine;
   }
 
   private getForm(): JQuery {
