@@ -1,4 +1,4 @@
-import Machine from "./Machine";
+import Machine from './Machine';
 
 export default class Hanahana extends Machine {
   static amI(machineName: string): boolean {

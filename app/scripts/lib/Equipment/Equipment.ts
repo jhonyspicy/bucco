@@ -1,16 +1,21 @@
+import {AjaxParams, Base, getBaseUrl} from '../Includes/Util';
+import Machine from '../Machine/Machine';
+import * as $ from 'jquery';
+import Hall from '../Hall/Hall';
+
 /**
  * 複数のMachineを管理する
  */
-import {AjaxParams, Base, getBaseUrl} from "../Includes/Util";
-import Machine from "../Machine/Machine";
-import * as $ from "jquery";
-
 export default class Equipment implements Base {
-  $dom:JQuery = $(`
+  $dom: JQuery = $(`
     <div class="ultraEquipment "></div>
-  `)
+  `);
+
   private _machines: Machine[] = [];
   private _params: AjaxParams;
+
+  constructor(private _hall: Hall| boolean = false) {
+  }
 
   append(): void {
     this.$dom.insertAfter('#some_element');
@@ -18,12 +23,12 @@ export default class Equipment implements Base {
 
   convertHtml($html: JQuery): void {
     $html.find('#ata0 .ind').first().each((i, elem) => {
-      const $elem   = $(elem);
-      const datHref = $elem.find('.det a').attr('href') || '';
-      const hisHref = $elem.find('.his a').attr('href') || '';
-      const number = parseInt($elem.find('.num').text());
-      const machine = this.makeMachine(number);
-      const openDedamaDetail = machine.setDetailParams.bind(machine);
+      const $elem             = $(elem);
+      const datHref           = $elem.find('.det a').attr('href') || '';
+      const hisHref           = $elem.find('.his a').attr('href') || '';
+      const number            = parseInt($elem.find('.num').text());
+      const machine           = this.makeMachine(number);
+      const openDedamaDetail  = machine.setDetailParams.bind(machine);
       const tableHistoryClick = machine.setHistoryParams.bind(machine);
 
       eval(datHref); // openDedamaDetail() を実行している。
@@ -32,15 +37,15 @@ export default class Equipment implements Base {
   }
 
   private makeMachine(number: number): Machine {
-    const machine: Machine = new Machine();
+    const machine: Machine = new Machine(this);
     this._machines[number] = machine;
 
-    this.$dom.find('#some_element').append(machine.$dom)
+    this.$dom.find('#some_element').append(machine.$dom);
     return machine;
   }
 
   setParams(kindCode: string, modelCode: string, edaNo: string, actionType: string, uritanka: string): void {
-    const $form = this.getForm()
+    const $form  = this.getForm();
     const method = $form.attr('method') || '';
     const action = $form.attr('action') || '';
     const url    = getBaseUrl() + action;
@@ -68,7 +73,7 @@ export default class Equipment implements Base {
       url,
       data,
     };
-  };
+  }
 
   private getForm(): JQuery {
     const formName = 'Hall' +

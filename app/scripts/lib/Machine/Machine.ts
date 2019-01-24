@@ -1,20 +1,24 @@
+import {Base, AjaxParams} from '../Includes/Util';
+import {getBaseUrl} from '../Includes/Util';
+import Equipment from '../Equipment/Equipment';
+
 /**
  * 台の詳細情報
  */
-import {Base, AjaxParams} from "../Includes/Util";
-import {getBaseUrl} from "../Includes/Util";
-
 export default class Machine implements Base {
-  $dom:JQuery = $(`
-    <div class="ultraHall"></div>
-  `)
+  $dom: JQuery = $(`
+    <div class="ultraMachine"></div>
+  `);
   private _detailParams: AjaxParams;
   private _historyParams: AjaxParams;
 
+  constructor(private _equipment: Equipment| boolean = false) {
+  }
 
   append(): void {
     this.$dom.insertAfter('#some_element');
   }
+
   convertHtml($html: JQuery): void {
   }
 
@@ -83,6 +87,7 @@ export default class Machine implements Base {
       data,
     };
   }
+
   /**
    * form の名前を取得する
    *
