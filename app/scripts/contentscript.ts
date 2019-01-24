@@ -12,7 +12,7 @@ function run () {
   const $html = $('html');
   let model: Base;
 
-  if (0 < $('[alt="パチンコ設置機種一覧"]').length) {
+  if (0 < $('[alt="パ' + 'チ' + 'ン' + 'コ設' + '置' + '機' + '種' + '一覧"]').length) {
     // ホールの機種一覧のページ
     model = new Hall();
   } else if (true) {

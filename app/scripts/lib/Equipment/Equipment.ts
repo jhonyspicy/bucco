@@ -1,17 +1,16 @@
 /**
  * 複数のMachineを管理する
  */
-import {Base, getBaseUrl} from "../Includes/Util";
+import {AjaxParams, Base, getBaseUrl} from "../Includes/Util";
 import Machine from "../Machine/Machine";
+import * as $ from "jquery";
 
 export default class Equipment implements Base {
   $dom:JQuery = $(`
     <div class="ultraEquipment "></div>
   `)
   private _machines: Machine[] = [];
-
-
-
+  private _params: AjaxParams;
 
   append(): void {
     this.$dom.insertAfter('#some_element');
@@ -32,10 +31,6 @@ export default class Equipment implements Base {
     });
   }
 
-  setParams(method: string, url: string, data: any) {
-
-  }
-
   private makeMachine(number: number): Machine {
     const machine: Machine = new Machine();
     this._machines[number] = machine;
@@ -44,5 +39,50 @@ export default class Equipment implements Base {
     return machine;
   }
 
+  setParams(kindCode: string, modelCode: string, edaNo: string, actionType: string, uritanka: string): void {
+    const $form = this.getForm()
+    const method = $form.attr('method') || '';
+    const action = $form.attr('action') || '';
+    const url    = getBaseUrl() + action;
+    const data   = {} as any;
 
+    $form.find('[name]').each((i, elem) => {
+      const $elem = $(elem);
+      const name  = $elem.attr('name') || '';
+      data[name]  = $elem.attr('value') || '';
+    });
+
+    data['kindcode']   = kindCode;
+    data['modelcode']  = modelCode;
+    data['edano']      = edaNo;
+    data['actiontype'] = actionType;
+    data['forward']    = 'K' +
+      'AK' +
+      'IN_' +
+      'LIST';
+    data['hallcode']   = ''; // TODO: hallcodeを取得する
+    data['uritanka']   = uritanka;
+
+    this._params = {
+      method,
+      url,
+      data,
+    };
+  };
+  /**
+   * form の名前を取得する
+   *
+   * @param name
+   */
+  private getFormName(): string {
+    return 'Hall' +
+      'Dedama' +
+      'Action' +
+      'Form';
+  }
+
+  private getForm(): JQuery {
+    const formName = this.getFormName();
+    return $(`form[name=${formName}]`);
+  }
 }
