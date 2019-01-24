@@ -29,8 +29,6 @@ export default class Equipment implements Base {
 
       eval(datHref); // openDedamaDetail() を実行している。
       eval(hisHref); // tableHistoryClick() を実行している。
-
-      machine.loadDetail();
     });
   }
 

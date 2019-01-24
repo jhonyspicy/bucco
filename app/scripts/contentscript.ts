@@ -4,13 +4,13 @@ import * as $ from 'jquery';
 import Hall from './lib/Hall/Hall';
 import Machine from './lib/Machine/Machine';
 import Equipment from "./lib/Equipment/Equipment";
-import {Util} from "./lib/Includes/Util";
+import {Base} from "./lib/Includes/Util";
 
 run()
 
 function run () {
   const $html = $('html');
-  let model: Util;
+  let model: Base;
 
   if (0 < $('[alt="パチンコ設置機種一覧"]').length) {
     // ホールの機種一覧のページ
