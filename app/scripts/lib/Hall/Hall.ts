@@ -1,98 +1,87 @@
-import Machine from '../Machine/Machine';
-import Hanahana from '../Machine/Hanahana';
+import {Base, getBaseUrl} from "../Includes/Util";
 import * as $ from 'jquery';
-import Chart = require('chart.js');
+import Equipment from "../Equipment/Equipment";
 
-enum PachinkoOrSlot {
-  Pachinko,
-  Slot
-}
+export default class Hall implements Base {
+  $dom:JQuery = $(`
+    <div class="ultraHall"></div>
+  `)
 
-export default class Hall {
-  public readonly $dom: JQuery = $(`
-      <div class="buccoHall">
-        <div class="buccoHall__info">
-          <h2 class="buccoHall__info__title">トータル獲得枚数</h2>
-          <ul class="buccoHall__info__sales"></ul>
-        </div>
-        <div class="buccoHall__chartCoinRate"><canvas></canvas></div>
-        <div class="buccoHall__content"></div>
-        <div class="buccoHall__status"></div>
-      </div>
-    `);
+  private _equipments: Equipment[] = [];
 
-  private _machines: Machine[] = [];
 
-  public date: Date;
-  public readonly name: string;
-  public readonly machineName: string;
-  public readonly pachinkoOrSlot: PachinkoOrSlot;
-  public promise: Promise<any> = Promise.resolve();
+  append(): void {
+    this.$dom.insertAfter('#some_element');
+  }
+  convertHtml($html: JQuery): void {
+    const $targetTable: JQuery = $html.find('#20slot').closest('table')
+    $targetTable.find('tr:nth-child(2)').each((i, elem) => {
+      const $elem   = $(elem);
+      const onClick = $elem.find('[name=select]').attr('onClick') || '';
+      const equipment: Equipment = this.makeEquipment();
+      const listClick = this.setParams.bind(null, equipment);
 
-  constructor() {
-    const $html = $('html');
-    this.name = $html.find('#hall_name').text();
-    this.date = new Date($html.find('#hall_date').text().split('|')[1].trim().split('：')[1]);
-    this.machineName = $('#machine_name a').text();
-    if ($('#machine_name').text().match(/パチ$/)) {
-      this.pachinkoOrSlot = PachinkoOrSlot.Pachinko;
-    } else {
-      this.pachinkoOrSlot = PachinkoOrSlot.Slot;
-    }
 
-    for (let i = 0; i < $('.past_days_right tr td').length; i++) {
-      this.$dom.find('.buccoHall__info__sales').append('<li class="buccoHall__info__sales__sale"></li>');
-    }
+      eval(onClick); // openDedamaDetail() を実行している。
+      // const hisHref = $elem.find('.his a').attr('href') || '';
+      // const number = parseInt($elem.find('.num').text());
+      // const machine = this.makeMachine(number);
+      // const openDedamaDetail = this.setDetailParams.bind(null, machine);
+      // const tableHistoryClick = this.setHistoryParams.bind(null, machine);
+      //
+      // eval(datHref); // openDedamaDetail() を実行している。
+      // eval(hisHref); // tableHistoryClick() を実行している。
+      //
+      // machine.loadDetail();
+    });
   }
 
-  makeMachine(number: number) {
-    let machine: Machine;
+  makeEquipment():Equipment {
+    const equipment: Equipment = new Equipment();
+    this._equipments.push(equipment);
+    this.$dom.find('#some_element').append(equipment.$dom)
 
-    if (Hanahana.amI(this.machineName)) {
-      machine = new Hanahana(this, number);
-    } else {
-      machine = new Machine(this, number);
-    }
-
-    this._machines[number] = machine;
-    this.$dom.find('.buccoHall__content').append(machine.$dom);
-
-    return machine;
+    return equipment;
   }
 
-  getLocalStorage() {
-    // let a = {
-    //   'version': '0.0.1',
-    //   544: {
-    //     'updated': '2019/1/18 20:50:30'
-    //   }
-    // };
 
-    let json = localStorage.getItem(this.name);
-    let data = {} as any;
+  private setParams(equipment: Equipment, kindCode: string, modelCode: string, edaNo: string, actionType: string, uritanka: string): void {
+    const $form = this.getForm()
+    const method = $form.attr('method') || '';
+    const action = $form.attr('action') || '';
+    const url    = getBaseUrl() + action;
+    const data   = {} as any;
 
-    if (json) {
-      let manifestData = chrome.runtime.getManifest();
+    $form.find('[name]').each((i, elem) => {
+      const $elem = $(elem);
+      const name  = $elem.attr('name') || '';
+      data[name]  = $elem.attr('value') || '';
+    });
 
-      data = JSON.parse(json);
+    data['kindcode']   = kindCode;
+    data['modelcode']  = modelCode;
+    data['edano']      = edaNo;
+    data['actiontype'] = actionType;
+    data['forward']    = 'KAKIN_LIST';
+    data['hallcode']   = ''; // TODO: hallcodeを取得する
+    data['uritanka']   = uritanka;
 
-      if (data.version !== manifestData.version) {
-        data = {}
-      }
-    }
-
-    return data;
+    equipment.setParams(method, url, data)
+  };
+  /**
+   * form の名前を取得する
+   *
+   * @param name
+   */
+  private getFormName(): string {
+    return 'Hall' +
+      'Dedama' +
+      'Action' +
+      'Form';
   }
 
-  isPachinko() {
-    return this.pachinkoOrSlot === PachinkoOrSlot.Pachinko;
-  }
-
-  isSlot() {
-    return this.pachinkoOrSlot === PachinkoOrSlot.Slot;
-  }
-
-  isCorner(num: number) {
-    return false;
+  private getForm(): JQuery {
+    const formName = this.getFormName();
+    return $(`form[name=${formName}]`);
   }
 }
