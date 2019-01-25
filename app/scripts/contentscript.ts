@@ -16,7 +16,7 @@ function run () {
   if (0 < $('[alt="パ' + 'チ' + 'ン' + 'コ設' + '置' + '機' + '種' + '一覧"]').length) {
     // ホールの機種一覧のページ
     model = new Hall();
-  } else if (true) {
+  } else if (0 < $('ded' + 'ama' + '_table').length) {
     // 特定機種の台番号一覧ページ
     model = new Equipment();
   } else if (true) {

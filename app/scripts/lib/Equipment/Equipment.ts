@@ -13,6 +13,7 @@ export default class Equipment implements Base {
   $dom: JQuery = $(`
     <div class="ultraEquipment "></div>
   `);
+  promise: Promise<any> = Promise.resolve();
 
   private _machines: Machine[] = [];
   private _params: AjaxParams;
@@ -25,6 +26,12 @@ export default class Equipment implements Base {
     this.$dom.insertAfter('#some_element');
   }
 
+  /**
+   * 台一覧ページのHTMLから台詳細のオブジェクトを生成して
+   * パラメーターをセットしていく
+   *
+   * @param $html
+   */
   convertHtml($html: JQuery): void {
     $html.find('#ata0 .ind').first().each((i, elem) => {
       const $elem             = $(elem);
@@ -37,9 +44,20 @@ export default class Equipment implements Base {
 
       eval(datHref); // openDedamaDetail() を実行している。
       eval(hisHref); // tableHistoryClick() を実行している。
+
+      this.promise = machine.run(this.promise);
     });
   }
 
+  /**
+   * 台一覧ページの取得に必要なパラメーターをセットする
+   *
+   * @param kindCode
+   * @param modelCode
+   * @param edaNo
+   * @param actionType
+   * @param uritanka
+   */
   setParams(kindCode: string, modelCode: string, edaNo: string, actionType: string, uritanka: string): void {
     const $form  = this.getForm();
     const method = $form.attr('method') || '';
@@ -68,6 +86,56 @@ export default class Equipment implements Base {
       url,
       data,
     };
+  }
+
+  load(): Promise<any> {
+    return new Promise(((resolve, reject) => {
+      let isRetry = false
+
+      $.ajax({
+        method: this._params.method,
+        url: this._params.url,
+        data: this._params.data,
+        dataType: 'html',
+        success: function (html) {
+          const $html = $(html);
+          if (!$html.find('#machine_name').length) {
+            if (!isRetry) {
+              isRetry = true;
+              console.log('Too many request wait a moment');
+              setTimeout(() => {
+                $.ajax(this)
+              }, 60000);
+
+              return;
+            }
+
+            // 2回連続で失敗したら停止させる
+            reject('stop loading. please reload your browser.');
+            return;
+          }
+
+          console.log('get success!!');
+          resolve($html);
+        },
+        error: (e) => {
+          // クッキーが切れたか何か、ブラウザのリロードが必要だはず。
+          reject('something wrong');
+        },
+      });
+    }));
+  }
+
+  run(promise: Promise<any>): Promise<any> {
+    return promise.then(() => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          this.load().then(() => {
+            resolve();
+          });
+        }, 5000)
+      });
+    })
   }
 
   private resolve() {

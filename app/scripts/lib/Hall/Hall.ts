@@ -11,6 +11,7 @@ export default class Hall implements Base {
   $dom: JQuery = $(`
     <div class="ultraHall"></div>
   `);
+  promise: Promise<any> = Promise.resolve();
 
   private _equipments: Equipment[] = [];
 
@@ -27,6 +28,8 @@ export default class Hall implements Base {
       const listClick            = equipment.setParams.bind(equipment);
 
       eval(onClick); // listClick() を実行している。
+
+      this.promise = equipment.run(this.promise);
     });
   }
 
