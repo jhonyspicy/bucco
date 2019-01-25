@@ -1,6 +1,8 @@
-import {Base, AjaxParams} from '../Includes/Util';
-import {getBaseUrl} from '../Includes/Util';
 import Equipment from '../Equipment/Equipment';
+import {interfaces, functions} from '../Includes/Util';
+import getBaseUrl = functions.getBaseUrl;
+import Base = interfaces.Base;
+import AjaxParams = interfaces.AjaxParams;
 
 /**
  * 台の詳細情報

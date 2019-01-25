@@ -1,4 +1,7 @@
-import {AjaxParams, Base, getBaseUrl} from '../Includes/Util';
+import {interfaces, functions} from '../Includes/Util';
+import getBaseUrl = functions.getBaseUrl;
+import Base = interfaces.Base;
+import AjaxParams = interfaces.AjaxParams;
 import Machine from '../Machine/Machine';
 import * as $ from 'jquery';
 import Hall from '../Hall/Hall';
@@ -15,7 +18,7 @@ export default class Equipment implements Base {
   private _params: AjaxParams;
   private _resolve: (value?: any) => void;
 
-  constructor(private _hall?: Hall)  {
+  constructor(private _hall?: Hall) {
   }
 
   append(): void {
@@ -73,7 +76,7 @@ export default class Equipment implements Base {
 
   private makeMachine(num: number): Machine {
     const machine: Machine = new Machine(this);
-    this._machines[num] = machine;
+    this._machines[num]    = machine;
 
     this.$dom.find('#some_element').append(machine.$dom);
     return machine;

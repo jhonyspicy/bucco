@@ -1,4 +1,5 @@
-import {Base, getBaseUrl} from '../Includes/Util';
+import {interfaces, functions} from '../Includes/Util';
+import Base = interfaces.Base;
 import * as $ from 'jquery';
 import Equipment from '../Equipment/Equipment';
 
