@@ -7,8 +7,8 @@ import Equipment from '../Equipment/Equipment';
  * ホールのホームページで
  * 複数のEquipmentを管理する。
  */
-export default class Hall implements Base {
-  $dom: JQuery = $(`
+export default class Hall extends Base {
+  $dom: JQuery          = $(`
     <div class="ultraHall"></div>
   `);
   promise: Promise<any> = Promise.resolve();
@@ -19,20 +19,25 @@ export default class Hall implements Base {
     this.$dom.insertAfter('#some_element');
   }
 
-  convertHtml($html: JQuery): void {
-    const $targetTable: JQuery = $html.find('#20slot').closest('table');
-    $targetTable.find('tr:nth-child(n + 2)').first().each((i, elem) => {
-      const $elem                = $(elem);
-      const onClick              = $elem.find('[name=select]').attr('onClick') || '';
-      const equipment: Equipment = this.makeEquipment();
-      const listClick            = equipment.setParams.bind(equipment);
+  convertHtml($html: JQuery): Promise<any> {
+    return new Promise(((resolve, reject) => {
+      const $targetTable: JQuery = $html.find('#20slot').closest('table');
+      $targetTable.find('tr:nth-child(n + 2)').first().each((i, elem) => {
+        const $elem                = $(elem);
+        const onClick              = $elem.find('[name=select]').attr('onClick') || '';
+        const equipment: Equipment = this.makeEquipment();
+        const listClick            = equipment.setParams.bind(equipment, $html);
 
-      eval(onClick); // listClick() を実行している。
+        eval(onClick); // listClick() を実行している。
 
-      this.promise = equipment.run(this.promise);
-    });
+        this.promise = equipment.run(this.promise);
+      });
 
-    this.promise.then(this.resolve)
+      this.promise.then(() => {
+        this.resolve();
+        resolve();
+      });
+    }));
   }
 
   makeEquipment(): Equipment {
@@ -44,6 +49,6 @@ export default class Hall implements Base {
   }
 
   private resolve() {
-    console.log('完了')
+    console.log('Hallの読み込み終了');
   }
 }

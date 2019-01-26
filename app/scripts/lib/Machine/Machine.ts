@@ -3,27 +3,31 @@ import {interfaces, functions} from '../Includes/Util';
 import getBaseUrl = functions.getBaseUrl;
 import Base = interfaces.Base;
 import AjaxParams = interfaces.AjaxParams;
-import * as $ from "jquery";
+import * as $ from 'jquery';
 
 /**
  * 台の詳細情報
  */
-export default class Machine implements Base {
+export default class Machine extends Base {
   $dom: JQuery = $(`
     <div class="ultraMachine"></div>
   `);
-  private _detailParams: AjaxParams;
+  protected _params: AjaxParams;
   private _historyParams: AjaxParams;
-  private _resolve: (value?: any) => void;
 
   constructor(private _equipment?: Equipment) {
+    super();
   }
 
   append(): void {
     this.$dom.insertAfter('#some_element');
   }
 
-  convertHtml($html: JQuery): void {
+  convertHtml($html: JQuery): Promise<any> {
+    return new Promise(((resolve, reject) => {
+      console.log('Machine の読み込みが終わったポイよ！！')
+      resolve();
+    }));
   }
 
   /**
@@ -32,8 +36,8 @@ export default class Machine implements Base {
    * @param cd
    * @param num
    */
-  setDetailParams(cd: any, num: any) {
-    const $form  = this.getForm('dat');
+  setDetailParams($html: JQuery, cd: any, num: any) {
+    const $form  = this.getForm('dat', $html);
     const method = $form.attr('method') || '';
     const action = $form.attr('action') || '';
     const url    = getBaseUrl() + action;
@@ -58,7 +62,7 @@ export default class Machine implements Base {
       data.actiontype = '14';
     }
 
-    this._detailParams = {
+    this._params = {
       method,
       url,
       data,
@@ -68,10 +72,11 @@ export default class Machine implements Base {
   /**
    * Ajaxで履歴を取得するためのパラメーターを作る
    *
+   * @param $html
    * @param num
    */
-  setHistoryParams(num: any) {
-    const $form  = this.getForm('his');
+  setHistoryParams($html: JQuery, num: any) {
+    const $form  = this.getForm('his', $html);
     const method = $form.attr('method') || '';
     const action = $form.attr('action') || '';
     const url    = getBaseUrl() + action;
@@ -92,58 +97,7 @@ export default class Machine implements Base {
     };
   }
 
-  load(): Promise<any> {
-    return new Promise(((resolve, reject) => {
-      let isRetry = false
-
-      $.ajax({
-        method: this._detailParams.method,
-        url: this._detailParams.url,
-        data: this._detailParams.data,
-        dataType: 'html',
-        success: function (html) {
-          const $html = $(html);
-          if (!$html.find('#machine_name').length) {
-            if (!isRetry) {
-              isRetry = true;
-              console.log('Too many request wait a moment');
-              setTimeout(() => {
-                $.ajax(this)
-              }, 60000);
-
-              return;
-            }
-
-            // 2回連続で失敗したら停止させる
-            reject('stop loading. please reload your browser.');
-            return;
-          }
-
-          console.log('get success!!');
-          resolve($html);
-        },
-        error: (e) => {
-          // クッキーが切れたか何か、ブラウザのリロードが必要だはず。
-          reject('something wrong');
-        },
-      });
-    }));
-  }
-
-  run(promise: Promise<any>): Promise<any> {
-    return promise.then(() => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          this.load().then(() => {
-            resolve();
-          });
-        }, 5000)
-      });
-    })
-  }
-
   private resolve() {
-    this._resolve();
   }
 
   /**
@@ -165,8 +119,8 @@ export default class Machine implements Base {
     }
   }
 
-  private getForm(name: string): JQuery {
+  private getForm(name: string, $html: JQuery): JQuery {
     const formName = this.getFormName(name);
-    return $(`form[name=${formName}]`);
+    return $html.find(`form[name=${formName}]`);
   }
 }
