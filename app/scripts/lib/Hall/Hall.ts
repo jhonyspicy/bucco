@@ -21,7 +21,7 @@ export default class Hall implements Base {
 
   convertHtml($html: JQuery): void {
     const $targetTable: JQuery = $html.find('#20slot').closest('table');
-    $targetTable.find('tr:nth-child(n + 2)').each((i, elem) => {
+    $targetTable.find('tr:nth-child(n + 2)').first().each((i, elem) => {
       const $elem                = $(elem);
       const onClick              = $elem.find('[name=select]').attr('onClick') || '';
       const equipment: Equipment = this.makeEquipment();
@@ -31,6 +31,8 @@ export default class Hall implements Base {
 
       this.promise = equipment.run(this.promise);
     });
+
+    this.promise.then(this.resolve)
   }
 
   makeEquipment(): Equipment {
@@ -42,5 +44,6 @@ export default class Hall implements Base {
   }
 
   private resolve() {
+    console.log('完了')
   }
 }
