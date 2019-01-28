@@ -15,6 +15,13 @@ export default class Hall extends Base {
 
   private _equipments: Equipment[] = [];
 
+  init(): void {
+    const $html: JQuery = $('html')
+    const $button: JQuery = $('<h1>TEST</h1>')
+    const $target = $html.find('#20slot').closest('table.slot')
+    $button.insertBefore($target)
+  }
+
   append(): void {
     this.$dom.insertAfter('#some_element');
   }

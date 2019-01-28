@@ -25,8 +25,9 @@ function run () {
   }
 
   if (model) {
-    model.append();
-    model.convertHtml($html);
+    model.init();
+    // model.append();
+    // model.convertHtml($html);
   }
 }
 

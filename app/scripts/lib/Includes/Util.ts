@@ -70,6 +70,8 @@ export module interfaces {
         });
       }));
     }
+
+    init() {}
   }
 
   /**
