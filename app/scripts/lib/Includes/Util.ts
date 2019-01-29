@@ -13,7 +13,7 @@ export module interfaces {
   export class Base {
     protected _params: AjaxParams;
 
-    append(): void {
+    append($html: JQuery): void {
     }
 
     convertHtml($html: JQuery): void {
@@ -71,7 +71,13 @@ export module interfaces {
       }));
     }
 
-    init() {}
+    /**
+     * 直接作成された時に呼ばれる、
+     * 機種一覧ならHall.init()が呼ばれ
+     * 台一覧ならEquipment.init()が呼ばれ
+     * 詳細ページならMachine.init()が呼ばれる
+     */
+    init(): void {}
   }
 
   /**

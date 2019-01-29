@@ -11,19 +11,44 @@ import Hall from '../Hall/Hall';
  */
 export default class Equipment extends Base {
   $dom: JQuery          = $(`
-    <div class="ultraEquipment "></div>
+    <div class="ultraEquipment">
+        EQUIPMENTS!!
+        <div class="ultraEquipment__name"></div>
+        <div class="ultraEquipment__machines"></div>
+    </div>
   `);
   promise: Promise<any> = Promise.resolve();
 
   private _machines: Machine[] = [];
+  private _name: string;
   protected _params: AjaxParams;
 
   constructor(private _hall?: Hall) {
     super();
   }
 
-  append(): void {
-    this.$dom.insertAfter('#some_element');
+  /**
+   * 直接作成された時に呼ばれる、
+   */
+  init(): void {
+    const $html: JQuery = $('html')
+    const $button: JQuery = $('<h1>TEST</h1>')
+    const $target = $html.find('#dedama_table')
+    $button.insertBefore($target)
+    $button.on('click', ()=>{
+      this.append($html)
+      this.convertHtml($html).then(() => {
+        // 全ての処理が終了
+        this.resolve();
+      });
+    })
+  }
+
+  /**
+   * 直接作成された時に呼ばれる、
+   */
+  append($html: JQuery): void {
+    this.$dom.insertBefore('#dedama_table');
   }
 
   /**
@@ -33,6 +58,8 @@ export default class Equipment extends Base {
    * @param $html
    */
   convertHtml($html: JQuery): Promise<any> {
+    this.name = $html.find('#machine_name a').text();
+
     return new Promise(((resolve, reject) => {
       $html.find('#ata0 .ind').first().each((i, elem) => {
         const $elem             = $(elem);
@@ -43,6 +70,8 @@ export default class Equipment extends Base {
         const openDedamaDetail  = machine.setDetailParams.bind(machine, $html);
         const tableHistoryClick = machine.setHistoryParams.bind(machine, $html);
 
+        this.$dom.find('.ultraEquipment__machines').append(machine.$dom);
+
         eval(datHref); // openDedamaDetail() を実行している。
         eval(hisHref); // tableHistoryClick() を実行している。
 
@@ -50,7 +79,6 @@ export default class Equipment extends Base {
       });
 
       this.promise.then(() => {
-        this.resolve();
         resolve();
       });
     }));
@@ -115,5 +143,10 @@ export default class Equipment extends Base {
       'Action' +
       'Form';
     return $(`form[name=${formName}]`);
+  }
+
+  set name(name: string) {
+    this._name = name;
+    this.$dom.find('.ultraEquipment__name').text(name)
   }
 }

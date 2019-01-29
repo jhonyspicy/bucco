@@ -10,7 +10,7 @@ import * as $ from 'jquery';
  */
 export default class Machine extends Base {
   $dom: JQuery = $(`
-    <div class="ultraMachine"></div>
+    <div class="ultraMachine">マシーン！</div>
   `);
   protected _params: AjaxParams;
   private _historyParams: AjaxParams;
@@ -19,7 +19,22 @@ export default class Machine extends Base {
     super();
   }
 
-  append(): void {
+  /**
+   * 直接作成された時に呼ばれる、
+   */
+  init(): void {
+    const $html: JQuery = $('html');
+    this.append($html);
+    this.convertHtml($html).then(() => {
+      // 全ての処理が終了
+      this.resolve();
+    });
+  }
+
+  /**
+   * 直接作成された時に呼ばれる、
+   */
+  append($html: JQuery): void {
     this.$dom.insertAfter('#some_element');
   }
 
@@ -105,7 +120,7 @@ export default class Machine extends Base {
    *
    * @param name
    */
-  private getFormName(name: string): string {
+  private static getFormName(name: string): string {
     if (name === 'dat') {
       return 'Table' +
         'Select' +
@@ -120,7 +135,7 @@ export default class Machine extends Base {
   }
 
   private getForm(name: string, $html: JQuery): JQuery {
-    const formName = this.getFormName(name);
+    const formName = Machine.getFormName(name);
     return $html.find(`form[name=${formName}]`);
   }
 }
