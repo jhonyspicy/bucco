@@ -48,7 +48,7 @@ export default class Equipment extends Base {
    * 直接作成された時に呼ばれる、
    */
   append($html: JQuery): void {
-    this.$dom.insertBefore('#dedama_table');
+    this.$dom.insertBefore('#ded' + 'ama' + '_table');
   }
 
   /**
