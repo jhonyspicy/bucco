@@ -1,8 +1,8 @@
 import Equipment from '../Equipment/Equipment';
-import {interfaces, functions} from '../Includes/Util';
+import {bucco, functions} from '../Includes/Util';
 import getBaseUrl = functions.getBaseUrl;
-import Base = interfaces.Base;
-import AjaxParams = interfaces.AjaxParams;
+import Base = bucco.Base;
+import AjaxParams = bucco.AjaxParams;
 import * as $ from 'jquery';
 
 /**

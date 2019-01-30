@@ -1,5 +1,5 @@
-import {interfaces, functions} from '../Includes/Util';
-import Base = interfaces.Base;
+import {bucco, functions} from '../Includes/Util';
+import Base = bucco.Base;
 import * as $ from 'jquery';
 import Equipment from '../Equipment/Equipment';
 
@@ -10,27 +10,27 @@ import Equipment from '../Equipment/Equipment';
 export default class Hall extends Base {
   $dom: JQuery = $(`
     <div class="ultraHall">
-      <div class="ultraHall_equipments"></div>
+      <div class="ultraHall__name"></div>
+      <div class="ultraHall__equipments"></div>
     </div>
   `);
-  promise: Promise<any> = Promise.resolve();
 
   private _equipments: Equipment[] = [];
+  private _name: string;
 
   /**
    * 直接作成された時に呼ばれる、
    */
   init(): void {
-    const $html: JQuery = $('html')
+    const $html: JQuery   = $('html')
     const $button: JQuery = $('<h1>TEST</h1>')
-    const $target = $html.find('#20slot').closest('table.slot')
+    const $target         = $html.find('#20slot').closest('table.slot')
     $button.insertBefore($target)
-    $button.on('click', ()=>{
+    $button.on('click', () => {
       this.append($html)
       this.convertHtml($html).then(() => {
-        // 全ての処理が終了
-        this.resolve();
-      });
+        // do something
+      })
     })
   }
 
@@ -43,6 +43,9 @@ export default class Hall extends Base {
   }
 
   convertHtml($html: JQuery): Promise<any> {
+    this.name                 = $html.find('#hall_name').text();
+    let promise: Promise<any> = Promise.resolve();
+
     return new Promise(((resolve, reject) => {
       const $targetTable: JQuery = $html.find('#20slot').closest('table');
       // $targetTable.find('tr:nth-child(n + 2)').first().each((i, elem) => {
@@ -52,15 +55,16 @@ export default class Hall extends Base {
         const equipment: Equipment = this.makeEquipment();
         const listClick            = equipment.setParams.bind(equipment, $html);
 
-        this.$dom.find('.ultraHall_equipments').append(equipment.$dom);
+        this.$dom.find('.ultraHall__equipments').append(equipment.$dom);
 
         eval(onClick); // listClick() を実行している。
 
-        this.promise = equipment.run(this.promise);
+        promise = equipment.run(promise);
       });
 
-      this.promise.then(() => {
+      promise.then(() => {
         resolve();
+        this.resolve()
       });
     }));
   }
@@ -75,5 +79,10 @@ export default class Hall extends Base {
 
   private resolve() {
     console.log('Hallの読み込み終了');
+  }
+
+  set name(name: string) {
+    this._name = name;
+    this.$dom.find('.ultraHall__name').text(name)
   }
 }

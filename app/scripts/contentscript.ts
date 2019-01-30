@@ -4,8 +4,8 @@ import * as $ from 'jquery';
 import Hall from './lib/Hall/Hall';
 import Machine from './lib/Machine/Machine';
 import Equipment from "./lib/Equipment/Equipment";
-import {interfaces} from "./lib/Includes/Util";
-import Base = interfaces.Base;
+import {bucco} from "./lib/Includes/Util";
+import Base = bucco.Base;
 
 run()
 

@@ -1,7 +1,7 @@
-import {interfaces, functions} from '../Includes/Util';
+import {bucco, functions} from '../Includes/Util';
 import getBaseUrl = functions.getBaseUrl;
-import Base = interfaces.Base;
-import AjaxParams = interfaces.AjaxParams;
+import Base = bucco.Base;
+import AjaxParams = bucco.AjaxParams;
 import Machine from '../Machine/Machine';
 import * as $ from 'jquery';
 import Hall from '../Hall/Hall';
@@ -38,9 +38,8 @@ export default class Equipment extends Base {
     $button.on('click', ()=>{
       this.append($html)
       this.convertHtml($html).then(() => {
-        // 全ての処理が終了
-        this.resolve();
-      });
+        // do something
+      })
     })
   }
 
@@ -59,6 +58,7 @@ export default class Equipment extends Base {
    */
   convertHtml($html: JQuery): Promise<any> {
     this.name = $html.find('#machine_name a').text();
+    let promise: Promise<any> = Promise.resolve();
 
     return new Promise(((resolve, reject) => {
       $html.find('#ata0 .ind').first().each((i, elem) => {
@@ -75,10 +75,11 @@ export default class Equipment extends Base {
         eval(datHref); // openDedamaDetail() を実行している。
         eval(hisHref); // tableHistoryClick() を実行している。
 
-        this.promise = machine.run(this.promise);
+        promise= machine.run(promise);
       });
 
-      this.promise.then(() => {
+      promise.then(() => {
+        this.resolve()
         resolve();
       });
     }));

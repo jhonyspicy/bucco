@@ -1,13 +1,55 @@
 import * as $ from 'jquery';
 
-export module interfaces {
+export module bucco {
   /**
-   * 自身の dom を htm に埋め込む。
+   * Ajaxを実行できる回数に制限があるので
+   * それを超えないようにAjaxを管理する。
    */
-  export interface Base2 {
-    append(): void;
+  export class Ajax {
+    static promise: Promise<any> = Promise.resolve();
 
-    convertHtml($html: JQuery): void;
+    static send(params: AjaxParams): Promise<JQuery> {
+      return new Promise((resolve1, reject1) => {
+        Ajax.promise = Ajax.promise.then(() => {
+          return new Promise(((resolve2, reject2) => {
+            let isRetry = false;
+
+            $.ajax({
+              method  : params.method,
+              url     : params.url,
+              data    : params.data,
+              dataType: 'html',
+              success : function (html) {
+                const $html: JQuery = $(html);
+                if (!$html.find('#machine_name').length) {
+                  if (!isRetry) {
+                    isRetry = true;
+                    console.log('Too many request wait a moment');
+                    setTimeout(() => {
+                      $.ajax(this);
+                    }, 60000);
+
+                    return;
+                  }
+
+                  // 2回連続で失敗したら停止させる
+                  reject2('stop loading. please reload your browser.');
+                  return;
+                }
+
+                console.log('get success!!');
+                resolve2();
+                resolve1($html);
+              },
+              error   : (e) => {
+                // クッキーが切れたか何か、ブラウザのリロードが必要だはず。
+                reject2('something wrong');
+              },
+            });
+          }));
+        });
+      });
+    }
   }
 
   export class Base {
@@ -23,7 +65,7 @@ export module interfaces {
       return promise.then(() => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.load(this._params).then(($html) => {
+            Ajax.send(this._params).then(($html) => {
               return this.convertHtml($html);
             }).then(() => {
               resolve();
@@ -31,44 +73,6 @@ export module interfaces {
           }, 5000);
         });
       });
-    }
-
-    load(params: AjaxParams): Promise<any> {
-      return new Promise(((resolve, reject) => {
-        let isRetry = false;
-
-        $.ajax({
-          method: params.method,
-          url: params.url,
-          data: params.data,
-          dataType: 'html',
-          success: function (html) {
-            const $html = $(html);
-            if (!$html.find('#machine_name').length) {
-              if (!isRetry) {
-                isRetry = true;
-                console.log('Too many request wait a moment');
-                setTimeout(() => {
-                  $.ajax(this);
-                }, 60000);
-
-                return;
-              }
-
-              // 2回連続で失敗したら停止させる
-              reject('stop loading. please reload your browser.');
-              return;
-            }
-
-            console.log('get success!!');
-            resolve($html);
-          },
-          error: (e) => {
-            // クッキーが切れたか何か、ブラウザのリロードが必要だはず。
-            reject('something wrong');
-          },
-        });
-      }));
     }
 
     /**
