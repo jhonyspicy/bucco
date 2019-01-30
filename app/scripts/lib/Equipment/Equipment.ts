@@ -31,11 +31,11 @@ export default class Equipment extends Base {
    * 直接作成された時に呼ばれる、
    */
   init(): void {
-    const $html: JQuery = $('html')
+    const $html: JQuery   = $('html')
     const $button: JQuery = $('<h1>TEST</h1>')
-    const $target = $html.find('#dedama_table')
+    const $target         = $html.find('#dedama_table')
     $button.insertBefore($target)
-    $button.on('click', ()=>{
+    $button.on('click', () => {
       this.append($html)
       this.convertHtml($html).then(() => {
         // do something
@@ -57,7 +57,7 @@ export default class Equipment extends Base {
    * @param $html
    */
   convertHtml($html: JQuery): Promise<any> {
-    this.name = $html.find('#machine_name a').text();
+    this.name                 = $html.find('#machine_name a').text();
     let promise: Promise<any> = Promise.resolve();
 
     return new Promise(((resolve, reject) => {
@@ -75,7 +75,7 @@ export default class Equipment extends Base {
         eval(datHref); // openDedamaDetail() を実行している。
         eval(hisHref); // tableHistoryClick() を実行している。
 
-        promise= machine.run(promise);
+        promise = machine.run(promise);
       });
 
       promise.then(() => {

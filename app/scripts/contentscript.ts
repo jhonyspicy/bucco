@@ -9,7 +9,7 @@ import Base = bucco.Base;
 
 run()
 
-function run () {
+function run() {
   const $html = $('html');
   let model: Base;
 
