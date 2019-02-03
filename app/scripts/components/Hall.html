@@ -1,1 +1,6 @@
-<h1>This is Hall template!!</h1>
+<div>
+    <h1 @click="onClick">This is Hall template!! {{hoge}} {{name}}</h1>
+    <Equipment v-for="(equipment, index) in equipments">{{index}}</Equipment>
+</div>
+
+

@@ -49,14 +49,17 @@ if (isHallPage() || isEquipmentPage() || isMachinePage()) {
   new Vue({
     el: '#app',
     template: `
-<div>
-<Hall v-if="isHallPage()"></Hall>
-<Equipment v-if="isEquipmentPage()"></Equipment>
-<Machine v-if="isMachinePage()"></Machine>
-</div>
+      <div>
+        <Hall
+         v-if="isHallPage()"
+         v-bind:html="html"
+         ></Hall>
+        <Equipment v-if="isEquipmentPage()"></Equipment>
+        <Machine v-if="isMachinePage()"></Machine>
+      </div>
     `,
     data: {
-      name: 'World'
+      html: document.documentElement.innerHTML
     },
     components: {
       Hall,
