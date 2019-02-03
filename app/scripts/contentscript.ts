@@ -1,33 +1,72 @@
 'use strict';
 
-import * as $ from 'jquery';
-import Hall from './lib/Hall/Hall';
-import Machine from './lib/Machine/Machine';
-import Equipment from "./lib/Equipment/Equipment";
-import {bucco} from "./lib/Includes/Util";
-import Base = bucco.Base;
+import Vue from 'vue';
+import Hall from './components/Hall';
+import Equipment from './components/Equipment';
+import Machine from './components/Machine';
+import {functions} from './lib/Includes/Util';
+import isHallPage = functions.isHallPage;
+import isEquipmentPage = functions.isEquipmentPage;
+import isMachinePage = functions.isMachinePage;
 
-run()
+const $app = document.createElement('div');
+$app.setAttribute('id', 'app');
 
-function run() {
-  const $html = $('html');
-  let model: Base;
-
-  if (0 < $('[alt="パ' + 'チ' + 'ン' + 'コ設' + '置' + '機' + '種' + '一覧"]').length) {
-    // ホールの機種一覧のページ
-    model = new Hall();
-  } else if (0 < $('#ded' + 'ama' + '_table').length) {
-    // 特定機種の台番号一覧ページ
-    model = new Equipment();
-  } else if (true) {
-    // 機種の詳細ページ
-    model = new Machine();
+/*
+#app 要素をDOMに追加する
+ */
+if (isHallPage()) {
+  /*
+  設置機種一覧
+   */
+  const $landmark = document.getElementById('20slot') || document.createElement('div');
+  const $target   = $landmark.closest('table.slot');
+  if ($target !== null && $target.parentElement !== null) {
+    $target.parentElement.insertBefore($app, $target);
   }
-
-  if (model) {
-    model.init();
-    // model.append();
-    // model.convertHtml($html);
+} else if (isEquipmentPage()) {
+  /*
+  大当り一覧
+   */
+  const $target = document.getElementById('dedama_table') || document.createElement('div');
+  if ($target !== null && $target.parentElement !== null) {
+    $target.parentElement.insertBefore($app, $target);
+  }
+} else if (isMachinePage()) {
+  /*
+  出玉詳細
+   */
+  const $target = document.getElementById('dedama_detail_table') || document.createElement('div');
+  if ($target !== null && $target.parentElement !== null) {
+    $target.parentElement.insertBefore($app, $target);
   }
 }
 
+if (isHallPage() || isEquipmentPage() || isMachinePage()) {
+  /*
+  対象ページじゃなかったら何もしない
+   */
+  new Vue({
+    el: '#app',
+    template: `
+<div>
+<Hall v-if="isHallPage()"></Hall>
+<Equipment v-if="isEquipmentPage()"></Equipment>
+<Machine v-if="isMachinePage()"></Machine>
+</div>
+    `,
+    data: {
+      name: 'World'
+    },
+    components: {
+      Hall,
+      Equipment,
+      Machine,
+    },
+    methods: {
+      isHallPage,
+      isEquipmentPage,
+      isMachinePage,
+    }
+  });
+}

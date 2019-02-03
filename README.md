@@ -71,7 +71,10 @@ if(process.env.NODE_ENV === 'development'){
 
 
 # 参考
+このアドオンのベースを下記で作りました。
 [TypeScriptで簡単にChrome Extensionを作る方法](https://qiita.com/Takumon/items/da2142cc06b243f83211)
 
+VUE.jsつ使うにあたって役に立った。
+https://qiita.com/hako1912/items/8d9968d07748d20825f8
 
 

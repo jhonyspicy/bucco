@@ -1,12 +1,27 @@
 {
   "compilerOptions": {
-      "module": "commonjs",
-      "target": "es5",
-      "noImplicitAny": true,
-      "noImplicitUseStrict": true,
-      "noImplicitReturns": true,
-      "strictNullChecks": true,
-      "jsx": "react",
-      "lib": ["dom", "es2017"]
+    "module": "commonjs",
+    "target": "es5",
+    "noImplicitAny": true,
+    "noImplicitUseStrict": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "jsx": "react",
+    "lib": ["dom", "es2017"],
+    // add by me
+    "baseUrl": "./",
+    "paths": {
+      "vue": [
+        "/node_modules/vue/types/index"
+      ],
+      "vue-class-component": [
+        "/node_modules/vue-class-component/lib/index"
+      ],
+      "vue-property-decorator": [
+        "/node_modules/vue-property-decorator/lib/vue-property-decorator"
+      ]
+    },
+    "experimentalDecorators": true,
+    "allowJs": true
   }
 }

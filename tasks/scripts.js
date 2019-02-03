@@ -35,7 +35,8 @@ gulp.task('scripts', (cb) => {
             test: /\.ts$/,
             loader: 'ts-loader',
             exclude: /node_modules/
-          }
+          },
+          { test: /\.html$/, loader: 'html-loader?minimize=false' }
         ]
       },
       resolve: {
@@ -43,7 +44,10 @@ gulp.task('scripts', (cb) => {
         modules: [
           'node_modules/',
           'app/scripts/'
-        ]
+        ],
+        alias: {
+          'vue$': 'vue/dist/vue.esm.js' // VUE.jsを使ってみる
+        }
       }
     },
     webpack,

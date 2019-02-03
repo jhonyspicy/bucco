@@ -26,13 +26,17 @@
     "@types/chart.js": "^2.7.31",
     "@types/chrome": "^0.x.x",
     "@types/jquery": "^3.3.5",
+    "@types/node": "^10.12.21",
+    "axios": "^0.18.0",
     "babel-cli": "6.x.x",
     "babel-core": "6.x.x",
     "babel-loader": "7.x.x",
     "babel-preset-env": "1.x.x",
     "chai": "4.x.x",
     "chart.js": "^2.7.2",
+    "cheerio": "^1.0.0-rc.2",
     "chromereload": "0.x.x",
+    "css-loader": "^2.1.0",
     "debounce": "1.x.x",
     "del": "3.x.x",
     "gulp": "3.x.x",
@@ -54,6 +58,7 @@
     "gulp-tag-version": "1.x.x",
     "gulp-util": "3.x.x",
     "gulp-zip": "^4.x.x",
+    "html-loader": "^0.5.5",
     "jquery": "^3.3.1",
     "nib": "^1.1.2",
     "require-dir": "0.x.x",
@@ -63,9 +68,16 @@
     "tslint": "^5.x.x",
     "typescript": "^3.0.1",
     "vinyl-named": "1.x.x",
+    "vue": "^2.5.22",
+    "vue-class-component": "^6.3.2",
+    "vue-property-decorator": "^7.3.0",
     "webpack": "3.x.x",
     "webpack-stream": "3.x.x",
     "yargs": "^8.x.x"
   },
-  "dependencies": {}
+  "vue": {
+    "configureWebpack": {
+      "runtimeCompiler": true
+    }
+  }
 }
