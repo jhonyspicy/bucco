@@ -2,9 +2,15 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Emit } from 'vue-property-decorator';
 import Cheerio = require('cheerio');
+import Equipment from "./Equipment";
+import Machine from "./Machine";
 
 @Component({
-  template: require('./Hall.html') // html-loaderを使うと外部のhtmlファイルを読み込める
+  template: require('./Hall.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
+  components: {
+    Equipment,
+    Machine,
+  },
 })
 export default class Hall extends Vue {
   private $: CheerioStatic;
