@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop, Emit } from 'vue-property-decorator';
+import {Emit, Prop, Watch} from 'vue-property-decorator';
+import Equipment from './Equipment';
+import Machine from './Machine';
 import Cheerio = require('cheerio');
-import Equipment from "./Equipment";
-import Machine from "./Machine";
 
 @Component({
   template: require('./Hall.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -13,30 +13,39 @@ import Machine from "./Machine";
   },
 })
 export default class Hall extends Vue {
-  private $: CheerioStatic;
-
   // data
   @Prop({ type: String })
   html: string;
 
-  hoge: string = 'こんにちは';
+  attrOnClicks: string[] = [];
+  private $: CheerioStatic;
 
   get name(): string {
-    return this.$('#hall_name').text();
-  }
-
-  get equipments(): CheerioElement[] {
-    return this.$('#20slot').closest('table').find('tr:nth-child(n + 2)').toArray();
+    if (this.$) {
+      return this.$('#hall_name').text();
+    }
+    return '';
   }
 
   // methods
-  onClick() {
-    this.hoge = 'さようなら';
+  start(event: Event) {
+    if (event) event.preventDefault()
+
+    this.$ = Cheerio.load(this.html);
+    console.log('a');
   }
 
-  // ライフサイクル
-  @Emit()
-  created() {
-    this.$ = Cheerio.load(this.html);
+  @Watch('$', { immediate: true, deep: true })
+  onLoadHtml(newValue: CheerioStatic, oldValue: CheerioStatic) {
+    this.attrOnClicks = [];
+    if (newValue) {
+      newValue('#20slot').closest('table').find('tr:nth-child(n + 2)').each((index, element) => {
+        const elem     = newValue(element);
+        const onClick = elem.find('[name=select]').attr('onclick') || '';
+        this.attrOnClicks.push(onClick);
+      });
+    }
+
+    return newValue;
   }
 }

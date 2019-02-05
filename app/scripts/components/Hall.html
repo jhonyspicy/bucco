@@ -1,6 +1,7 @@
 <div>
-    <h1 @click="onClick">This is Hall template!! {{hoge}} {{name}}</h1>
-    <Equipment v-for="(equipment, index) in equipments">{{index}}</Equipment>
+    <h1>This is Hall template!! {{name}}</h1>
+    <button @click="start($event)">始めるよ！</button>
+    <Equipment v-for="attrOnClick in attrOnClicks" :key="null" :attrOnClick="attrOnClick" />
 </div>
 
 
