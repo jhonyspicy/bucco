@@ -14,15 +14,15 @@ import Cheerio = require('cheerio');
 })
 export default class Hall extends Vue {
   // data
-  @Prop({ type: String })
-  html: string;
+  @Prop({type: String})
+  params: string;
 
-  attrOnClicks: string[] = [];
-  private $: CheerioStatic;
+  equipmentParams: string[] = [];
+  private c: CheerioStatic = Cheerio.load('');
 
   get name(): string {
-    if (this.$) {
-      return this.$('#hall_name').text();
+    if (this.c) {
+      return this.c('#hall_name').text();
     }
     return '';
   }
@@ -31,21 +31,28 @@ export default class Hall extends Vue {
   start(event: Event) {
     if (event) event.preventDefault()
 
-    this.$ = Cheerio.load(this.html);
-    console.log('a');
+    this.c = Cheerio.load(document.documentElement.innerHTML);
   }
 
-  @Watch('$', { immediate: true, deep: true })
+  @Watch('c', { immediate: true, deep: true })
   onLoadHtml(newValue: CheerioStatic, oldValue: CheerioStatic) {
-    this.attrOnClicks = [];
+    this.equipmentParams = [];
     if (newValue) {
       newValue('#20slot').closest('table').find('tr:nth-child(n + 2)').each((index, element) => {
         const elem     = newValue(element);
         const onClick = elem.find('[name=select]').attr('onclick') || '';
-        this.attrOnClicks.push(onClick);
+        this.equipmentParams.push(onClick);
       });
     }
 
     return newValue;
+  }
+
+  // ライフサイクル
+  @Emit()
+  created() {
+    // if (this.html) {
+    //   this.$ = Cheerio.load(this.html);
+    // }
   }
 }

@@ -1,5 +1,3 @@
-import * as $ from 'jquery';
-
 export namespace bucco {
   /**
    * Ajaxに必要なパラメーター
@@ -12,6 +10,8 @@ export namespace bucco {
 }
 
 export namespace functions {
+  import AjaxParams = bucco.AjaxParams;
+
   /**
    * ベースのURLを取得する
    */
@@ -23,11 +23,11 @@ export namespace functions {
    * 現在のページがホールアーカイブページかどうか
    */
   export function isHallPage(): boolean {
-    if (document.querySelector('[alt="パチスロ設置機種一覧"]') === null) {
+    if (document.querySelector('[alt="パ' + 'チ' + 'ス' + 'ロ' + '設置' + '機' + '種一' + '覧"]') === null) {
       return false;
     }
 
-    if (document.getElementById('20slot') === null) {
+    if (document.getElementById('20s' + 'lot') === null) {
       return false;
     }
 
@@ -42,9 +42,9 @@ export namespace functions {
       return false;
     }
 
-    const $machineName = <HTMLElement> document.querySelector('#machine_name');
+    const $machineName = <HTMLElement> document.querySelector('#mach' + 'ine_name');
     const machineName = $machineName === null ? '' : $machineName.innerText;
-    if (machineName.indexOf('【20】スロ') === -1) {
+    if (machineName.indexOf('【2' + '0】ス' + 'ロ') === -1) {
       return false;
     }
 
@@ -66,6 +66,13 @@ export namespace functions {
     }
 
     return  true;
+  }
+
+  export function ajax(params: AjaxParams) {
+    return new Promise(((resolve, reject) => {
+      // TODO
+      resolve('');
+    }));
   }
 }
 

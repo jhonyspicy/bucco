@@ -1,1 +1,6 @@
-<h1>This is Equipment template!!</h1>
+<div>
+    <h1>This is Equipment template!! {{hallName}} {{name}}</h1>
+    <button @click="start($event)" v-if="!params">始めるよ！</button>
+    <Machine
+    ></Machine>
+</div>

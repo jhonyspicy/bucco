@@ -1,7 +1,11 @@
 <div>
     <h1>This is Hall template!! {{name}}</h1>
-    <button @click="start($event)">始めるよ！</button>
-    <Equipment v-for="attrOnClick in attrOnClicks" :key="null" :attrOnClick="attrOnClick" />
+    <button @click="start($event)" v-if="!params">始めるよ！</button>
+    <Equipment
+            v-for="params in equipmentParams"
+            v-bind:key="null"
+            v-bind:params="params"
+    ></Equipment>
 </div>
 
 

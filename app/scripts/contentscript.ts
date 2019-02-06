@@ -52,14 +52,19 @@ if (isHallPage() || isEquipmentPage() || isMachinePage()) {
       <div>
         <Hall
          v-if="isHallPage()"
-         v-bind:html="html"
+         v-bind:isRoot=true
          ></Hall>
-        <Equipment v-if="isEquipmentPage()"></Equipment>
-        <Machine v-if="isMachinePage()"></Machine>
+        <Equipment
+         v-if="isEquipmentPage()"
+         v-bind:isRoot=true
+         ></Equipment>
+        <Machine
+         v-if="isMachinePage()"
+         v-bind:isRoot=true
+         ></Machine>
       </div>
     `,
     data: {
-      html: document.documentElement.innerHTML
     },
     components: {
       Hall,
