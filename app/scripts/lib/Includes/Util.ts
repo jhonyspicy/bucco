@@ -38,7 +38,7 @@ export namespace functions {
    * 現在のページが台一覧かどうか
    */
   export function isEquipmentPage(): boolean {
-    if (document.querySelector('#ded' + 'ama' + '_table') === null) {
+    if (document.querySelector('#d' + 'ed' + 'ama' + '_table') === null) {
       return false;
     }
 
