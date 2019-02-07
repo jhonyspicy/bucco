@@ -1,5 +1,16 @@
 export namespace bucco {
   /**
+   * Ajaxのリミットに気を使いながら発行する
+   * サーバーに負担かけないようにやさしくすること！
+   */
+  export class API {
+    static promise: Promise<any> = Promise.resolve();
+    static send(params: AjaxParams) {
+
+    }
+  }
+
+  /**
    * Ajaxに必要なパラメーター
    */
   export interface AjaxParams {
@@ -10,8 +21,6 @@ export namespace bucco {
 }
 
 export namespace functions {
-  import AjaxParams = bucco.AjaxParams;
-
   /**
    * ベースのURLを取得する
    */
@@ -66,13 +75,6 @@ export namespace functions {
     }
 
     return  true;
-  }
-
-  export function ajax(params: AjaxParams) {
-    return new Promise(((resolve, reject) => {
-      // TODO
-      resolve('');
-    }));
   }
 }
 

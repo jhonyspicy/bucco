@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
-import Cheerio = require('cheerio');
 import Machine from './Machine';
-import {bucco, functions} from '../lib/Includes/Util';
-import ajax = functions.ajax;
+import {bucco} from '../lib/Includes/Util';
+import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
+import API = bucco.API;
 
 @Component({
   template: require('./Equipment.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -14,39 +14,31 @@ import AjaxParams = bucco.AjaxParams;
   },
 })
 export default class Equipment extends Vue {
-  @Prop({type: String})
-  params: string;
-
-  machineParams: string[] = [];
-  private c: CheerioStatic = Cheerio.load('');
+  @Prop() params: AjaxParams; // onClickの値がテキストで入っている
+  machineParams: string[]  = [];
+  private ch: CheerioStatic = Cheerio.load('');
+  static promise: Promise<any> = Promise.resolve();
 
   get name(): string {
-    if (this.c) {
-      return this.c('#machine_name a').text();
-    }
-    return '';
+    return this.ch('#machine_name a').text();
   }
 
   get hallName(): string {
-    if (this.c) {
-      return this.c('#hall_name').text();
-    }
-    return '';
+    return this.ch('#hall_name').text();
   }
 
   // methods
   start(event: Event) {
-    if (event) event.preventDefault()
+    if (event) event.preventDefault();
 
-    this.c = Cheerio.load(document.documentElement.innerHTML);
+    this.ch = Cheerio.load(document.documentElement.innerHTML);
   }
 
-  @Watch('c', { immediate: true, deep: true })
-  onLoadHtml(newValue: CheerioStatic, oldValue: CheerioStatic) {
+  @Watch('ch') onLoadHtml(newValue: CheerioStatic, oldValue: CheerioStatic) {
     this.machineParams = [];
     if (newValue) {
       newValue('#20slot').closest('table').find('tr:nth-child(n + 2)').each((index, element) => {
-        const elem     = newValue(element);
+        const elem    = newValue(element);
         const onClick = elem.find('[name=select]').attr('onclick') || '';
         this.machineParams.push(onClick);
       });
@@ -56,14 +48,9 @@ export default class Equipment extends Vue {
   }
 
   // ライフサイクル
-  @Emit()
-  created() {
+  @Emit() created() {
     if (this.params) {
-      ajax({} as AjaxParams).then((html: string) => {
-        // TODO
-        console.log('todo');
-        this.c = Cheerio.load(html);
-      });
+      API.send(this.params);
     }
   }
 }
