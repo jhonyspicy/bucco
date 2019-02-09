@@ -49,7 +49,7 @@ if (isHallPage() || isEquipmentPage() || isMachinePage()) {
   new Vue({
     el: '#app',
     template: `
-      <div>
+      <div id="ultra7">
         <Hall
          v-if="isHallPage()"
          v-bind:isRoot=true

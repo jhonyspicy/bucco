@@ -1,15 +1,7 @@
+import * as Cheerio from 'cheerio';
+import axios from 'axios';
+
 export namespace bucco {
-  /**
-   * Ajaxのリミットに気を使いながら発行する
-   * サーバーに負担かけないようにやさしくすること！
-   */
-  export class API {
-    static promise: Promise<any> = Promise.resolve();
-    static send(params: AjaxParams) {
-
-    }
-  }
-
   /**
    * Ajaxに必要なパラメーター
    */
@@ -18,9 +10,16 @@ export namespace bucco {
     url: string;
     data: any;
   }
+
+  export interface MachineParams {
+    detail: AjaxParams;
+    history: AjaxParams;
+  }
 }
 
 export namespace functions {
+  import AjaxParams = bucco.AjaxParams;
+
   /**
    * ベースのURLを取得する
    */
@@ -36,11 +35,7 @@ export namespace functions {
       return false;
     }
 
-    if (document.getElementById('20s' + 'lot') === null) {
-      return false;
-    }
-
-    return  true;
+    return document.getElementById('20s' + 'lot') !== null;
   }
 
   /**
@@ -51,13 +46,9 @@ export namespace functions {
       return false;
     }
 
-    const $machineName = <HTMLElement> document.querySelector('#mach' + 'ine_name');
-    const machineName = $machineName === null ? '' : $machineName.innerText;
-    if (machineName.indexOf('【2' + '0】ス' + 'ロ') === -1) {
-      return false;
-    }
-
-    return  true;
+    const $machineName = <HTMLElement>document.querySelector('#mach' + 'ine_name');
+    const machineName  = $machineName === null ? '' : $machineName.innerText;
+    return machineName.indexOf('【2' + '0】ス' + 'ロ') !== -1;
   }
 
   /**
@@ -68,13 +59,65 @@ export namespace functions {
       return false;
     }
 
-    const $machineName = <HTMLElement> document.querySelector('#machine_name');
-    const machineName = $machineName === null ? '' : $machineName.innerText;
-    if (machineName.indexOf('【20】スロ') === -1) {
-      return false;
-    }
-
-    return  true;
+    const $machineName = <HTMLElement>document.querySelector('#machine_name');
+    const machineName  = $machineName === null ? '' : $machineName.innerText;
+    return machineName.indexOf('【20】スロ') !== -1;
   }
+
+  /**
+   * Ajaxのリミットに気を使いながら発行する
+   * サーバーに負担かけないようにやさしくすること！
+   */
+  export const ajax = (() => {
+    let promise: Promise<any> = Promise.resolve();
+
+    return function (params: AjaxParams) {
+      return new Promise(((resolve1, reject1) => {
+        promise = promise.then(() => {
+          return new Promise(((resolve2, reject2) => {
+            function send(retries: number = 0) {
+              if (2 < retries) {
+                reject2('stop loading. please reload your browser.');
+                return;
+              }
+
+              const searchParams = new URLSearchParams();
+              Object.keys(params.data).forEach(function (key) {
+                searchParams.append(key, params.data[key]);
+              });
+
+              axios({
+                method: params.method,
+                url: params.url,
+                data: searchParams,
+                headers: {
+                  'Accept': 'text/html, */*; q=0.01',
+                },
+              }).then((res: any) => {
+                const $html = Cheerio.load(res.data);
+                if (0 < $html('#machine_name').length) {
+                  // 成功しているようだ！！
+                  setTimeout(() => {
+                    resolve2();
+                    resolve1($html);
+                  }, 5000);
+                  return;
+                }
+
+                console.log('Too many request wait a moment');
+                setTimeout(() => {
+                  send(++retries);
+                }, 60000);
+              }).catch(() => {
+                reject2('ajax failed. please reload your browser.');
+              });
+            }
+
+            send(0);
+          }));
+        });
+      }));
+    };
+  })();
 }
 

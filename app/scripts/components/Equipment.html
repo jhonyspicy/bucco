@@ -2,5 +2,8 @@
     <h1>This is Equipment template!! {{hallName}} {{name}}</h1>
     <button @click="start($event)" v-if="!params">始めるよ！</button>
     <Machine
+            v-for="params in paramsList"
+            v-bind:key="null"
+            v-bind:params="params"
     ></Machine>
 </div>

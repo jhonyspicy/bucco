@@ -6,6 +6,7 @@ import * as $ from 'jquery';
 import {bucco, functions} from '../lib/Includes/Util';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
+import ajax = functions.ajax;
 import AjaxParams = bucco.AjaxParams;
 
 @Component({
@@ -16,8 +17,8 @@ import AjaxParams = bucco.AjaxParams;
 })
 export default class Hall extends Vue {
   @Prop() params: string;
-  equipmentParams: AjaxParams[] = [];
-  private ch: CheerioStatic  = Cheerio.load('');
+  paramsList: AjaxParams[]     = [];
+  private ch: CheerioStatic    = Cheerio.load('');
   static promise: Promise<any> = Promise.resolve();
 
   get name(): string {
@@ -29,35 +30,27 @@ export default class Hall extends Vue {
 
   // methods
   start(event: Event) {
-    if (event) event.preventDefault();
-
+    event.preventDefault();
     this.ch = Cheerio.load(document.documentElement.innerHTML);
   }
 
-  @Watch('ch') onLoadHtml(ch: CheerioStatic, oldValue: CheerioStatic) {
-    this.equipmentParams = [];
+  @Watch('ch') onLoadHtml(ch: CheerioStatic) {
+    this.paramsList = [];
     if (ch) {
-      ch('#20slot').closest('table').find('tr:nth-child(n + 2)').first().each((index, element) => {
-        const elem    = Cheerio(element);
-        const onClick = elem.find('[name=select]').attr('onclick') || '';
-        // this.$dom.find('.ultraHall__equipments').append(equipment.$dom);
-        //
-        const listClick          = this.getParams.bind(null, ch);
+      // ch('#20slot').closest('table').find('tr:nth-child(n + 2)').first().each((index, element) => {
+      ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
+        const $elem              = Cheerio(element);
+        const onClick            = $elem.find('[name=select]').attr('onclick') || '';
+        const listClick          = this.getParams.bind(this, ch);
         const params: AjaxParams = eval(onClick); // listClick() を実行している。
 
-        this.equipmentParams.push(params);
+        this.paramsList.push(params);
       });
-      console.log(this.equipmentParams);
     }
-
-    return $;
   }
 
   // ライフサイクル
   @Emit() created() {
-    // if (this.html) {
-    //   this.$ = Cheerio.load(this.html);
-    // }
   }
 
 
