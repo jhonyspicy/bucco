@@ -28,6 +28,11 @@ export default class Equipment extends Vue {
     return this.ch('#hall_name').text();
   }
 
+  get ok(): boolean {
+    // @ts-ignore
+    return !!this.ch.text();
+  }
+
   // methods
   start(event: Event) {
     event.preventDefault();
@@ -36,13 +41,13 @@ export default class Equipment extends Vue {
 
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {
     this.paramsList = [];
-    if (ch) {
+    if (this.ok) {
       ch('#ata0 .ind').each((index, element) => {
         const $elem             = Cheerio(element);
         const datHref           = $elem.find('.det a').attr('href') || '';
         const hisHref           = $elem.find('.his a').attr('href') || '';
-        const openDedamaDetail  = this.getDetailParams.bind(this, ch);
-        const tableHistoryClick = this.getHistoryParams.bind(this, ch);
+        const openDedamaDetail  = this.getParams.bind(this);
+        const tableHistoryClick = this.getParams.bind(this);
 
         const detailParams: AjaxParams  = eval(datHref); // openDedamaDetail() を実行している。
         const historyParams: AjaxParams = eval(hisHref); // tableHistoryClick() を実行している。
@@ -61,11 +66,11 @@ export default class Equipment extends Vue {
     }
   }
 
-  private getDetailParams(
+  private getParams(
     cd: any,
     num: any
   ) {
-    const formName = this.getFormName('history');
+    const formName =  'Table' + 'Select' + 'Action' + 'Form';
     const $form    = this.ch(`form[name=${formName}]`);
     const method   = $form.attr('method') || '';
     const action   = $form.attr('action') || '';
@@ -96,44 +101,5 @@ export default class Equipment extends Vue {
       url,
       data,
     };
-  }
-
-  private getHistoryParams(
-    num: any
-  ) {
-    const formName = this.getFormName('history');
-    const $form    = this.ch(`form[name=${formName}]`);
-    const method   = $form.attr('method') || '';
-    const action   = $form.attr('action') || '';
-    const url      = getBaseUrl() + action;
-    const data     = {} as any;
-
-    $form.find('[name]').each((i, elem) => {
-      const $elem = Cheerio(elem);
-      const name  = $elem.attr('name') || '';
-      data[name]  = $elem.attr('value') || '';
-    });
-
-    data.tablenum = num;
-
-    return {
-      method,
-      url,
-      data,
-    };
-  }
-
-  private getFormName(name: string): string {
-    if (name === 'history') {
-      return 'Table' +
-        'History' +
-        'Action' +
-        'Form';
-    } else {
-      return 'Table' +
-        'Select' +
-        'Action' +
-        'Form';
-    }
   }
 }

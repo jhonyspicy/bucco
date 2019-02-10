@@ -11,9 +11,9 @@ export namespace bucco {
     data: any;
   }
 
-  export interface MachineParams {
-    detail: AjaxParams;
-    history: AjaxParams;
+  export interface GraphSrc {
+    original: string;
+    thumbnail: string;
   }
 }
 

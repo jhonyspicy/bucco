@@ -2,11 +2,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
 import Equipment from './Equipment';
-import * as $ from 'jquery';
 import {bucco, functions} from '../lib/Includes/Util';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
-import ajax = functions.ajax;
 import AjaxParams = bucco.AjaxParams;
 
 @Component({
@@ -22,10 +20,12 @@ export default class Hall extends Vue {
   static promise: Promise<any> = Promise.resolve();
 
   get name(): string {
-    if (this.ch) {
-      return this.ch('#hall_name').text();
-    }
-    return '';
+    return this.ch('#hall_name').text();
+  }
+
+  get ok(): boolean {
+    // @ts-ignore
+    return !!this.ch.text();
   }
 
   // methods
@@ -36,7 +36,7 @@ export default class Hall extends Vue {
 
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {
     this.paramsList = [];
-    if (ch) {
+    if (this.ok) {
       // ch('#20slot').closest('table').find('tr:nth-child(n + 2)').first().each((index, element) => {
       ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
         const $elem              = Cheerio(element);
