@@ -17,8 +17,9 @@ import getBaseUrl = functions.getBaseUrl;
 export default class Equipment extends Vue {
   @Prop() params: AjaxParams; // onClickの値がテキストで入っている
   paramsList: AjaxParams[]     = [];
+  promise: Promise<any> = Promise.resolve();
   private ch: CheerioStatic    = Cheerio.load('');
-  static promise: Promise<any> = Promise.resolve();
+  private finish = () => {};
 
   get name(): string {
     return this.ch('#machine_name a').text();
@@ -54,14 +55,22 @@ export default class Equipment extends Vue {
 
         this.paramsList.push(detailParams);
       });
+
+      this.finish();
     }
   }
 
   // ライフサイクル
   @Emit() created() {
     if (this.params) {
-      ajax(this.params).then(($html: CheerioStatic) => {
-        this.ch = $html;
+      debugger;
+      this.$parent.$data.promise = this.$parent.$data.promise.then(() => {
+        return new Promise((resolve, reject) => {
+          this.finish = resolve;
+          ajax(this.params).then(($html: CheerioStatic) => {
+            this.ch = $html;
+          });
+        });
       });
     }
   }

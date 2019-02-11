@@ -15,6 +15,17 @@ export namespace bucco {
     original: string;
     thumbnail: string;
   }
+
+  export interface MachineInfo {
+    number: number;
+    name: string;
+    results: MachineResult[];
+  }
+
+  export interface MachineResult {
+    total: number;
+    coin: number;
+  }
 }
 
 export namespace functions {

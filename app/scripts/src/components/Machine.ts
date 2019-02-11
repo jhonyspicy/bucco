@@ -14,9 +14,8 @@ import getBaseUrl = functions.getBaseUrl;
 export default class Machine extends Vue {
   @Prop() params: AjaxParams; // onClickの値がテキストで入っている
   historyParams: AjaxParams;
-
+  promise: Promise<any> = Promise.resolve();
   private ch: CheerioStatic    = Cheerio.load('');
-  static promise: Promise<any> = Promise.resolve();
 
   get number(): number {
     if (this.ok) {

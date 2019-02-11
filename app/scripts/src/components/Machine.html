@@ -1,6 +1,6 @@
 <div>
     <h1>This is Machine template!! {{number}}</h1>
-    <img v-if="ok" :src="totalGraph.original" width="500">
+    <img v-if="ok" :src="totalGraph.original">
     <div v-for="(dayDate, index) in dayDateList">
         <div>{{index}} : {{dayDate.total}}</div>
         <img :src="dayDate.graph.thumbnail">

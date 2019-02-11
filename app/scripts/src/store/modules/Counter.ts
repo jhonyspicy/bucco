@@ -15,13 +15,14 @@ export default class Counter extends VuexModule {
   }
 
   // action 'incr' commits mutation 'increment' when done with return value as payload
-  @Action({commit: 'incr'}) incr() {
-    console.log(1);
+  @Action({commit: 'increment'}) incr() {
+    console.log('increment');
     return 5;
   }
 
   // action 'decr' commits mutation 'decrement' when done with return value as payload
-  @Action({commit: 'decr'}) decr() {
+  @Action({commit: 'decrement'}) decr() {
+    console.log('decrement');
     return 5;
   }
 }

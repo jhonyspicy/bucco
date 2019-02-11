@@ -18,8 +18,8 @@ import Counter from '../store/modules/Counter';
 export default class Hall extends Vue {
   @Prop() params: string;
   paramsList: AjaxParams[]     = [];
+  promise: Promise<any> = Promise.resolve();
   private ch: CheerioStatic    = Cheerio.load('');
-  static promise: Promise<any> = Promise.resolve();
 
   get name(): string {
     // counterModule.incr();
