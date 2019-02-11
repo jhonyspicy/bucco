@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
 import Machine from './Machine';
-import {bucco, functions} from '../lib/Includes/Util';
+import {bucco, functions} from '../Includes/Util';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import ajax = functions.ajax;

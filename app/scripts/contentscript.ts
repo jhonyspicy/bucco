@@ -1,13 +1,16 @@
 'use strict';
 
 import Vue from 'vue';
-import Hall from './components/Hall';
-import Equipment from './components/Equipment';
-import Machine from './components/Machine';
-import {functions} from './lib/Includes/Util';
+import Vuex from 'vuex';
+import Hall from './src/components/Hall';
+import Equipment from './src/components/Equipment';
+import Machine from './src/components/Machine';
+import {functions} from './src/Includes/Util';
 import isHallPage = functions.isHallPage;
 import isEquipmentPage = functions.isEquipmentPage;
 import isMachinePage = functions.isMachinePage;
+// import {counterModule} from './store/modules/Store';
+import store from './src/store';
 
 const $app = document.createElement('div');
 $app.setAttribute('id', 'app');
@@ -47,6 +50,7 @@ if (isHallPage() || isEquipmentPage() || isMachinePage()) {
   対象ページじゃなかったら何もしない
    */
   new Vue({
+    store,
     el: '#app',
     template: `
       <div id="ultra7">

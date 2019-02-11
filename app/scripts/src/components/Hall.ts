@@ -2,10 +2,12 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
 import Equipment from './Equipment';
-import {bucco, functions} from '../lib/Includes/Util';
+import {bucco, functions} from '../Includes/Util';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
 import AjaxParams = bucco.AjaxParams;
+// import { counterModule } from '../store/modules/Store';
+import Counter from '../store/modules/Counter';
 
 @Component({
   template: require('./Hall.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -20,6 +22,17 @@ export default class Hall extends Vue {
   static promise: Promise<any> = Promise.resolve();
 
   get name(): string {
+    // counterModule.incr();
+    this.$store;
+    this.$store.commit('increment');
+/*
+    this.$store.state.Counter.count;
+    this.$store.commit('Counter/INCREMENT',13);
+    this.$store.commit({
+  type: 'Counter/INCREMENT',
+  amount: 13
+});
+*/
     return this.ch('#hall_name').text();
   }
 

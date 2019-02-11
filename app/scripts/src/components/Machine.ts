@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
-import {bucco, functions} from '../lib/Includes/Util';
+import {bucco, functions} from '../Includes/Util';
 import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
 import * as Cheerio from 'cheerio';
@@ -83,10 +83,11 @@ export default class Machine extends Vue {
     }
   }
 
-  private getParams() {
+  private getParams(day: number = 0) {
     const formName = 'Table' + 'History' + 'Action' + 'Form';
     const $form    = this.ch(`form[name=${formName}]`);
-    const method   = $form.attr('method') || '';
+    // const method   = $form.attr('method') || '';
+    const method   = 'get';
     const action   = $form.attr('action') || '';
     const url      = getBaseUrl() + action;
     const data     = {} as any;
@@ -96,6 +97,8 @@ export default class Machine extends Vue {
       const name  = $elem.attr('name') || '';
       data[name]  = $elem.attr('value') || '';
     });
+
+    data.day = day;
 
     return {
       method,
