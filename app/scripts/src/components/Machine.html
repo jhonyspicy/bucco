@@ -1,8 +1,19 @@
-<div>
-    <h1>This is Machine template!! {{number}}</h1>
-    <img v-if="ok" :src="totalGraph.original">
-    <div v-for="(dayDate, index) in dayDateList">
-        <div>{{index}} : {{dayDate.total}}</div>
-        <img :src="dayDate.graph.thumbnail">
+<div class="ultraMachine">
+  <div class="ultraMachine__info">
+    <div class="ultraMachine__info__number">{{number}}</div>
+    <div class="ultraMachine__info__name">{{name}}</div>
+  </div>
+
+  <div class="ultraMachine__data">
+    <div class="ultraMachine__data__totalGraph">
+      <img v-if="ok" :src="totalGraph.original">
     </div>
+    <ul class="ultraMachine__data__dayData">
+      <li v-for="(dayData, index) in dayDataList">
+        <div class="ultraMachine__data__dayData__number">{{index}}日前</div>
+        <div class="ultraMachine__data__dayData__rotate">{{dayData.total}}回転</div>
+        <img :src="dayData.graph.thumbnail">
+      </li>
+    </ul>
+  </div>
 </div>

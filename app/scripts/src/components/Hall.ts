@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
 import Equipment from './Equipment';
-import {bucco, functions} from '../Includes/Util';
+import {bucco, functions} from '../includes/util';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
 import AjaxParams = bucco.AjaxParams;

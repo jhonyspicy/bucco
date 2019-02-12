@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
-import {bucco, functions} from '../Includes/Util';
+import {bucco, functions} from '../includes/util';
 import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
 import * as Cheerio from 'cheerio';
@@ -17,6 +17,10 @@ export default class Machine extends Vue {
   promise: Promise<any> = Promise.resolve();
   private ch: CheerioStatic    = Cheerio.load('');
 
+  /**
+   * 台番号
+   * @example 100
+   */
   get number(): number {
     if (this.ok) {
       return parseInt(this.ch('#dedama_detail_table .left h4').text());
@@ -24,14 +28,24 @@ export default class Machine extends Vue {
     return 0;
   }
 
+  /**
+   * 機種名
+   * @example ニューキングハナハナ
+   */
   get name(): string {
     return this.ch('#machine_name a').text();
   }
 
+  /**
+   * 店舗名
+   */
   get hallName(): string {
     return this.ch('#hall_name').text();
   }
 
+  /**
+   * 週間グラフ
+   */
   get totalGraph(): GraphSrc {
     return {
       original: this.ch('#dedama_8days a').attr('href') || '',
@@ -39,7 +53,7 @@ export default class Machine extends Vue {
     };
   }
 
-  get dayDateList() {
+  get dayDataList() {
     const result: any[] = [];
     if (this.ok) {
       this.ch('#graph_list dd').each((index, element) => {

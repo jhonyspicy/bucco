@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
 import Machine from './Machine';
-import {bucco, functions} from '../Includes/Util';
+import {bucco, functions} from '../includes/util';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import ajax = functions.ajax;
@@ -63,7 +63,6 @@ export default class Equipment extends Vue {
   // ライフサイクル
   @Emit() created() {
     if (this.params) {
-      debugger;
       this.$parent.$data.promise = this.$parent.$data.promise.then(() => {
         return new Promise((resolve, reject) => {
           this.finish = resolve;
