@@ -1,6 +1,6 @@
 <div class="ultraEquipment">
   <h1>This is Equipment template!! {{hallName}} {{name}}</h1>
-  <button @click="start($event)" v-if="!params">始めるよ！</button>
+  <button @click="start($event)" v-if="!params && !ok">始めるよ！</button>
   <Machine
     v-for="params in paramsList"
     v-bind:key="null"

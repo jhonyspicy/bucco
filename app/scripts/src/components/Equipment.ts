@@ -48,12 +48,10 @@ export default class Equipment extends Vue {
         const datHref           = $elem.find('.det a').attr('href') || '';
         const hisHref           = $elem.find('.his a').attr('href') || '';
         const openDedamaDetail  = this.getParams.bind(this);
-        const tableHistoryClick = this.getParams.bind(this);
 
-        const detailParams: AjaxParams  = eval(datHref); // openDedamaDetail() を実行している。
-        const historyParams: AjaxParams = eval(hisHref); // tableHistoryClick() を実行している。
+        const params: AjaxParams  = eval(datHref); // openDedamaDetail() を実行している。
 
-        this.paramsList.push(detailParams);
+        this.paramsList.push(params);
       });
 
       this.finish();
