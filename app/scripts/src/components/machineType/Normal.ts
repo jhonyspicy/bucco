@@ -21,10 +21,7 @@ export default class Normal extends Vue {
    * @example 100
    */
   get number(): number {
-    if (this.ok) {
-      return parseInt(this.ch('#dedama_detail_table .left h4').text());
-    }
-    return 0;
+    return parseInt(this.ch('#dedama_detail_table .left h4').text());
   }
 
   /**
@@ -37,6 +34,7 @@ export default class Normal extends Vue {
 
   /**
    * 店舗名
+   * @example モナコ
    */
   get hallName(): string {
     return this.ch('#hall_name').text();
@@ -54,34 +52,19 @@ export default class Normal extends Vue {
 
   get dayDataList() {
     const result: any[] = [];
-    if (this.ok) {
-      this.ch('#graph_list dd').each((index, element) => {
-        const $dd = Cheerio(element);
-        const $tr = this.ch(`#dedama_kind_table tr:nth-child(${index + 2})`);
-        result.push({
-          graph: {
-            original: $dd.find('a').attr('href') || '',
-            thumbnail: $dd.find('img').attr('src') || ''
-          },
-          total: $tr.find('td').eq(1).text()
-        });
+    this.ch('#graph_list dd').each((index, element) => {
+      const $dd = Cheerio(element);
+      const $tr = this.ch(`#dedama_kind_table tr:nth-child(${index + 2})`);
+      result.push({
+        graph: {
+          original: $dd.find('a').attr('href') || '',
+          thumbnail: $dd.find('img').attr('src') || ''
+        },
+        total: $tr.find('td').eq(1).text()
       });
-    }
+    });
 
     return result;
-  }
-
-  get ok(): boolean {
-    // @ts-ignore
-    return !!this.ch.text();
-  }
-
-  @Watch('ch') onLoadHtml(ch: CheerioStatic) {
-    if (this.ok) {
-      const hisHref           = ch('#dedama_detail_table .left p a:nth-of-type(2)').attr('href') || '';
-      const tableHistoryClick = this.getParams.bind(this);
-      this.historyParams      = eval(hisHref); // tableHistoryClick() を実行している。
-    }
   }
 
   // ライフサイクル

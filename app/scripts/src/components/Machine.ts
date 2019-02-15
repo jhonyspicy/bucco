@@ -5,9 +5,13 @@ import {bucco, functions} from '../includes/util';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import ajax = functions.ajax;
+import Normal from './machineType/Normal'
 
 @Component({
-  template: require('./Machine.html') // html-loaderを使うと外部のhtmlファイルを読み込める
+  template: require('./Machine.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
+  components: {
+    Normal,
+  },
 })
 export default class Machine extends Vue {
   @Prop() params: AjaxParams; // onClickの値がテキストで入っている
