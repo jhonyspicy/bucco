@@ -1,11 +1,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Emit, Prop, Watch} from 'vue-property-decorator';
+import {Emit, Prop} from 'vue-property-decorator';
 import {bucco, functions} from '../../includes/util';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
-import ajax = functions.ajax;
 import getBaseUrl = functions.getBaseUrl;
 
 @Component({

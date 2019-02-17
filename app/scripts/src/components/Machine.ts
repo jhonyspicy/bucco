@@ -2,11 +2,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop} from 'vue-property-decorator';
 import {bucco, functions} from '../includes/util';
+import Normal from './machineType/Normal';
+import Hanahana from './machineType/Hanahana';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import ajax = functions.ajax;
-import Normal from './machineType/Normal';
-import Hanahana from './machineType/Hanahana';
 
 @Component({
   template: require('./Machine.html'), // html-loaderを使うと外部のhtmlファイルを読み込める

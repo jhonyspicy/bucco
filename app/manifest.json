@@ -2,7 +2,7 @@
   "name": "__MSG_appName__",
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
-  "version": "0.0.3",
+  "version": "3.0.2",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
@@ -27,5 +27,10 @@
   "permissions": [
     "tabs",
     "<all_urls>"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ultra7@example.com"
+    }
+  }
 }

@@ -6,8 +6,6 @@ import {bucco, functions} from '../includes/util';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
 import AjaxParams = bucco.AjaxParams;
-// import { counterModule } from '../store/modules/Store';
-import Counter from '../store/modules/Counter';
 
 @Component({
   template: require('./Hall.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -22,17 +20,6 @@ export default class Hall extends Vue {
   private ch: CheerioStatic    = Cheerio.load('');
 
   get name(): string {
-    // counterModule.incr();
-    this.$store;
-    this.$store.commit('increment');
-/*
-    this.$store.state.Counter.count;
-    this.$store.commit('Counter/INCREMENT',13);
-    this.$store.commit({
-  type: 'Counter/INCREMENT',
-  amount: 13
-});
-*/
     return this.ch('#hall_name').text();
   }
 
@@ -50,8 +37,8 @@ export default class Hall extends Vue {
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {
     this.paramsList = [];
     if (this.ok) {
-      // ch('#20slot').closest('table').find('tr:nth-child(n + 2)').first().each((index, element) => {
-      ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
+      ch('#20slot').closest('table').find('tr:nth-child(n + 2)').each((index, element) => {
+      // ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
         const $elem              = Cheerio(element);
         const onClick            = $elem.find('[name=select]').attr('onclick') || '';
         const listClick          = this.getParams.bind(this, ch);
