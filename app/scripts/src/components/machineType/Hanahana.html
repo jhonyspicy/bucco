@@ -1,0 +1,24 @@
+<div>
+  <div class="ultraMachine__info">
+    <div class="ultraMachine__info__number">{{number}}</div>
+  </div>
+
+  <div class="ultraMachine__data">
+    <div class="ultraMachine__data__totalGraph">
+      <img :src="totalGraph.thumbnail">
+    </div>
+    <ul class="ultraMachine__data__dayDataList">
+      <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__item">
+        <div class="ultraMachine__data__dayDataList__item__number">{{index}}日前</div>
+        <div class="ultraMachine__data__dayDataList__item__smallGraph"><img :src="dayData.graph.thumbnail"></div>
+        <div class="ultraMachine__data__dayDataList__item__rotate"><span>回転:</span>{{dayData.total}}</div>
+        <div class="ultraMachine__data__dayDataList__item__big"><span>Big:</span>123</div>
+        <div class="ultraMachine__data__dayDataList__item__reg"><span>Reg:</span>123</div>
+        <div class="ultraMachine__data__dayDataList__item__plusRange"><span>正幅:</span>12333</div>
+        <div class="ultraMachine__data__dayDataList__item__minusRange"><span>負幅:</span>12333</div>
+        <div class="ultraMachine__data__dayDataList__item__tamamochi"><span>玉持:</span>36.53</div>
+
+      </li>
+    </ul>
+  </div>
+</div>

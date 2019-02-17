@@ -7,11 +7,12 @@ import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
 import ajax = functions.ajax;
 import getBaseUrl = functions.getBaseUrl;
+import Normal from './Normal';
 
 @Component({
-  template: require('./Normal.html') // html-loaderを使うと外部のhtmlファイルを読み込める
+  template: require('./Hanahana.html') // html-loaderを使うと外部のhtmlファイルを読み込める
 })
-export default class Normal extends Vue {
+export default class Hanahana extends Normal {
   @Prop() ch: CheerioStatic;
   historyParams: AjaxParams;
   promise: Promise<any> = Promise.resolve();

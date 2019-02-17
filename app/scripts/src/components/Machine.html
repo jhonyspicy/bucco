@@ -1,7 +1,12 @@
 <div class="ultraMachine">
-  <template v-if="ok">
-    <Hanahana v-if="isHanahan()" v-bind:ch="ch" />
-    <Okidoki v-if="isOkidoki()" v-bind:ch="ch" />
-    <Normal v-else  v-bind:ch="ch" />
-  </template>
+  <transition mode="out-in">
+    <div v-if="ok" :key="1">
+      <Hanahana v-if="isHanahan()" v-bind:ch="ch" />
+      <Okidoki v-else-if="isOkidoki()" v-bind:ch="ch" />
+      <Normal v-else  v-bind:ch="ch" />
+    </div>
+    <div v-else class="ultraMachine__status" :key="2">
+      しばしお待ちを。。。
+    </div>
+  </transition>
 </div>
