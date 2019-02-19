@@ -2,13 +2,17 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop} from 'vue-property-decorator';
 import {bucco, functions} from '../../includes/util';
+import GraphDay from "../GraphDay";
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
 import getBaseUrl = functions.getBaseUrl;
 
 @Component({
-  template: require('./Normal.html') // html-loaderを使うと外部のhtmlファイルを読み込める
+  template: require('./Normal.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
+  components: {
+    GraphDay,
+  },
 })
 export default class Normal extends Vue {
   @Prop() ch: CheerioStatic;
@@ -59,7 +63,9 @@ export default class Normal extends Vue {
           original: $dd.find('a').attr('href') || '',
           thumbnail: $dd.find('img').attr('src') || ''
         },
-        total: $tr.find('td').eq(1).text()
+        total: $tr.find('td').eq(1).text(),
+        rangePlus: 0,
+        rangeMinus: 0,
       });
     });
 
@@ -95,5 +101,10 @@ export default class Normal extends Vue {
       url,
       data,
     };
+  }
+
+  sample(a: string, index: number) {
+    console.log('aa!!', a);
+    this.$set(this.dayDataList, index, {rangePlus: 111});
   }
 }
