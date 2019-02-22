@@ -56,9 +56,6 @@ export default class Normal extends Vue {
 
   // ライフサイクル
   @Emit() created() {
-    // const hisHref           = this.ch('#dedama_detail_table .left p a:nth-of-type(2)').attr('href') || '';
-    // const tableHistoryClick = this.getParams.bind(this);
-    // this.historyParams      = eval(hisHref); // tableHistoryClick() を実行している。
     this.generateDayDataList();
   }
 
@@ -72,6 +69,10 @@ export default class Normal extends Vue {
           thumbnail: $dd.find('img').attr('src') || ''
         },
         total: $tr.find('td').eq(1).text(),
+        nowCoin: 0,
+        operation: 0,
+        max: 0,
+        min: 0,
         rangePlus: 0,
         rangeMinus: 0,
       });
@@ -102,8 +103,12 @@ export default class Normal extends Vue {
     };
   }
 
-  sample(a: string, dayData: any, index: number) {
-    console.log('aa!!', a);
-    dayData.rangePlus = 999 - index;
+  onLoad(imgData: any, dayData: any) {
+    dayData.nowCoin    = imgData.nowCoin;
+    dayData.operation  = imgData.operation;
+    dayData.max        = imgData.max;
+    dayData.min        = imgData.min;
+    dayData.rangePlus  = imgData.rangePlus;
+    dayData.rangeMinus = imgData.rangeMinus;
   }
 }
