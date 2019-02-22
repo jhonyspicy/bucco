@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop} from 'vue-property-decorator';
 import {bucco, functions} from '../../includes/util';
-import GraphDay from "../GraphDay";
+import Graph from "../Graph";
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
@@ -11,13 +11,14 @@ import getBaseUrl = functions.getBaseUrl;
 @Component({
   template: require('./Normal.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
   components: {
-    GraphDay,
+    Graph,
   },
 })
 export default class Normal extends Vue {
   @Prop() ch: CheerioStatic;
   historyParams: AjaxParams;
   promise: Promise<any> = Promise.resolve();
+  dayDataList: any[] = [];
 
   /**
    * 台番号
@@ -53,12 +54,19 @@ export default class Normal extends Vue {
     };
   }
 
-  get dayDataList() {
-    const result: any[] = [];
+  // ライフサイクル
+  @Emit() created() {
+    // const hisHref           = this.ch('#dedama_detail_table .left p a:nth-of-type(2)').attr('href') || '';
+    // const tableHistoryClick = this.getParams.bind(this);
+    // this.historyParams      = eval(hisHref); // tableHistoryClick() を実行している。
+    this.generateDayDataList();
+  }
+
+  protected generateDayDataList() {
     this.ch('#graph_list dd').each((index, element) => {
       const $dd = Cheerio(element);
       const $tr = this.ch(`#dedama_kind_table tr:nth-child(${index + 2})`);
-      result.push({
+      this.dayDataList.push({
         graph: {
           original: $dd.find('a').attr('href') || '',
           thumbnail: $dd.find('img').attr('src') || ''
@@ -69,14 +77,7 @@ export default class Normal extends Vue {
       });
     });
 
-    return result;
-  }
-
-  // ライフサイクル
-  @Emit() created() {
-    const hisHref           = this.ch('#dedama_detail_table .left p a:nth-of-type(2)').attr('href') || '';
-    const tableHistoryClick = this.getParams.bind(this);
-    this.historyParams      = eval(hisHref); // tableHistoryClick() を実行している。
+    console.log(this.dayDataList);
   }
 
   protected getParams(day: number = 0) {
@@ -103,8 +104,8 @@ export default class Normal extends Vue {
     };
   }
 
-  sample(a: string, index: number) {
+  sample(a: string, dayData: any, index: number) {
     console.log('aa!!', a);
-    this.$set(this.dayDataList, index, {rangePlus: 111});
+    dayData.rangePlus = 999 - index;
   }
 }

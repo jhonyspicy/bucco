@@ -10,7 +10,9 @@
     <ul class="ultraMachine__data__dayDataList">
       <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__item">
         <div class="ultraMachine__data__dayDataList__item__number">{{index}}日前</div>
-        <div class="ultraMachine__data__dayDataList__item__smallGraph"><GraphDay :graph="dayData.graph" v-on:test="sample($event, index)" /></div>
+        <div class="ultraMachine__data__dayDataList__item__smallGraph">
+          <Graph :graph="dayData.graph" v-on:test="sample($event, dayData, index)"/>
+        </div>
         <div class="ultraMachine__data__dayDataList__item__smallGraph"><img :src="dayData.graph.thumbnail"></div>
         <div class="ultraMachine__data__dayDataList__item__rotate"><span>回転:</span>{{dayData.total}}</div>
         <div class="ultraMachine__data__dayDataList__item__plusRange"><span>正幅:</span>{{dayData.rangePlus}}</div>

@@ -5,9 +5,9 @@ import {bucco, functions} from '../includes/util';
 import GraphSrc = bucco.GraphSrc;
 
 @Component({
-  template: require('./GraphDay.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
+  template: require('./Graph.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
 })
-export default class GraphDay extends Vue {
+export default class Graph extends Vue {
   @Prop() graph: GraphSrc;
   range = {
     plus: 0,
