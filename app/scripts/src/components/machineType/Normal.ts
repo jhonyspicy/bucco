@@ -76,8 +76,6 @@ export default class Normal extends Vue {
         rangeMinus: 0,
       });
     });
-
-    console.log(this.dayDataList);
   }
 
   protected getParams(day: number = 0) {
