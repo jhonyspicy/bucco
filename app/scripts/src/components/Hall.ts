@@ -32,6 +32,9 @@ export default class Hall extends Vue {
   start(event: Event) {
     event.preventDefault();
     this.ch = Cheerio.load(document.documentElement.innerHTML);
+
+    // ホール名をStoreに設定する
+    this.$store.dispatch('hallName', {hallName: this.ch('#hall_name').text()});
   }
 
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {

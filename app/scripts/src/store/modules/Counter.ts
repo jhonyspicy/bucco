@@ -4,12 +4,12 @@ import {Action, Module, Mutation, VuexModule} from 'vuex-module-decorators';
 export default class Counter extends VuexModule {
   count = 0;
 
-  @Mutation INCREMENT(payload: any) {
+  @Mutation increment(payload: any) {
     console.log('INCREMENT');
     this.count += payload.amount;
   }
 
-  @Mutation DECREMENT(payload: any) {
+  @Mutation decrement(payload: any) {
     console.log('DECREMENT');
     this.count -= payload.amount;
   }

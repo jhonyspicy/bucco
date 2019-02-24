@@ -1,16 +1,15 @@
 <div class="ultraEquipment">
   <div class="ultraEquipment__info" v-if="params || ok">
     <h1 class="ultraEquipment__info__name">{{name || 'Waiting...'}}</h1>
+
   </div>
   <div class="ultraEquipment__control">
     <button @click="start($event)" v-if="!params && !ok" class="startButton">START</button>
   </div>
 
-  <div class="ultraEquipment__children">
-    <Machine
-      v-for="params in paramsList"
-      v-bind:key="null"
-      v-bind:params="params"
-    ></Machine>
+  <div class="ultraEquipment__islands">
+    <template v-for="island in islands">
+      <Island v-bind:islandData="island" />
+    </template>
   </div>
 </div>

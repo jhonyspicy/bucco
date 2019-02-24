@@ -3,33 +3,31 @@ body
   vendor('user-drag', auto) !important
 
 .startButton
-  display: inline-block;
-  text-decoration: none;
-  background: #ff8181;
-  color: #FFF;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  border-radius: 50%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 23px;
-  vertical-align: middle;
-  overflow: hidden;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.29);
-  border-bottom: solid 3px #bd6565;
-  transition: .4s;
+  display: inline-block
+  text-decoration: none
+  background: #ff8181
+  color: #FFF
+  width: 100px
+  height: 100px
+  line-height: 100px
+  border-radius: 50%
+  text-align: center
+  font-weight: bold
+  font-size: 23px
+  vertical-align: middle
+  overflow: hidden
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.29)
+  border-bottom: solid 3px #bd6565
+  transition: .4s
 
 .ultraHall
-  padding: 20px 0;
+  padding: 20px 0
   &__control
     text-align: center
 
 .ultraEquipment
   padding: 20px 0
   text-align: left
-  &__control
-    text-align: center
 
   &__info
     &__name
@@ -41,16 +39,33 @@ body
       border-radius: 20px
       border: 5px solid #666
 
-  &__children
-    .ultraMachine
-      display: inline-block;
-      width: 50%;
-      padding: 10px 5px;
-      box-sizing: border-box;
+  &__control
+    text-align: center
 
-      &__data__dayDataList__item
-        &:nth-child(n+5)
-          display: none
+  &__islands
+    .ultraIsland
+      padding: 20px 0
+
+      &:nth-child(n + 2)
+        border-top: 10px solid #999
+
+.ultraIsland
+  font-size: 0
+  &__left
+  &__right
+    display: inline-block
+    vertical-align: top
+    width: 50%
+
+  .ultraMachine
+    display: inline-block
+    width: 100%
+    padding: 10px 5px
+    box-sizing: border-box
+
+    &__data__dayDataList__item
+      &:nth-child(n+5)
+        display: none
 
 .ultraMachine
   padding-bottom: 50px
@@ -103,234 +118,14 @@ body
         &__minusRange
         &__tamamochi
           padding: 2px 5px
+          font-size: 12px
+          text-align: right
 
           span
-            width: 50px
             display: inline-block
+            width: 45px
+            float: left;
+            vertical-align: middle
+            text-align: left;
             font-size: 16px
             font-weight: bold
-            vertical-align: middle
-
-/*
-
-.buccoHall
-  background-color: #fff
-  padding: 30px 0
-
-  &__info
-    &__title
-      font-size: 25px
-      font-weight: bold
-
-    &__sales
-      counter-reset: days -1
-
-      &__sale
-        clearfix()
-        counter-increment: days;
-        font-size: 18px
-        text-align: right
-        width: 200px
-
-        &:before
-          float: left
-          content: counter(days) '日前';
-          display: inline-block
-          font-size: 15px
-          padding: 0 5px
-          box-sizing border-box
-          width: 60px
-
-        &:first-child:before
-          content '当日'
-
-        &:nth-child(2):before
-          content '前日'
-
-  &__chartCoinRate
-    size 100% 420px
-
-  &__content
-    display: block
-
-  &__status
-    display: block
-
-.buccoMachine
-  &.corner
-    relative()
-
-    &:after
-      absolute(right 10px top 30px)
-      content: '角'
-      transform rotate(30deg)
-      border 5px solid #ff0000
-      border-radius 50%
-      font-size: 50px
-      font-weight: bold
-      color #ff0000
-      padding: 10px
-      $offset = 30px;
-      $border = 7px;
-      box-shadow: 0 $offset 0 0 #fff, $offset 0 0 0 #fff, (- $offset) 0 0 0 #fff, 0 (- $offset) 0 0 #fff,
-        0 $offset 0 $border #ff0000, $offset 0 0 $border #ff0000, (- $offset) 0 0 $border #ff0000, 0 (- $offset) 0 $border #ff0000
-
-
-  &__header
-    &__number
-      font-size: 100px
-      font-weight: bold
-      display: inline-block
-
-    &__setting
-      display: inline-block
-
-      &__key
-        font-size: 15px
-
-      &__sale
-      &__coinRate
-        font-size: 25px
-        font-weight: bold
-
-
-  &__info
-    &__bigGraph img
-      size auto
-
-    &__smallGraphs
-      counter-reset: days -1
-      font-size: 0
-      display: flex;
-      flex-direction: row-reverse;
-
-      li
-        counter-increment: days;
-        display: inline-block
-        width: 12.5%
-
-        img
-          width: 100%
-          height: auto
-
-        &:before
-          content: counter(days) '日前';
-          display: block
-          font-size: 15px
-          font-weight: bold
-          text-align: center
-          padding: 20px 0 5px
-
-        &:first-child:before
-          content '当日'
-
-        &:nth-child(2):before
-          content '前日'
-
-    &__detail
-      &#dedama_kind_table
-        margin: 0
-
-    &__mixChart
-    &__bigChart
-    &__regChart
-      size 100% 0
-
-.buccoGraph
-  &.shrimp
-    relative()
-    background-color: #d8c4ff
-
-    &:after
-      content: ''
-      absolute(right -10px top -10px)
-      background-image: url('data:image/png;base64,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');
-      size(37px 51px)
-
-  &__info
-    &__coinRate
-      //&.coinRate40
-      //  color: #7363ff
-      //&.coinRate39
-      //  color: #7363ff
-      //&.coinRate38
-      //  color: #7363ff
-      //&.coinRate37
-      //  color: #00FF00
-      //&.coinRate36
-      //  color: #00FF00
-      //&.coinRate35
-      //  color: #00FF00
-      //&.coinRate34
-      //  color: #FF0000
-
-      &.coinRate33
-        color: #ff0000
-
-      &.coinRate00
-        color: #ff0000
-
-    &__nowCoin
-      &.nowCoin6000
-      &.nowCoin5000
-      &.nowCoin4000
-        background-color: #a297ff
-
-      //  background-color: #7363ff
-      //&.nowCoin3000
-      //  background-color: #7363ff
-      //&.nowCoin2000
-      //  background-color: #00FF00
-      //&.nowCoin1000
-      //  background-color: #00FF00
-      //&.nowCoin0
-      //  background-color: #00FF00
-      //&.nowCoin_1000
-      //  background-color: #00FF00
-      //&.nowCoin_2000
-      //  background-color: #00FF00
-
-      &.nowCoin_3000
-        background-color: #ffe700
-
-      &.nowCoin_4000
-      &.nowCoin_0000
-        background-color: #ff0000
-
-    &__regularRate
-      &.regularRate1
-      &.regularRate09
-      &.regularRate08
-      &.regularRate07
-        color: #7363ff
-
-      &.regularRate06
-      &.regularRate05
-      &.regularRate04
-        color: #00ff00
-
-      &.regularRate03
-      &.regularRate02
-      &.regularRate01
-        color: #ff0000
-
-    &__coinRate
-    &__nowCoin
-    &__min
-    &__max
-    &__rangePlus
-    &__rangeMinus
-    &__regularRate
-      display: block
-      padding: 5px 0 0
-
-      &__key
-        display: inline-block
-        padding: 5px 0
-        font-size: 11px
-
-      &__value
-        display: inline-block
-        font-size: 15px
-        font-weight: bold
-*/

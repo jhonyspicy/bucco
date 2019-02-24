@@ -1,9 +1,9 @@
 <div class="ultraMachine">
   <transition mode="out-in">
     <div v-if="ok" :key="1">
-      <Hanahana v-if="isHanahan()" v-bind:ch="ch" />
-      <Okidoki v-else-if="isOkidoki()" v-bind:ch="ch" />
-      <Normal v-else  v-bind:ch="ch" />
+      <Hanahana v-if="isHanahan()" v-bind:ch="ch" :id="params.id" />
+      <Okidoki v-else-if="isOkidoki()" v-bind:ch="ch" :id="params.id" />
+      <Normal v-else  v-bind:ch="ch" :id="params.id" />
     </div>
     <div v-else class="ultraMachine__status" :key="2">
       しばしお待ちを。。。

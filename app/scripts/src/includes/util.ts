@@ -6,6 +6,7 @@ export namespace bucco {
    * Ajaxに必要なパラメーター
    */
   export interface AjaxParams {
+    id?: number;
     method: string;
     url: string;
     data: any;
@@ -25,6 +26,17 @@ export namespace bucco {
   export interface MachineResult {
     total: number;
     coin: number;
+  }
+
+  export enum Side {
+    Left = 'left',
+    Right = 'right',
+  }
+
+  export interface MachinePosition {
+    island: number;
+    side: Side;
+    order: number;
   }
 }
 
@@ -130,5 +142,14 @@ export namespace functions {
       }));
     };
   })();
+
+  export function arrayPack<T>(target: T[]): T[] {
+    const result: any[] = [];
+    target.forEach((island) => {
+      result.push(island);
+    });
+
+    return result;
+  }
 }
 

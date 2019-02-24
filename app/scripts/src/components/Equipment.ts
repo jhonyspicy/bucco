@@ -5,21 +5,27 @@ import Machine from './Machine';
 import {bucco, functions} from '../includes/util';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
+import Side = bucco.Side;
 import ajax = functions.ajax;
 import getBaseUrl = functions.getBaseUrl;
+import MachinePosition = bucco.MachinePosition;
+import arrayPack = functions.arrayPack;
+import Island from './Island';
 
 @Component({
   template: require('./Equipment.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
   components: {
-    Machine,
+    Island,
   },
 })
 export default class Equipment extends Vue {
   @Prop() params: AjaxParams; // onClickの値がテキストで入っている
-  paramsList: AjaxParams[]     = [];
-  promise: Promise<any> = Promise.resolve();
-  private ch: CheerioStatic    = Cheerio.load('');
-  private finish = () => {};
+  paramsList: AjaxParams[]  = [];
+  islands: any[]            = [];
+  promise: Promise<any>     = Promise.resolve();
+  private ch: CheerioStatic = Cheerio.load('');
+  private finish            = () => {
+  };
 
   get name(): string {
     return this.ch('#machine_name a').text();
@@ -38,21 +44,57 @@ export default class Equipment extends Vue {
   start(event: Event) {
     event.preventDefault();
     this.ch = Cheerio.load(document.documentElement.innerHTML);
+
+    // ホール名をStoreに設定する
+    this.$store.dispatch('hallName', {hallName: this.ch('#hall_name').text()});
   }
 
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {
-    this.paramsList = [];
     if (this.ok) {
-      ch('#ata0 .ind').each((index, element) => {
-        const $elem             = Cheerio(element);
-        const datHref           = $elem.find('.det a').attr('href') || '';
-        const hisHref           = $elem.find('.his a').attr('href') || '';
-        const openDedamaDetail  = this.getParams.bind(this);
+      this.paramsList = [];
 
-        const params: AjaxParams  = eval(datHref); // openDedamaDetail() を実行している。
+      ch('#ata0 .ind').each((index, element) => {
+        const $elem            = Cheerio(element);
+        const datHref          = $elem.find('.det a').attr('href') || '';
+        const openDedamaDetail = this.getParams.bind(this);
+
+        const params: AjaxParams = eval(datHref); // openDedamaDetail() を実行している。
+        params.id = parseInt($elem.find('.num').text());
 
         this.paramsList.push(params);
       });
+
+      this.islands = [];
+      const islands: any[] = [];
+      if (this.$store.getters.isSupportHall) {
+        this.paramsList.forEach((params) => {
+          const p: MachinePosition = this.$store.getters.position(params.id);
+          islands[p.island] = islands[p.island] || {};
+          islands[p.island][p.side] = islands[p.island][p.side] || [];
+          islands[p.island][p.side][p.order] = params;
+        });
+        this.islands = arrayPack(islands).map((island) => {
+          /*
+          配列のindexが0から始まっているとは限らないので(islands[5]みたいな)
+          0から順番になるようにする
+           */
+          for (let key in Side) {
+            const side = Side[key]; // left or right
+
+            if (Object.keys(island).indexOf(side) !== -1) {
+              island[side] = arrayPack(island[side]);
+            }
+          }
+
+          return island;
+        });
+      } else {
+        const island = {
+          left: this.paramsList.slice(0, this.paramsList.length / 2),
+          right: this.paramsList.slice(this.paramsList.length / 2),
+        };
+        this.islands.push(island);
+      }
 
       this.finish();
     }

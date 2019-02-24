@@ -42,6 +42,10 @@ export default class Machine extends Vue {
     } else {
       this.ch = Cheerio.load(document.documentElement.innerHTML);
     }
+
+    if (this.ok) {
+      this.$store.dispatch('hallName', {hallName: this.ch('#hall_name').text()});
+    }
   }
 
   isHanahan(): boolean {

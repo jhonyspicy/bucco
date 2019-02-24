@@ -16,6 +16,7 @@ import getBaseUrl = functions.getBaseUrl;
 })
 export default class Normal extends Vue {
   @Prop() ch: CheerioStatic;
+  @Prop() id: number;
   historyParams: AjaxParams;
   promise: Promise<any> = Promise.resolve();
   dayDataList: any[] = [];
@@ -63,7 +64,10 @@ export default class Normal extends Vue {
     this.ch('#graph_list dd').each((index, element) => {
       const $dd = Cheerio(element);
       const $tr = this.ch(`#dedama_kind_table tr:nth-child(${index + 2})`);
+
       this.dayDataList.push({
+        id: this.id,
+        dayBefore: index,
         graph: {
           original: $dd.find('a').attr('href') || '',
           thumbnail: $dd.find('img').attr('src') || ''
@@ -110,5 +114,7 @@ export default class Normal extends Vue {
     dayData.min        = imgData.min;
     dayData.rangePlus  = imgData.rangePlus;
     dayData.rangeMinus = imgData.rangeMinus;
+
+    this.$store.dispatch('machineData', {data: dayData});
   }
 }

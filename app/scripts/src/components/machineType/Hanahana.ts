@@ -15,14 +15,17 @@ export default class Hanahana extends Normal {
     this.ch('#graph_list dd').each((index, element) => {
       const $dd = Cheerio(element);
       const $tr = this.ch(`#dedama_kind_table tr:nth-child(${index + 2})`);
+
       this.dayDataList.push({
+        id: this.id,
+        dayBefore: index,
         graph: {
           original: $dd.find('a').attr('href') || '',
           thumbnail: $dd.find('img').attr('src') || ''
         },
-        total: parseInt($tr.find('td').eq(1).text()),
-        big: parseInt($tr.find('td').eq(2).text()),
-        reg: parseInt($tr.find('td').eq(3).text()),
+        total: $tr.find('td').eq(1).text(),
+        big: $tr.find('td').eq(2).text(),
+        reg: $tr.find('td').eq(3).text(),
         nowCoin: 0,
         operation: 0,
         max: 0,

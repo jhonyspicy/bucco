@@ -11,10 +11,10 @@ import * as _ from 'lodash';
 })
 export default class Graph extends Vue {
   @Prop() graph: GraphSrc;
-  @Prop() kind: string;
+  @Prop() kind: string; // day or week 詳細グラフか、習慣グラフか
 
   private perCoin = 55; // 1pxあたりのコイン数
-  private perRotate = 87; // 1pxあたりの回転数
+  private perRotate = 90; // 1pxあたりの回転数
 
   // ライフサイクル
   @Emit() created() {
