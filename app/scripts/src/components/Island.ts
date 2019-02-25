@@ -3,7 +3,7 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {bucco} from '../includes/util';
 import Machine from './Machine';
-import AjaxParams = bucco.AjaxParams;
+import IslandData = bucco.IslandData;
 
 @Component({
   template: require('./Island.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -12,5 +12,9 @@ import AjaxParams = bucco.AjaxParams;
   },
 })
 export default class Island extends Vue {
-  @Prop() islandData: AjaxParams; // onClickの値がテキストで入っている
+  @Prop() islandData: IslandData;
+
+  get dailyEarnedNumber() {
+    return [1, 2, 3, 4, 5, 6, 7];
+  }
 }

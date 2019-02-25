@@ -38,6 +38,11 @@ export namespace bucco {
     side: Side;
     order: number;
   }
+
+  export interface IslandData {
+    left: AjaxParams[];
+    right: AjaxParams[];
+  }
 }
 
 export namespace functions {
