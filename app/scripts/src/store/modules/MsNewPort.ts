@@ -138,10 +138,10 @@ export default class MsNewPort extends VuexModule {
     {
       left: [
         520,
-        525,
         521,
         522,
         523,
+        525,
         526,
         527,
         528,
