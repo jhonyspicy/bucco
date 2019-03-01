@@ -22,7 +22,7 @@ export default class Equipment extends Vue {
   @Prop() params: AjaxParams; // onClickの値がテキストで入っている
   paramsList: AjaxParams[]  = [];
   islands: any[]            = [];
-  isShow: boolean           = false;
+  isShow: boolean           = true;
   promise: Promise<any>     = Promise.resolve();
   private ch: CheerioStatic = Cheerio.load('');
   private finish            = () => {
