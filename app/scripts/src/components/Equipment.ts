@@ -22,6 +22,7 @@ export default class Equipment extends Vue {
   @Prop() params: AjaxParams; // onClickの値がテキストで入っている
   paramsList: AjaxParams[]  = [];
   islands: any[]            = [];
+  isShow: boolean           = false;
   promise: Promise<any>     = Promise.resolve();
   private ch: CheerioStatic = Cheerio.load('');
   private finish            = () => {
@@ -47,6 +48,10 @@ export default class Equipment extends Vue {
 
     // ホール名をStoreに設定する
     this.$store.dispatch('hallName', {hallName: this.ch('#hall_name').text()});
+  }
+
+  toggleIsShow() {
+    this.isShow = !this.isShow;
   }
 
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {
