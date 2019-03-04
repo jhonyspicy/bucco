@@ -182,10 +182,10 @@ export default class MsNewPort extends VuexModule {
     {
       left: [
         362,
-        367,
         363,
         365,
         366,
+        367,
         368,
         370,
         371,
@@ -203,10 +203,10 @@ export default class MsNewPort extends VuexModule {
       ],
       right: [
         361,
-        356,
         360,
         358,
         357,
+        356,
         355,
         353,
         352,
@@ -226,10 +226,10 @@ export default class MsNewPort extends VuexModule {
     {
       left: [
         305,
-        310,
         306,
         307,
         308,
+        310,
         311,
         312,
         313,
@@ -270,10 +270,10 @@ export default class MsNewPort extends VuexModule {
     {
       left: [
         180,
-        185,
         181,
         182,
         183,
+        185,
         186,
         187,
         188,
@@ -291,10 +291,10 @@ export default class MsNewPort extends VuexModule {
       ],
       right: [
         178,
-        173,
         177,
         176,
         175,
+        173,
         172,
         171,
         170,
