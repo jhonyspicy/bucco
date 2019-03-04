@@ -107,7 +107,7 @@ export default class Normal extends Vue {
     };
   }
 
-  onLoad(imgData: any, dayData: any) {
+  onGraphLoad(imgData: any, dayData: any) {
     dayData.nowCoin    = imgData.nowCoin;
     dayData.operation  = imgData.operation;
     dayData.max        = imgData.max;

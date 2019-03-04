@@ -11,7 +11,7 @@
       <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__item">
         <div class="ultraMachine__data__dayDataList__item__number">{{index}}日前</div>
         <div class="ultraMachine__data__dayDataList__item__smallGraph">
-          <Graph :graph="dayData.graph" :kind="'day'" v-on:load="onLoad($event, dayData)" />
+          <Graph :graph="dayData.graph" :kind="'day'" v-on:load="onGraphLoad($event, dayData)" />
         </div>
         <div class="ultraMachine__data__dayDataList__item__rotate"><span>回転:</span>{{dayData.total}}</div>
         <div class="ultraMachine__data__dayDataList__item__rotate"><span>稼働:</span>{{dayData.operation}}</div>
