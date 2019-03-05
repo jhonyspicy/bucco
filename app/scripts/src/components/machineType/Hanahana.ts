@@ -38,7 +38,10 @@ export default class Hanahana extends Normal {
         rangePlus: 0,
         rangeMinus: 0,
         coinRate: 0,
-        classes: [],
+        nowCoinClasses: [],
+        coinRateClasses: [],
+        regClasses: [],
+        icons: [],
       });
     });
   }
@@ -50,13 +53,43 @@ export default class Hanahana extends Normal {
     dayData.min        = imgData.min;
     dayData.rangePlus  = imgData.rangePlus;
     dayData.rangeMinus = imgData.rangeMinus;
+    dayData.coinRate   = this.calcCoinRate(dayData);
 
-    const spendCoin  = dayData.big * 312 + dayData.reg * 130 - dayData.nowCoin
-    const coinRate   = (dayData.total / spendCoin) * 50;
-    dayData.coinRate = _.round(coinRate, 2);
+    dayData.icons = []; // とりあえず適当にクラスをつけるテスト。
 
-    dayData.classes = ['shrimpUp']; // とりあえず適当にクラスをつけるテスト。
+    // 獲得枚数
+    if (dayData.nowCoin < -3000) {
+      dayData.nowCoinClasses = ['bad'];
+    } else if (4000 < dayData.nowCoin) {
+      dayData.nowCoinClasses = ['good'];
+    }
+
+    // ベイビーの多さ
+    if (0 < dayData.reg && 0.8 < dayData.reg / dayData.big) {
+      dayData.regClasses = ['good'];
+    }
+
+    // 球持ち
+    if (dayData.coinRate < 33) {
+      dayData.coinRateClasses = ['bad'];
+    } else if (36 < dayData.coinRate) {
+      dayData.coinRateClasses = ['good'];
+    }
+
+    // シュリンプアップ
+    if (dayData.nowCoin < -3000 && 36 < dayData.coinRate) {
+      dayData.icons.push('shrimpUp');
+    }
+
+    dayData.icons.push('test1');
+    dayData.icons.push('test2');
 
     this.$store.dispatch('machineData', {data: dayData});
+  }
+
+  private calcCoinRate(dayData: any) {
+    const spendCoin  = dayData.big * 312 + dayData.reg * 130 - dayData.nowCoin;
+    const coinRate   = (dayData.total / spendCoin) * 50;
+    return _.round(coinRate, 2);
   }
 }

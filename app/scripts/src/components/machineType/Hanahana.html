@@ -10,19 +10,22 @@
     <ul class="ultraMachine__data__dayDataList">
       <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__day" v-bind:class="dayData.classes">
         <div class="ultraMachine__data__dayDataList__day__number">{{index}}日前</div>
+        <div class="ultraMachine__data__dayDataList__day__icons">
+          <i class="ultraMachine__data__dayDataList__day__icons__icon" v-bind:class="icon" v-for="icon in dayData.icons" />
+        </div>
         <div class="ultraMachine__data__dayDataList__day__smallGraph">
           <Graph :graph="dayData.graph" :kind="'day'" v-on:load="onGraphLoad($event, dayData)" />
         </div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>回転:</span>{{dayData.total}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>稼働:</span>{{dayData.operation}}</div>
-        <div class="ultraMachine__data__dayDataList__day__item"><span>獲得:</span>{{dayData.nowCoin}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item" v-bind:class="dayData.nowCoinClasses"><span>獲得:</span>{{dayData.nowCoin}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>最高:</span>{{dayData.max}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>最低:</span>{{dayData.min}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>正幅:</span>{{dayData.rangePlus}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>負幅:</span>{{dayData.rangeMinus}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>Big:</span>{{dayData.big}}</div>
-        <div class="ultraMachine__data__dayDataList__day__item"><span>Reg:</span>{{dayData.reg}}</div>
-        <div class="ultraMachine__data__dayDataList__day__item"><span>球持:</span>{{dayData.coinRate}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item" v-bind:class="dayData.regClasses"><span>Reg:</span>{{dayData.reg}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item" v-bind:class="dayData.coinRateClasses"><span>球持:</span>{{dayData.coinRate}}</div>
       </li>
     </ul>
   </div>
