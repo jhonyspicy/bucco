@@ -58,7 +58,11 @@ export default class Hanahana extends Normal {
     dayData.icons = []; // とりあえず適当にクラスをつけるテスト。
 
     // 獲得枚数
-    if (dayData.nowCoin < -3000) {
+    if (dayData.nowCoin < -4000) {
+      dayData.nowCoinClasses = ['worst'];
+    } else if (dayData.nowCoin < -3000) {
+      dayData.nowCoinClasses = ['worse'];
+    } else if (dayData.nowCoin < -2000) {
       dayData.nowCoinClasses = ['bad'];
     } else if (4000 < dayData.nowCoin) {
       dayData.nowCoinClasses = ['good'];
@@ -87,6 +91,10 @@ export default class Hanahana extends Normal {
     this.$store.dispatch('machineData', {data: dayData});
   }
 
+  /**
+   * 球持ち
+   * @param dayData
+   */
   private calcCoinRate(dayData: any) {
     const spendCoin  = dayData.big * 312 + dayData.reg * 130 - dayData.nowCoin;
     const coinRate   = (dayData.total / spendCoin) * 50;
