@@ -19,7 +19,7 @@ export default class Hanahana extends Normal {
           original: $dd.find('a').attr('href') || '',
           thumbnail: $dd.find('img').attr('src') || ''
         },
-        total: $tr.find('td').eq(1).text(),
+        rotate: $tr.find('td').eq(1).text(),
         big: $tr.find('td').eq(2).text(),
         reg: $tr.find('td').eq(3).text(),
         nowCoin: 0,
@@ -88,7 +88,7 @@ export default class Hanahana extends Normal {
    */
   private calcCoinRate(dayData: any) {
     const spendCoin  = dayData.big * 312 + dayData.reg * 130 - dayData.nowCoin;
-    const coinRate   = (dayData.total / spendCoin) * 50;
+    const coinRate   = (dayData.rotate / spendCoin) * 50;
     return _.round(coinRate, 2);
   }
 }

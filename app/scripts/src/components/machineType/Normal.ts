@@ -29,6 +29,17 @@ export default class Normal extends Vue {
   }
 
   /**
+   * 一週間の獲得枚数
+   * @example 100
+   */
+  get totalCoin(): number {
+    const result = this.dayDataList.reduce(function (a, b) {
+      return {nowCoin: a.nowCoin + b.nowCoin}
+    });
+    return result.nowCoin;
+  }
+
+  /**
    * 機種名
    * @example ニューキングハナハナ
    */
@@ -71,7 +82,7 @@ export default class Normal extends Vue {
           original: $dd.find('a').attr('href') || '',
           thumbnail: $dd.find('img').attr('src') || ''
         },
-        total: $tr.find('td').eq(1).text(),
+        rotate: $tr.find('td').eq(1).text(),
         nowCoin: 0,
         operation: 0,
         max: 0,

@@ -1,6 +1,7 @@
 <div>
   <div class="ultraMachine__info">
     <div class="ultraMachine__info__number">{{number}}</div>
+    <div class="ultraMachine__info__totalCoin">獲得枚数 {{totalCoin}}</div>
   </div>
 
   <div class="ultraMachine__data">
@@ -16,7 +17,7 @@
         <div class="ultraMachine__data__dayDataList__day__smallGraph">
           <Graph :graph="dayData.graph" :kind="'day'" v-on:load="onGraphLoad($event, dayData)" />
         </div>
-        <div class="ultraMachine__data__dayDataList__day__item"><span>回転:</span>{{dayData.total}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>回転:</span>{{dayData.rotate}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>稼働:</span>{{dayData.operation}}</div>
         <div class="ultraMachine__data__dayDataList__day__item" v-bind:class="dayData.nowCoinClasses"><span>獲得:</span>{{dayData.nowCoin}}</div>
         <div class="ultraMachine__data__dayDataList__day__item"><span>最高:</span>{{dayData.max}}</div>
