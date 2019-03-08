@@ -8,18 +8,21 @@
       <img :src="totalGraph.original">
     </div>
     <ul class="ultraMachine__data__dayDataList">
-      <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__item">
-        <div class="ultraMachine__data__dayDataList__item__number">{{index}}日前</div>
-        <div class="ultraMachine__data__dayDataList__item__smallGraph">
+      <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__day">
+        <div class="ultraMachine__data__dayDataList__day__number">{{index}}日前</div>
+        <div class="ultraMachine__data__dayDataList__day__icons">
+          <i class="ultraMachine__data__dayDataList__day__icons__icon" v-bind:class="icon" v-for="icon in dayData.icons" />
+        </div>
+        <div class="ultraMachine__data__dayDataList__day__smallGraph">
           <Graph :graph="dayData.graph" :kind="'day'" v-on:load="onGraphLoad($event, dayData)" />
         </div>
-        <div class="ultraMachine__data__dayDataList__item__rotate"><span>回転:</span>{{dayData.total}}</div>
-        <div class="ultraMachine__data__dayDataList__item__rotate"><span>稼働:</span>{{dayData.operation}}</div>
-        <div class="ultraMachine__data__dayDataList__item__rotate"><span>獲得:</span>{{dayData.nowCoin}}</div>
-        <div class="ultraMachine__data__dayDataList__item__plusRange"><span>最高:</span>{{dayData.max}}</div>
-        <div class="ultraMachine__data__dayDataList__item__plusRange"><span>最低:</span>{{dayData.min}}</div>
-        <div class="ultraMachine__data__dayDataList__item__plusRange"><span>正幅:</span>{{dayData.rangePlus}}</div>
-        <div class="ultraMachine__data__dayDataList__item__minusRange"><span>負幅:</span>{{dayData.rangeMinus}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>回転:</span>{{dayData.total}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>稼働:</span>{{dayData.operation}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>獲得:</span>{{dayData.nowCoin}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>最高:</span>{{dayData.max}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>最低:</span>{{dayData.min}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>正幅:</span>{{dayData.rangePlus}}</div>
+        <div class="ultraMachine__data__dayDataList__day__item"><span>負幅:</span>{{dayData.rangeMinus}}</div>
       </li>
     </ul>
   </div>

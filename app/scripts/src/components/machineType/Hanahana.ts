@@ -55,7 +55,7 @@ export default class Hanahana extends Normal {
     dayData.rangeMinus = imgData.rangeMinus;
     dayData.coinRate   = this.calcCoinRate(dayData);
 
-    dayData.icons = []; // とりあえず適当にクラスをつけるテスト。
+    dayData.icons = [];
 
     // 獲得枚数
     if (dayData.nowCoin < -4000) {

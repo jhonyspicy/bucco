@@ -8,7 +8,7 @@
       <img :src="totalGraph.original">
     </div>
     <ul class="ultraMachine__data__dayDataList">
-      <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__day" v-bind:class="dayData.classes">
+      <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__day">
         <div class="ultraMachine__data__dayDataList__day__number">{{index}}日前</div>
         <div class="ultraMachine__data__dayDataList__day__icons">
           <i class="ultraMachine__data__dayDataList__day__icons__icon" v-bind:class="icon" v-for="icon in dayData.icons" />

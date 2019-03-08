@@ -79,6 +79,7 @@ export default class Normal extends Vue {
         min: 0,
         rangePlus: 0,
         rangeMinus: 0,
+        icons: [],
       });
     });
   }

@@ -84,8 +84,7 @@ body
     box-sizing: border-box
 
     &__data__dayDataList__day
-      &:nth-child(n+5)
-        display: none
+      width: 25%
 
 .ultraMachine
   padding-bottom: 50px
@@ -115,11 +114,15 @@ body
         height: auto
 
     &__dayDataList
-      display: flex
-      flex-direction: row-reverse
-      justify-content: space-between
+      display: block
+      direction: rtl
+      unicode-bidi: bidi-override
+      white-space: nowrap
+      overflow-x auto
       &__day
         display: inline-block
+        width: 12.5%
+        direction: ltr
 
         &__number
           text-align: center
