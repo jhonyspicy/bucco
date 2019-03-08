@@ -17,7 +17,6 @@ import getBaseUrl = functions.getBaseUrl;
 export default class Normal extends Vue {
   @Prop() ch: CheerioStatic;
   @Prop() id: number;
-  historyParams: AjaxParams;
   promise: Promise<any> = Promise.resolve();
   dayDataList: any[] = [];
 
@@ -84,7 +83,7 @@ export default class Normal extends Vue {
     });
   }
 
-  protected getParams(day: number = 0) {
+  protected getParams(day: number = 0): AjaxParams {
     const formName = 'Table' + 'History' + 'Action' + 'Form';
     const $form    = this.ch(`form[name=${formName}]`);
     // const method   = $form.attr('method') || '';

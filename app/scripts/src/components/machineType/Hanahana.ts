@@ -7,15 +7,6 @@ import * as _ from 'lodash';
   template: require('./Hanahana.html') // html-loaderを使うと外部のhtmlファイルを読み込める
 })
 export default class Hanahana extends Normal {
-  getCoinRateClasses(coinRate: number): string[] {
-    console.log('a');
-    const result = [];
-    if (coinRate > 35) {
-      result.push('yes');
-    }
-    return result;
-  }
-
   protected generateDayDataList() {
     this.ch('#graph_list dd').each((index, element) => {
       const $dd = Cheerio(element);
