@@ -72,7 +72,7 @@ export default class Hanahana extends Normal {
     }
 
     // シュリンプアップ
-    if (dayData.nowCoin < -3000 && 36 < dayData.coinRate) {
+    if (dayData.nowCoin < -1000 && 36 < dayData.coinRate) {
       dayData.icons.push('shrimpUp');
     }
 

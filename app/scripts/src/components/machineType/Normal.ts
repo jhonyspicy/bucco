@@ -89,6 +89,7 @@ export default class Normal extends Vue {
         min: 0,
         rangePlus: 0,
         rangeMinus: 0,
+        nowCoinClasses: [],
         icons: [],
       });
     });
@@ -125,6 +126,17 @@ export default class Normal extends Vue {
     dayData.min        = imgData.min;
     dayData.rangePlus  = imgData.rangePlus;
     dayData.rangeMinus = imgData.rangeMinus;
+
+    // 獲得枚数
+    if (dayData.nowCoin < -4000) {
+      dayData.nowCoinClasses = ['worst'];
+    } else if (dayData.nowCoin < -3000) {
+      dayData.nowCoinClasses = ['worse'];
+    } else if (dayData.nowCoin < -2000) {
+      dayData.nowCoinClasses = ['bad'];
+    } else if (4000 < dayData.nowCoin) {
+      dayData.nowCoinClasses = ['good'];
+    }
 
     this.$store.dispatch('machineData', {data: dayData});
   }
