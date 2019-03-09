@@ -59,13 +59,21 @@ export default class Hanahana extends Normal {
       dayData.nowCoinClasses = ['good'];
     }
 
-    // ベイビーの多さ
-    if (0 < dayData.reg && 0.8 < dayData.reg / dayData.big) {
-      dayData.regClasses = ['good'];
+    // ベイビーの多さ(しっかり回っていること)
+    if (0 < dayData.reg && 2000 < dayData.rotate) {
+      if (0.8 < dayData.reg / dayData.big) {
+        // ベイビー多め
+        dayData.regClasses = ['good'];
+
+        if (1000 < dayData.nowCoin) {
+          // しかもしっかり出てる♪
+          dayData.icons.push('baby');
+        }
+      }
     }
 
     // 球持ち
-    if (dayData.coinRate < 33) {
+    if (dayData.coinRate < 34) {
       dayData.coinRateClasses = ['bad'];
     } else if (36 < dayData.coinRate) {
       dayData.coinRateClasses = ['good'];
@@ -73,11 +81,14 @@ export default class Hanahana extends Normal {
 
     // シュリンプアップ
     if (dayData.nowCoin < -1000 && 36 < dayData.coinRate) {
-      dayData.icons.push('shrimpUp');
+      dayData.icons.push('shrimp');
     }
 
-    dayData.icons.push('test1');
-    dayData.icons.push('test2');
+    if (false) {
+      // ハートマークのアルゴリズムは考え中
+      dayData.icons.push('hart');
+    }
+
 
     this.$store.dispatch('machineData', {data: dayData});
   }

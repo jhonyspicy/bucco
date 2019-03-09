@@ -10,10 +10,10 @@
     </div>
     <ul class="ultraMachine__data__dayDataList">
       <li v-for="(dayData, index) in dayDataList" class="ultraMachine__data__dayDataList__day">
-        <div class="ultraMachine__data__dayDataList__day__number">{{index}}日前</div>
         <div class="ultraMachine__data__dayDataList__day__icons">
           <i class="ultraMachine__data__dayDataList__day__icons__icon" v-bind:class="icon" v-for="icon in dayData.icons" />
         </div>
+        <div class="ultraMachine__data__dayDataList__day__number">{{index}}日前</div>
         <div class="ultraMachine__data__dayDataList__day__smallGraph">
           <Graph :graph="dayData.graph" :kind="'day'" v-on:load="onGraphLoad($event, dayData)" />
         </div>

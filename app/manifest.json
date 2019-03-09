@@ -2,7 +2,7 @@
   "name": "ultra7",
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
-  "version": "3.0.3",
+  "version": "3.0.6",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
@@ -27,6 +27,9 @@
   "permissions": [
     "tabs",
     "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "images/*"
   ],
   "browser_specific_settings": {
     "gecko": {
