@@ -89,8 +89,7 @@ export default class Hanahana extends Normal {
       dayData.icons.push('hart');
     }
 
-
-    this.$store.dispatch('machineData', {data: dayData});
+    this.dispatchMachineData();
   }
 
   /**

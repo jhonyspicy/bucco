@@ -7,6 +7,7 @@ import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import GraphSrc = bucco.GraphSrc;
 import getBaseUrl = functions.getBaseUrl;
+import * as _ from "lodash";
 
 @Component({
   template: require('./Normal.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -19,6 +20,7 @@ export default class Normal extends Vue {
   @Prop() id: number;
   promise: Promise<any> = Promise.resolve();
   dayDataList: any[] = [];
+  dispatchMachineData: any; // 遅延実行させたい。
 
   /**
    * 台番号
@@ -68,6 +70,16 @@ export default class Normal extends Vue {
   // ライフサイクル
   @Emit() created() {
     this.generateDayDataList();
+
+    this.dispatchMachineData = _.debounce(() => {
+      this.$store.dispatch(
+        'machineData',
+        {
+          data: this.dayDataList,
+          id  : this.id
+        }
+      );
+    }, 1000);
   }
 
   protected generateDayDataList() {
@@ -138,6 +150,6 @@ export default class Normal extends Vue {
       dayData.nowCoinClasses = ['good'];
     }
 
-    this.$store.dispatch('machineData', {data: dayData});
+    this.dispatchMachineData();
   }
 }

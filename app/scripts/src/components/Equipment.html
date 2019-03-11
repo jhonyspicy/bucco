@@ -1,6 +1,12 @@
 <div class="ultraEquipment">
   <div class="ultraEquipment__info" v-if="params || ok">
-    <h1 class="ultraEquipment__info__name" @click="toggleIsShow">{{name || 'Waiting...'}}</h1>
+    <h1 class="ultraEquipment__info__name" @click="toggleShow">{{name || '待たれよ...'}}</h1>
+    <ul class="ultraEquipment__info__totalInfo">
+      <li v-for="(dayInfo, index) in totalInfo" class="ultraEquipment__info__totalInfo__day">
+        <div class="ultraEquipment__info__totalInfo__day__item">{{index}}日前 総獲得枚数 {{dayInfo.nowCoin}}</div>
+        <div class="ultraEquipment__info__totalInfo__day__item">{{index}}日前 総稼働量 {{dayInfo.operation}}</div>
+      </li>
+    </ul>
   </div>
   <div class="ultraEquipment__control">
     <button @click="start($event)" v-if="!params && !ok" class="startButton">START</button>

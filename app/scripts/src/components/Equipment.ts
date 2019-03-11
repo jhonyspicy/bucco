@@ -41,6 +41,21 @@ export default class Equipment extends Vue {
     return !!this.ch.text();
   }
 
+  get machineIdList(): number[] {
+    return this.paramsList.map(function (params) {
+      return params.id || 0;
+    });
+    // this.$store.getters.aa();
+  }
+
+  get totalInfo(): number {
+    return this.$store.getters.totalInfo(this.machineIdList);
+  }
+
+  get totalOperation(): number {
+    return 0;
+  }
+
   // methods
   start(event: Event) {
     event.preventDefault();
@@ -50,7 +65,7 @@ export default class Equipment extends Vue {
     this.$store.dispatch('hallName', {hallName: this.ch('#hall_name').text()});
   }
 
-  toggleIsShow() {
+  toggleShow() {
     this.isShow = !this.isShow;
   }
 
