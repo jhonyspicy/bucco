@@ -48,39 +48,27 @@ body
     &__totalInfo
       font-size: 0
       &__day
-        &__title
-          font-size: 20px
-          font-weight: bold
-          display: inline-block
-          width: 25%
-          padding: 10px 0
-        &__item
-          font-size: 15px
-          display: inline-block
-          width: 25%
-          padding: 2px 0
+        font-size: 15px
+        display: block
+        padding: 2px 0
 
-          &.best
-            background-color: #5b54ff
-          &.better
-            background-color: #9391ff
-          &.good
-            background-color: #67e4ff
-          &.bad
-            background-color: #fffc4a
-          &.worse
-            background-color: #ffa8a3
-          &.worst
-            background-color: #ff041d
+        &.best
+          background-color: #5b54ff
+        &.better
+          background-color: #9391ff
+        &.good
+          background-color: #67e4ff
+        &.bad
+          background-color: #fffc4a
+        &.worse
+          background-color: #ffa8a3
+        &.worst
+          background-color: #ff041d
 
-          &__key
-            display: inline-block
-            width: 70px
-            text-align: left
-          &__value
-            display: inline-block
-            width: 80px
-            text-align: right
+        &__cell
+          display: inline-block
+          width: 80px
+          text-align: right
 
   &__control
     text-align: center

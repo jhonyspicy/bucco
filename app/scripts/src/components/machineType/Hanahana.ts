@@ -22,6 +22,7 @@ export default class Hanahana extends Normal {
         rotate: $tr.find('td').eq(1).text(),
         big: $tr.find('td').eq(2).text(),
         reg: $tr.find('td').eq(3).text(),
+        ratio: $tr.find('td').eq(4).text(),
         nowCoin: 0,
         operation: 0,
         max: 0,
