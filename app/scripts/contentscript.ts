@@ -51,6 +51,15 @@ if (isHallPage()) {
 }
 
 if (isHallPage() || isEquipmentPage() || isMachinePage()) {
+  Vue.filter('addComma', (val: number) => {
+    return val.toLocaleString();
+  });
+  Vue.filter('dayBeforeWeek', (val: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() - val);
+    return ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]
+  });
+
   /*
   対象ページじゃなかったら何もしない
    */

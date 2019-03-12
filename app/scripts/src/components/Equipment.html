@@ -2,9 +2,13 @@
   <div class="ultraEquipment__info" v-if="params || ok">
     <h1 class="ultraEquipment__info__name" @click="toggleShow">{{name || '待たれよ...'}}</h1>
     <ul class="ultraEquipment__info__totalInfo">
+      <li class="ultraEquipment__info__totalInfo__day">
+        <h2 class="ultraEquipment__info__totalInfo__day__title">総獲得枚数</h2>
+        <h2 class="ultraEquipment__info__totalInfo__day__title">総稼働量</h2>
+      </li>
       <li v-for="(dayInfo, index) in totalInfo" class="ultraEquipment__info__totalInfo__day">
-        <div class="ultraEquipment__info__totalInfo__day__item">{{index}}日前 総獲得枚数 {{dayInfo.nowCoin}}</div>
-        <div class="ultraEquipment__info__totalInfo__day__item">{{index}}日前 総稼働量 {{dayInfo.operation}}</div>
+        <div class="ultraEquipment__info__totalInfo__day__item"><span class="ultraEquipment__info__totalInfo__day__item__key">{{index}}日前({{index | dayBeforeWeek}})</span><span class="ultraEquipment__info__totalInfo__day__item__value">{{dayInfo.nowCoin | addComma}}</span></div>
+        <div class="ultraEquipment__info__totalInfo__day__item"><span class="ultraEquipment__info__totalInfo__day__item__key">{{index}}日前({{index | dayBeforeWeek}})</span><span class="ultraEquipment__info__totalInfo__day__item__value">{{dayInfo.operation | addComma}}</span></div>
       </li>
     </ul>
   </div>

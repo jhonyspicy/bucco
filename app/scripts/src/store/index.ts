@@ -108,17 +108,9 @@ export default new Vuex.Store({
      * @param getters
      */
     totalInfo: (state, getters) => (machineIdList: number[] = []): any => {
+      const result: any[] = [];
       if (_.isEmpty(state.machineData)) {
-        return [
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-          {nowCoin  : 0, operation: 0,},
-        ];
+        return result;
       }
 
       let machineData: any[];
@@ -131,18 +123,17 @@ export default new Vuex.Store({
         });
       }
 
-      return machineData.reduce((data: any[], currentValue: any[]): any[] => {
-        const result: any[] = [];
+      machineData.forEach((days) => {
+        days.forEach((day:any) => {
+          const i = day.dayBefore;
+          result[i] = result[i] || {nowCoin  : 0, operation: 0,};
 
-        data.forEach((value, index, array) => {
-          result.push({
-            nowCoin  : currentValue[index].nowCoin + value.nowCoin,
-            operation: currentValue[index].operation + value.operation
-          });
+          result[i].nowCoin += day.nowCoin;
+          result[i].operation += day.operation;
         });
-
-        return result;
       });
+
+      return result;
     }
   },
   /**

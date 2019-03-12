@@ -20,7 +20,7 @@ export default class Normal extends Vue {
   @Prop() id: number;
   promise: Promise<any> = Promise.resolve();
   dayDataList: any[] = [];
-  dispatchMachineData: any; // 遅延実行させたい。
+  protected dispatchMachineData: any; // 遅延実行させたい。
 
   /**
    * 台番号
