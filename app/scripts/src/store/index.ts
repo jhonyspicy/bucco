@@ -115,12 +115,12 @@ export default new Vuex.Store({
 
       let machineData: any[];
 
-      if (_.isEmpty(machineIdList)) {
-        machineData = state.machineData.slice();
-      } else {
+      if (_.isArray(machineIdList)) {
         machineData = state.machineData.filter((data: any, index: number) => {
           return -1 !== machineIdList.indexOf(index)
         });
+      } else {
+        machineData = state.machineData.slice();
       }
 
       machineData.forEach((days) => {
