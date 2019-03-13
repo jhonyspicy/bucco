@@ -66,8 +66,8 @@ export default class Hanahana extends Normal {
         // ベイビー多め
         dayData.regClasses = ['good'];
 
-        if (1000 < dayData.nowCoin) {
-          // しかもしっかり出てる♪
+        if (0 < dayData.nowCoin && dayData.ratio < 160) {
+          // todo: 注目のベイビー多めのアルゴリズムを考える
           dayData.icons.push('baby');
         }
       }
@@ -82,11 +82,18 @@ export default class Hanahana extends Normal {
 
     // シュリンプアップ
     if (dayData.nowCoin < -1000 && 36 < dayData.coinRate) {
+      // todo: シュリンプアップのアルゴリズムを考える
       dayData.icons.push('shrimp');
     }
 
-    if (false) {
-      // ハートマークのアルゴリズムは考え中
+    if (
+      36 < dayData.coinRate &&
+      0.8 < dayData.reg / dayData.big &&
+      0 < dayData.nowCoin &&
+      -2000 < dayData.rangeMinus &&
+      dayData.ratio < 160
+    ) {
+      // todo: ハートマークのアルゴリズムは考え中
       dayData.icons.push('hart');
     }
 
