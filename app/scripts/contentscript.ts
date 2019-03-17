@@ -59,6 +59,11 @@ if (isHallPage() || isEquipmentPage() || isMachinePage()) {
     date.setDate(date.getDate() - val);
     return ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]
   });
+  Vue.filter('dayBefore', (val: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() - val);
+    return date.getDate();
+  });
 
   /*
   対象ページじゃなかったら何もしない

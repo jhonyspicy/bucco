@@ -45,31 +45,6 @@ body
       border-radius: 20px
       border: 5px solid #666
 
-    &__totalInfo
-      font-size: 0
-      &__day
-        font-size: 15px
-        display: block
-        padding: 2px 0
-
-        &.best
-          background-color: #5b54ff
-        &.better
-          background-color: #9391ff
-        &.good
-          background-color: #67e4ff
-        &.bad
-          background-color: #fffc4a
-        &.worse
-          background-color: #ffa8a3
-        &.worst
-          background-color: #ff041d
-
-        &__cell
-          display: inline-block
-          width: 80px
-          text-align: right
-
   &__control
     text-align: center
 
@@ -79,6 +54,31 @@ body
 
       &:nth-child(n + 2)
         border-top: 10px solid #999
+
+.totalInfo
+  font-size: 0
+  &__day
+    font-size: 15px
+    display: block
+    padding: 2px 0
+
+    &.best
+      background-color: #5b54ff
+    &.better
+      background-color: #9391ff
+    &.good
+      background-color: #67e4ff
+    &.bad
+      background-color: #fffc4a
+    &.worse
+      background-color: #ffa8a3
+    &.worst
+      background-color: #ff041d
+
+    &__cell
+      display: inline-block
+      width: 90px
+      text-align: right
 
 .ultraIsland
   font-size: 0

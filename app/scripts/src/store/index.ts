@@ -5,6 +5,7 @@ import MsNewPort from './modules/MsNewPort';
 import {bucco, functions} from '../includes/util';
 import Side = bucco.Side;
 import * as _ from 'lodash';
+import BasicData = bucco.BasicData;
 
 Vue.use(Vuex);
 
@@ -107,7 +108,7 @@ export default new Vuex.Store({
      * @param state
      * @param getters
      */
-    totalInfo: (state, getters) => (machineIdList: number[] = []): any => {
+    totalInfo: (state, getters) => (machineIdList: number[] = []): BasicData[] => {
       const result: any[] = [];
       if (_.isEmpty(state.machineData)) {
         return result;
@@ -115,7 +116,7 @@ export default new Vuex.Store({
 
       let machineData: any[];
 
-      if (_.isArray(machineIdList)) {
+      if (!_.isEmpty(machineIdList)) {
         machineData = state.machineData.filter((data: any, index: number) => {
           return -1 !== machineIdList.indexOf(index)
         });

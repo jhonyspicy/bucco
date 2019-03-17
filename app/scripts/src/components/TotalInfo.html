@@ -1,0 +1,18 @@
+<ul class="totalInfo">
+  <li v-for="(dayInfo, index) in totalInfo" class="totalInfo__day">
+      <span class="totalInfo__day__cell">
+        {{index | dayBefore}}日 ({{index | dayBeforeWeek}})
+      </span>
+    <span class="totalInfo__day__cell">
+        {{dayInfo.nowCoin | addComma}}
+      </span>
+    /
+    <span class="totalInfo__day__cell">
+        {{dayInfo.operation | addComma}}
+      </span>
+    =
+    <span class="totalInfo__day__cell">
+        {{(100 * dayInfo.nowCoin / dayInfo.operation) | addComma}} %
+      </span>
+  </li>
+</ul>

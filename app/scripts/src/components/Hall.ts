@@ -3,6 +3,7 @@ import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
 import Equipment from './Equipment';
 import {bucco, functions} from '../includes/util';
+import TotalInfo from './TotalInfo';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
 import AjaxParams = bucco.AjaxParams;
@@ -11,13 +12,14 @@ import AjaxParams = bucco.AjaxParams;
   template: require('./Hall.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
   components: {
     Equipment,
+    TotalInfo,
   },
 })
 export default class Hall extends Vue {
   @Prop() params: string;
-  paramsList: AjaxParams[]     = [];
+  paramsList: AjaxParams[] = [];
   promise: Promise<any> = Promise.resolve();
-  private ch: CheerioStatic    = Cheerio.load('');
+  private ch: CheerioStatic = Cheerio.load('');
 
   get name(): string {
     return this.ch('#hall_name').text();
@@ -26,6 +28,10 @@ export default class Hall extends Vue {
   get ok(): boolean {
     // @ts-ignore
     return !!this.ch.text();
+  }
+
+  get totalInfo(): number {
+    return this.$store.getters.totalInfo();
   }
 
   // methods
@@ -41,10 +47,10 @@ export default class Hall extends Vue {
     this.paramsList = [];
     if (this.ok) {
       ch('#20slot').closest('table').find('tr:nth-child(n + 2)').each((index, element) => {
-      // ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
-        const $elem              = Cheerio(element);
-        const onClick            = $elem.find('[name=select]').attr('onclick') || '';
-        const listClick          = this.getParams.bind(this, ch);
+        // ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
+        const $elem = Cheerio(element);
+        const onClick = $elem.find('[name=select]').attr('onclick') || '';
+        const listClick = this.getParams.bind(this, ch);
         const params: AjaxParams = eval(onClick); // listClick() を実行している。
 
         this.paramsList.push(params);
@@ -80,27 +86,27 @@ export default class Hall extends Vue {
       'ama' +
       'Action' +
       'Form';
-    const $form    = ch(`form[name=${formName}]`);
-    const method   = $form.attr('method') || '';
-    const action   = $form.attr('action') || '';
-    const url      = getBaseUrl() + action;
-    const data     = {} as any;
+    const $form = ch(`form[name=${formName}]`);
+    const method = $form.attr('method') || '';
+    const action = $form.attr('action') || '';
+    const url = getBaseUrl() + action;
+    const data = {} as any;
 
     $form.find('[name]').each((i, elem) => {
       const $elem = Cheerio(elem);
-      const name  = $elem.attr('name') || '';
-      data[name]  = $elem.attr('value') || '';
+      const name = $elem.attr('name') || '';
+      data[name] = $elem.attr('value') || '';
     });
 
-    data['kindcode']   = kindCode;
-    data['modelcode']  = modelCode;
-    data['edano']      = edaNo;
+    data['kindcode'] = kindCode;
+    data['modelcode'] = modelCode;
+    data['edano'] = edaNo;
     data['actiontype'] = actionType;
-    data['forward']    = 'K' +
+    data['forward'] = 'K' +
       'AK' +
       'IN_' +
       'LIST';
-    data['uritanka']   = uritanka;
+    data['uritanka'] = uritanka;
 
     return {
       method,

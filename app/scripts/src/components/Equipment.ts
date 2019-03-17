@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, Watch} from 'vue-property-decorator';
-import Machine from './Machine';
 import {bucco, functions} from '../includes/util';
+import Island from './Island';
+import TotalInfo from './TotalInfo';
 import Cheerio = require('cheerio');
 import AjaxParams = bucco.AjaxParams;
 import Side = bucco.Side;
@@ -10,12 +11,12 @@ import ajax = functions.ajax;
 import getBaseUrl = functions.getBaseUrl;
 import MachinePosition = bucco.MachinePosition;
 import arrayPack = functions.arrayPack;
-import Island from './Island';
 
 @Component({
   template: require('./Equipment.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
   components: {
     Island,
+    TotalInfo,
   },
 })
 export default class Equipment extends Vue {
@@ -50,10 +51,6 @@ export default class Equipment extends Vue {
 
   get totalInfo(): number {
     return this.$store.getters.totalInfo(this.machineIdList);
-  }
-
-  get totalOperation(): number {
-    return 0;
   }
 
   // methods

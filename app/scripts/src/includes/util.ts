@@ -43,6 +43,11 @@ export namespace bucco {
     left: AjaxParams[];
     right: AjaxParams[];
   }
+
+  export interface BasicData {
+    nowCoin: number;
+    operation: number;
+  }
 }
 
 export namespace functions {
