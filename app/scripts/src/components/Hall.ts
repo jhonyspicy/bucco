@@ -31,7 +31,7 @@ export default class Hall extends Vue {
   }
 
   get totalInfo(): number {
-    return this.$store.getters.totalInfo();
+    return this.$store.getters.totalInfo(false);
   }
 
   // methods

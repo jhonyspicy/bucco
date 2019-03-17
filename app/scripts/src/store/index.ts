@@ -108,7 +108,7 @@ export default new Vuex.Store({
      * @param state
      * @param getters
      */
-    totalInfo: (state, getters) => (machineIdList: number[] = []): BasicData[] => {
+    totalInfo: (state, getters) => (machineIdList: number[] | false = []): BasicData[] => {
       const result: any[] = [];
       if (_.isEmpty(state.machineData)) {
         return result;
@@ -116,7 +116,7 @@ export default new Vuex.Store({
 
       let machineData: any[];
 
-      if (!_.isEmpty(machineIdList)) {
+      if (_.isArray(machineIdList)) {
         machineData = state.machineData.filter((data: any, index: number) => {
           return -1 !== machineIdList.indexOf(index)
         });
