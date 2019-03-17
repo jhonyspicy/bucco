@@ -2,7 +2,7 @@
   "name": "ultra7",
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
