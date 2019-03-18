@@ -1,29 +1,9 @@
 <div class="ultraEquipment">
   <div class="ultraEquipment__info" v-if="params || ok">
     <h1 class="ultraEquipment__info__name" @click="toggleShow">{{name || '待たれよ...'}}</h1>
-    <div class="ultraEquipment__info__info">
+    <div class="ultraEquipment__info__total">
       <TotalInfo v-bind:totalInfo="totalInfo"></TotalInfo>
     </div>
-<!--
-    <ul class="ultraEquipment__info__totalInfo">
-      <li v-for="(dayInfo, index) in totalInfo" class="ultraEquipment__info__totalInfo__day">
-        <span class="ultraEquipment__info__totalInfo__day__cell">
-          {{index}}日前({{index | dayBeforeWeek}})
-        </span>
-        <span class="ultraEquipment__info__totalInfo__day__cell">
-          {{dayInfo.nowCoin | addComma}}
-        </span>
-        /
-        <span class="ultraEquipment__info__totalInfo__day__cell">
-          {{dayInfo.operation | addComma}}
-        </span>
-        =
-        <span class="ultraEquipment__info__totalInfo__day__cell">
-          {{(100 * dayInfo.nowCoin / dayInfo.operation) | addComma}} %
-        </span>
-      </li>
-    </ul>
--->
   </div>
   <div class="ultraEquipment__control">
     <button @click="start($event)" v-if="!params && !ok" class="startButton">START</button>

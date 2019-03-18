@@ -55,12 +55,14 @@ if (isHallPage() || isEquipmentPage() || isMachinePage()) {
     return val.toLocaleString();
   });
   Vue.filter('dayBeforeWeek', (val: number) => {
-    const date = new Date();
+    const date = new Date(); // todo: 「データ更新日時」から時間を作った方がいいはず。
+    date.setHours(date.getHours() - 5); // 12時越えた時にずれるのでとりあえず5時間引いとく
     date.setDate(date.getDate() - val);
     return ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]
   });
   Vue.filter('dayBefore', (val: number) => {
-    const date = new Date();
+    const date = new Date(); // todo: 「データ更新日時」から時間を作った方がいいはず。
+    date.setHours(date.getHours() - 5); // 12時越えた時にずれるのでとりあえず5時間引いとく
     date.setDate(date.getDate() - val);
     return date.getDate();
   });
