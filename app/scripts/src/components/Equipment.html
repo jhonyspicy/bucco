@@ -1,7 +1,7 @@
 <div class="ultraEquipment">
   <div class="ultraEquipment__info" v-if="params || ok">
     <h1 class="ultraEquipment__info__name" @click="toggleShow">{{name || '待たれよ...'}}</h1>
-    <div class="ultraEquipment__info__total">
+    <div class="ultraEquipment__info__total" >
       <TotalInfo v-bind:totalInfo="totalInfo"></TotalInfo>
     </div>
   </div>

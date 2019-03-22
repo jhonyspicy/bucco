@@ -46,9 +46,24 @@ export default class Hall extends Vue {
   @Watch('ch') onLoadHtml(ch: CheerioStatic) {
     this.paramsList = [];
     if (this.ok) {
-      ch('#20slot').closest('table').find('tr:nth-child(n + 2)').each((index, element) => {
+      let begin20 = false;
+      ch('#20slot').closest('table').find('tr').each((index, element): boolean|any => {
         // ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
         const $elem = Cheerio(element);
+        const titleCellRegex = new RegExp('【.*】スロ');
+
+        if (titleCellRegex.test($elem.text())) {
+          if ($elem.text().indexOf('【2' + '0】ス' + 'ロ') === -1) {
+            if (begin20) {
+              // 20スロのエリアが終わったらループ終了
+              return false;
+            }
+          } else {
+            begin20 = true;
+            return;
+          }
+        }
+
         const onClick = $elem.find('[name=select]').attr('onclick') || '';
         const listClick = this.getParams.bind(this, ch);
         const params: AjaxParams = eval(onClick); // listClick() を実行している。

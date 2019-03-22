@@ -24,6 +24,7 @@ export default class Equipment extends Vue {
   paramsList: AjaxParams[]  = [];
   islands: any[]            = [];
   isShow: boolean           = true;
+  isOwn: boolean            = false;
   promise: Promise<any>     = Promise.resolve();
   private ch: CheerioStatic = Cheerio.load('');
   private finish            = () => {
@@ -120,6 +121,7 @@ export default class Equipment extends Vue {
   // ライフサイクル
   @Emit() created() {
     if (this.params) {
+      this.isOwn = false;
       this.$parent.$data.promise = this.$parent.$data.promise.then(() => {
         return new Promise((resolve, reject) => {
           this.finish = resolve;
@@ -128,6 +130,8 @@ export default class Equipment extends Vue {
           });
         });
       });
+    } else {
+      this.isOwn = true;
     }
   }
 
