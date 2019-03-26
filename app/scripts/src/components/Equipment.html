@@ -1,17 +1,21 @@
 <div class="ultraEquipment">
-  <div class="ultraEquipment__info" v-if="params || ok">
-    <h1 class="ultraEquipment__info__name" @click="toggleShow">{{name || '待たれよ...'}}</h1>
-    <div class="ultraEquipment__info__total" >
-      <TotalInfo v-bind:totalInfo="totalInfo"></TotalInfo>
+  <template v-if="!params && !ok">
+    <div class="ultraEquipment__control">
+      <button @click="start($event)"  class="startButton">START</button>
     </div>
-  </div>
-  <div class="ultraEquipment__control">
-    <button @click="start($event)" v-if="!params && !ok" class="startButton">START</button>
-  </div>
+  </template>
+  <template  v-if="params || ok">
+    <div class="ultraEquipment__info">
+      <h1 class="ultraEquipment__info__name" @click="toggleShow">{{name || '待たれよ...'}}</h1>
+      <div class="ultraEquipment__info__total" v-if="isOwn">
+        <TotalInfo v-bind:totalInfo="totalInfo"></TotalInfo>
+      </div>
+    </div>
 
-  <div class="ultraEquipment__islands" v-bind:class="{ show : isShow }">
-    <template v-for="island in islands">
-      <Island v-bind:islandData="island" />
-    </template>
-  </div>
+    <div class="ultraEquipment__islands" v-bind:class="{ show : isShow }">
+      <template v-for="island in islands">
+        <Island v-bind:islandData="island" />
+      </template>
+    </div>
+  </template>
 </div>

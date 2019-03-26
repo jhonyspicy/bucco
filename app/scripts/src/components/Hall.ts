@@ -7,6 +7,7 @@ import TotalInfo from './TotalInfo';
 import Cheerio = require('cheerio');
 import getBaseUrl = functions.getBaseUrl;
 import AjaxParams = bucco.AjaxParams;
+import BasicData = bucco.BasicData;
 
 @Component({
   template: require('./Hall.html'), // html-loaderを使うと外部のhtmlファイルを読み込める
@@ -30,8 +31,16 @@ export default class Hall extends Vue {
     return !!this.ch.text();
   }
 
-  get totalInfo(): number {
+  get allTotalInfo(): BasicData[] {
     return this.$store.getters.totalInfo(false);
+  }
+
+  get islandNumberList(): number[][] {
+    return this.$store.getters.islandNumberList;
+  }
+
+  getTotalInfo(numberList: number[]): BasicData[] {
+    return this.$store.getters.totalInfo(numberList);
   }
 
   // methods

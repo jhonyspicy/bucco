@@ -78,12 +78,12 @@ export default new Vuex.Store({
       }
 
       const hallModuleName = getters.hallModuleName;
-      const islandInfos = state[hallModuleName].islandInfos;
+      const islandInfos    = state[hallModuleName].islandInfos;
 
       for (let index in islandInfos) {
         const islandInfo = islandInfos[index];
         for (let key in Side) {
-          const side = Side[key]; // left or right
+          const side  = Side[key]; // left or right
           const order = islandInfo[side].indexOf(id);
           if (order !== -1) {
             return {
@@ -118,16 +118,16 @@ export default new Vuex.Store({
 
       if (_.isArray(machineIdList)) {
         machineData = state.machineData.filter((data: any, index: number) => {
-          return -1 !== machineIdList.indexOf(index)
+          return -1 !== machineIdList.indexOf(index);
         });
       } else {
         machineData = state.machineData.slice();
       }
 
       machineData.forEach((days) => {
-        days.forEach((day:any) => {
-          const i = day.dayBefore;
-          result[i] = result[i] || {nowCoin  : 0, operation: 0,};
+        days.forEach((day: any) => {
+          const i   = day.dayBefore;
+          result[i] = result[i] || {nowCoin: 0, operation: 0};
 
           result[i].nowCoin += day.nowCoin;
           result[i].operation += day.operation;
@@ -135,6 +135,32 @@ export default new Vuex.Store({
       });
 
       return result;
+    },
+
+    islandNumberList: (state, getters): number[][] => {
+      if (!getters.isSupportHall) {
+        return [];
+      }
+
+      const hallModuleName = getters.hallModuleName;
+      const islandInfos    = state[hallModuleName].islandInfos;
+      const resultList: number[][] = [];
+
+      for (let index in islandInfos) {
+        const islandInfo = islandInfos[index];
+
+        let numbers: number[] = [];
+
+        for (let key in Side) {
+          const side  = Side[key]; // left or right
+
+          numbers = numbers.concat(islandInfo[side]);
+        }
+
+        resultList.push(numbers.sort());
+      }
+
+      return resultList;
     }
   },
   /**
@@ -157,7 +183,7 @@ export default new Vuex.Store({
      */
     machineData(state, payload) {
       state.machineData[payload.id] = payload.data;
-      state.machineData = state.machineData.slice(); // 複製
+      state.machineData             = state.machineData.slice(); // 複製
     }
   },
   actions: {
