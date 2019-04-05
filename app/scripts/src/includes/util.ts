@@ -44,6 +44,11 @@ export namespace bucco {
     right: AjaxParams[];
   }
 
+  export interface IslandInfo {
+    left: number[];
+    right: number[];
+  }
+
   export interface BasicData {
     nowCoin: number;
     operation: number;

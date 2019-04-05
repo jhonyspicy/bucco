@@ -108,7 +108,7 @@ export default new Vuex.Store({
      * @param state
      * @param getters
      */
-    totalInfo: (state, getters) => (machineIdList: number[] | false = []): BasicData[] => {
+    totalInfo: (state, getters) => (machineIdList: number[] | boolean = []): BasicData[] => {
       const result: any[] = [];
       if (_.isEmpty(state.machineData)) {
         return result;
@@ -161,7 +161,21 @@ export default new Vuex.Store({
       }
 
       return resultList;
-    }
+    },
+
+    /**
+     * 店舗の座席情報を取得する。
+     * @param state
+     * @param getters
+     */
+    islandInfos: (state, getters): any => {
+      if (!getters.isSupportHall) {
+        return [];
+      }
+
+      const hallModuleName = getters.hallModuleName;
+      return state[hallModuleName].islandInfos;
+    },
   },
   /**
    * @url https://vuex.vuejs.org/ja/guide/mutations.html

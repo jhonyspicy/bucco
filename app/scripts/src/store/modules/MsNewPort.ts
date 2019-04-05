@@ -2,6 +2,7 @@ import {Action, Module, Mutation, VuexModule} from 'vuex-module-decorators';
 
 @Module({namespaced: true})
 export default class MsNewPort extends VuexModule {
+  // 座席情報
   islandInfos = [
     {
       left: [
