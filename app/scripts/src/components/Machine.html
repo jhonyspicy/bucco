@@ -1,0 +1,12 @@
+<div class="ultraMachine">
+  <transition mode="out-in">
+    <div v-if="ok" :key="1">
+      <Hanahana v-if="isHanahan()" v-bind:ch="ch" :id="id" />
+      <Okidoki v-else-if="isOkidoki()" v-bind:ch="ch" :id="id" />
+      <Normal v-else  v-bind:ch="ch" :id="id" />
+    </div>
+    <div v-else class="ultraMachine__status" :key="2">
+      しばしお待ちを。。。
+    </div>
+  </transition>
+</div>

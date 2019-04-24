@@ -2,202 +2,226 @@ body
   user-select: auto !important
   vendor('user-drag', auto) !important
 
-.buccoHall
-  background-color: #fff
-  padding: 30px 0
+.startButton
+  display: inline-block
+  text-decoration: none
+  background: #ff8181
+  color: #FFF
+  width: 100px
+  height: 100px
+  line-height: 100px
+  border-radius: 50%
+  text-align: center
+  font-weight: bold
+  font-size: 23px
+  vertical-align: middle
+  overflow: hidden
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.29)
+  border-bottom: solid 3px #bd6565
+  transition: .4s
+
+.ultraHall
+  padding: 20px 0
+  &__control
+    text-align: center
+
+  &__contents
+    .ultraEquipment__islands
+      display: none
+      &.show
+        display: block
 
   &__info
     &__title
-      font-size: 25px
+      font-size: 20px
       font-weight: bold
 
-    &__sales
-      counter-reset: days -1
-      &__sale
-        clearfix()
-        counter-increment: days;
-        font-size: 18px
-        text-align: right
-        width: 200px
-        &:before
-          float: left
-          content: counter(days) '日前';
-          display: inline-block
-          font-size: 15px
-          padding: 0 5px
-          box-sizing border-box
-          width: 60px
+    &__islandTotalInfo
+      font-size: 0
+      text-align: left
+      &__item
+        width: 50%
+        padding: 10px 0
+        display: inline-block
+        text-align: center
 
-        &:first-child:before
-          content '当日'
-        &:nth-child(2):before
-          content '前日'
+.ultraEquipment
+  padding: 20px 0
+  text-align: left
 
-  &__chartCoinRate
-    size 100% 420px
-
-  &__content
-      display: block
-
-  &__status
-      display: block
-
-.buccoMachine
-  &.corner
-    relative()
-    &:after
-      absolute(right 10px top 30px)
-      content: '角'
-      transform rotate(30deg)
-      border 5px solid #ff0000
-      border-radius 50%
+  &__info
+    &__name
       font-size: 50px
       font-weight: bold
-      color #ff0000
-      padding: 10px
-      $offset = 30px;
-      $border = 7px;
-      box-shadow: 0 $offset 0 0 #fff, $offset 0 0 0 #fff, (- $offset) 0 0 0 #fff, 0 (- $offset) 0 0 #fff,
-        0 $offset 0 $border #ff0000, $offset 0 0 $border #ff0000, (- $offset) 0 0 $border #ff0000, 0 (- $offset) 0 $border #ff0000
+      text-align: center
+      background-color: #dea
+      padding: 25px 0 20px
+      border-radius: 20px
+      border: 5px solid #666
 
+  &__control
+    text-align: center
 
-  &__header
+  &__islands
+    .ultraIsland
+      padding: 20px 0
+
+      &:nth-child(n + 2)
+        border-top: 10px solid #999
+
+.totalInfo
+  font-size: 0
+  &__day
+    font-size: 15px
+    display: block
+    padding: 2px 0
+
+    &.best
+      background-color: #5b54ff
+    &.better
+      background-color: #9391ff
+    &.good
+      background-color: #67e4ff
+    &.bad
+      background-color: #fffc4a
+    &.worse
+      background-color: #ffa8a3
+    &.worst
+      background-color: #ff041d
+
+    &__cell
+      display: inline-block
+      width: 90px
+      text-align: right
+
+      &:first-child
+        font-weight: bold
+
+.ultraIsland
+  font-size: 0
+  &__info
+    &__item
+      display: inline-block
+      font-size: 20px
+      width: 50%
+
+      &__day
+        display: inline-block
+
+      &__number
+        display: inline-block
+        text-align: right
+        width: 120px
+
+  &__left
+  &__right
+    display: inline-block
+    vertical-align: top
+    width: 50%
+
+  .ultraMachine
+    display: inline-block
+    width: 100%
+    padding: 10px 5px
+    box-sizing: border-box
+
+    &__data__dayDataList__day
+      width: 25%
+
+.ultraMachine
+  padding-bottom: 50px
+
+  .v-enter-active, v-leave-active
+    transition-duration 0.5s
+  .v-enter, .v-leave-to
+    opacity: 0
+  .v-leave-active
+    absolute()
+
+  &__status
+    text-align: center
+    font-size: 20px
+    font-weight: bold
+
+  &__info
     &__number
-      font-size: 100px
+      font-size: 40px
       font-weight: bold
       display: inline-block
-
-    &__setting
+      width: 140px
+      vertical-align: middle
+    &__totalCoin
+      font-size: 20px
       display: inline-block
+      vertical-align: middle
 
-      &__key
-        font-size: 15px
-      &__sale
-      &__coinRate
-        font-size: 25px
-        font-weight: bold
+  &__data
+    &__totalGraph
+      img
+        width: 100%
+        height: auto
 
-
-  &__info
-    &__bigGraph img
-      size auto
-
-    &__smallGraphs
-      counter-reset: days -1
-      font-size: 0
-      display: flex;
-      flex-direction: row-reverse;
-      li
-        counter-increment: days;
-        display: inline-block
-        width:12.5%
-        img
-          width: 100%
-          height: auto
-        &:before
-          content: counter(days) '日前';
-          display: block
-          font-size: 15px
-          font-weight: bold
-          text-align: center
-          padding: 20px 0 5px
-
-        &:first-child:before
-          content '当日'
-        &:nth-child(2):before
-          content '前日'
-    &__detail
-      &#dedama_kind_table
-        margin: 0
-
-    &__mixChart
-    &__bigChart
-    &__regChart
-      size 100% 0
-
-.buccoGraph
-  &.shrimp
-    relative()
-    background-color: #d8c4ff
-    &:after
-      content: ''
-      absolute(right -10px top -10px)
-      background-image:url('data:image/png;base64,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');
-      size(37px 51px)
-
-  &__info
-    &__coinRate
-      //&.coinRate40
-      //  color: #7363ff
-      //&.coinRate39
-      //  color: #7363ff
-      //&.coinRate38
-      //  color: #7363ff
-      //&.coinRate37
-      //  color: #00FF00
-      //&.coinRate36
-      //  color: #00FF00
-      //&.coinRate35
-      //  color: #00FF00
-      //&.coinRate34
-      //  color: #FF0000
-      &.coinRate33
-        color: #ff0000
-      &.coinRate00
-        color: #ff0000
-
-    &__nowCoin
-      &.nowCoin6000
-      &.nowCoin5000
-      &.nowCoin4000
-        background-color: #a297ff
-      //  background-color: #7363ff
-      //&.nowCoin3000
-      //  background-color: #7363ff
-      //&.nowCoin2000
-      //  background-color: #00FF00
-      //&.nowCoin1000
-      //  background-color: #00FF00
-      //&.nowCoin0
-      //  background-color: #00FF00
-      //&.nowCoin_1000
-      //  background-color: #00FF00
-      //&.nowCoin_2000
-      //  background-color: #00FF00
-      &.nowCoin_3000
-        background-color: #ffe700
-      &.nowCoin_4000
-      &.nowCoin_0000
-        background-color: #ff0000
-
-    &__regularRate
-      &.regularRate1
-      &.regularRate09
-      &.regularRate08
-      &.regularRate07
-        color: #7363ff
-      &.regularRate06
-      &.regularRate05
-      &.regularRate04
-        color: #00ff00
-      &.regularRate03
-      &.regularRate02
-      &.regularRate01
-        color: #ff0000
-    &__coinRate
-    &__nowCoin
-    &__min
-    &__max
-    &__rangePlus
-    &__rangeMinus
-    &__regularRate
+    &__dayDataList
       display: block
-      padding: 5px 0 0
-      &__key
+      direction: rtl
+      unicode-bidi: bidi-override
+      white-space: nowrap
+      overflow-x auto
+      overflow-y hidden
+      &__day
         display: inline-block
-        padding: 5px 0
-        font-size: 11px
-      &__value
-        display: inline-block
-        font-size: 15px
-        font-weight: bold
+        width: 12.5%
+        direction: ltr
+
+        &__number
+          text-align: center
+          font-size: 15px
+          padding: 5px 0
+
+        &__smallGraph
+          img
+            width: 100%
+
+        &__icons
+          font-size: 0
+          text-align: center
+          height: 25px
+          &__icon
+            display: inline-block
+            size 25px
+            margin: 0 2px
+            border-radius 50%
+
+            &.shrimp
+              background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAolBMVEUoKi7yy9flwMzyfWg5NzoxNDgzNTkzNDgpMTbiYVgzNDj9/f0zNTk1NTlLPkHZX1Y2NTk0NTk1NTngbV8zNTk1NTlhQkKuVlDGWVN2SEbod2WKTEmdVE7DsrhXU1jYusSWiI9tZGqumKGEeH7h2dy/aVv07O+sqqzWaFuPU03TXVXvlIw0NTnbX1fnws7oeWb///83NzvaXlYuMjbmYVnmeGUWxcynAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfjAwgRFQWEK0pvAAAAl0lEQVQoz5WRywrDMAwE3ZaE9JpCodeeV1Js6P//WtcOhUSKC9mDDxpGD5zS/6BXHnrGjG4vnB1TydKieoHz5wayqkJk2rFMgAVEwmxRrV1R3+LRqGsgjXhL9T1YIDwqZ9zMiCiOYX2DyX3aT/qhD16UDm6Hmd9uSxDnpNRWOFRgJZB6BHuhBAVK4UHhidhpTRyhOP+zLl/ZuSCPGTUwIgAAAABJRU5ErkJggg==")
+            &.baby
+              background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4wMIEi8veH/jmQAAA61JREFUSMedls9rXFUUxz/nvh/z8l4mmUnamkiTSd1UsCgWutMqlRLFAVEorgS70YVW/Fea6Male8EfgaLBWBUpiGTjQlSimUmkTZO2k0zey7x5797rYhKNzYwz7dndX+fD99xz7zlCD5urx7w3HTFXiwPgOeAtZbLzLvZYMYy2RgvedeAj4PtqSVoLDUu1JF19dZ2dr8VcqUTM1ePT1nIVmDUonlr9lKw4yc7UM3iug6fAWq4B71dL8lsvkLp/4oN6B/BhLa5YyyIwm4tLQJvJxi+EgUs5/oOtOGErNQi8BCwuNOxUtSQsNOxgSgCu1uJl4GmD4vH2Cs8nN9i5e49cCkxUTmGUx9ecZiOYZrzgAPxULcm5gcM1V4svWfgYCGaydWZ3v0Vh8IbHIRgGrQEwKBZ4gmz4JIGj9oA3qiX5pG+4ACxc0DhBaFucbf2MR44XhuBH/wDwXJRozlEj3ouxwhBwoZu/I5D5tbioxanM5Gu8vv05j+g77CQZS9/9Du7+dtfhm69+JN5tMSlNLukbnMi20FBZaNjhvhBjcHOcoJL9xZBtoYB2mlOr3wa1H11Hsbp6kzTNABiizfF8E9NR493v0+0mz7cZy8EZApNyKqszPhZy+c0XaG7cphAEpI27XH77Fcg1uRFWmGS98Biu7Z5Eqns2WGIJWYyeZcWfQRlDu9kgaW6zeXOdpLmDTTMwml/tCX7wnyRVBRT/iu2r5AAEsByc4dFsg6JpMl4u4kRjnXURtglZVjOMBy7WQttY2UzSwZQctntOiS9GX6TunaSphXgvIcbnT8b5TJ3FD8fwREi1YSNJSY0ZXMmBFV2hGIxxPXiZsN3A13u0nSESb5QxX/CV0EhzdnNNueDZ0c7DfDAICIEjTCgwfhlLmYLACLDdzrmV5kSeYiL0cUTQhoeBWKwFC2TGkGpDkmuSTBN5DhOhj1KCIz1/qP6QljbcSlKMtSgEVwmBqyj6Lm1t2WxlRK5DueBiHxaiRPCVwgC5MeQWjLYYaygoxUjo44r0BAwYrk7u+0rw/Y5DAQ5Hx/Y5fwSiFLkxtA7GnhLKgQe2vzNgD8j6vpMrU1ETqB2MtbHkxg4CAKhVS7I74LfCEnTUtPchDKZiaeCidbgyWmDEdzk+5Pfe3LGelbFrjd+/rFeBNQG205xmpv8PUAdeA7rW+COQd6cj5msx71SimggXgS+VwGaScqeVYe1/Mwu4BlyslmStV7ciD9J3WTjvKjk26ntbpYI7cN/1NyXJktdoPOM9AAAAAElFTkSuQmCC")
+            &.hart
+              background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAABDXAAAQ1wFQ31ZVAAAAB3RJTUUH4wMIEi8TVxCfHgAAA/1JREFUSMedlktsVGUUx3/nu4/p9Ek7hXpt0qgU2/KwKgQxIS5ISRACC0FjjCaY6MawRVcYo6wwBmVn1Ji4YOVCE00ABwzUkCCCjYi2ZIpECzMU+4LOtJ2Z+x0X3NahdDras7o359zzO+fL+c7/wv+0dE876Z72ijGlJqWOIJmafQ6AVcBywACjQH+QTF2fl2xlFNcAzAA3o7ix0pxS+pLuaU8Ah4DNQDNQHxWSBdLAKeDNyHcI2BAVUg0UgQlgGDgGHAiSqal0TztSAngqSlJd4cQyUeXxRWIU6Ad2BMnUH1LS9mmgtfw3whLsFLDLpHvaHeC1sgBVMI6iuhTIFmCbAWqB7WXDfF9r3/4AaWq2SwS9bgAf6Cx3TE7bIzid68RZEdzXjdTWqdTUVSJvNNGI+gv7De6q1WoaGlWamkEtcyBjiO/dp/6W7ZU6qTeABaYXdHseble3hoMDapqWo9Yi1TWKMWAM7qNrxDQlwJjFIGMGyANXF+yjrl7NihZT6DuPJJpFHJfqN95Sr3ujxXHVWdWFSbQoxlkMcskFcsB3wOp7XIU8/tadtjhw2YR/XsV7bANSXYOzskPc4bQqqnY4A4KKY9BiWcgXbpBMFf4K+MxZ2foiIi1zY6tWY1t3mcmD+zHLH0CamlXql6nUNajb3qX4MSn82ItpTAhi0Omp+9Nb++vNs+mj7tTEjfeARP70caO57N1Lp4pZ1ogWClq83Ge89ZswTQl113Rr4dwZdTvWitfSSu7j94m/8KpQFdea/QfBceTuxQVCi2kJqho71x0wwC1gJLZjz2Fx3CtM3lZyk6HNXLfZw+8gvo8dH8UsS+CufZL86RNG70yINDSYwk9nsZO3Jf783qLbsUbD/l9COzgQ2sGBkKlsr7f+6SOI/OzGGx48MtvdNfjc39x6DjFtoIjrgeuh42OK5zlu5zo79emHFC5dUHd6SvX2uNFbGfW373ZzH71rZ7750sGPgdqLd3qHnu1gX5bojsyt+ocgI1Xx5yQWG5JYFTgOiGAnxkFROzIsdvRvmTn2leQ+OSxSXUM4nAFR8j+cFKmpRXz/gsSqdnZAdlZX5iDRJiZIpi4AL0XrPZq0GaP5GVs4f1ZxHHRsRGx6SMT1sEPXNH/quNVc1iDyG7AnSKZulOqTLKRqEfAZ4FugVvN5qna/EhbOnDB2fESQkssXhmhYRPzYILAzSKZ+n59TyslnBNoEHAV5WPPTiOdxD+BfOw+8HCRTV0o7WBQyD/Q48DXQVib0+whwYyEAlZSoBNQJnIvkuNQuRuqXWSzPoputZBj6gSeAvmjXZYGTwLYgmcpU+nuR//obFAHrIrWbAZJBMlUsd0RLsoWqrdTBrP0D4Im4Tlb56LkAAAAASUVORK5CYII=")
+
+        &__item
+          padding: 2px 5px
+          font-size: 12px
+          text-align: right
+
+          &.best
+            background-color: #5b54ff
+          &.better
+            background-color: #9391ff
+          &.good
+            background-color: #67e4ff
+          &.bad
+            background-color: #fffc4a
+          &.worse
+            background-color: #ffa8a3
+          &.worst
+            background-color: #ff041d
+
+          span
+            display: inline-block
+            width: 45px
+            float: left;
+            vertical-align: middle
+            text-align: left;
+            font-size: 14px
+            font-weight: bold

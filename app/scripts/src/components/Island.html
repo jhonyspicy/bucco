@@ -1,0 +1,16 @@
+<div class="ultraIsland">
+  <div class="ultraIsland__left" v-if="islandData.left">
+    <Machine
+            v-for="params in islandData.left"
+            v-bind:key="params.id"
+            v-bind:params="params"
+    ></Machine>
+  </div>
+  <div class="ultraIsland__right" v-if="islandData.right">
+    <Machine
+            v-for="params in islandData.right"
+            v-bind:key="params.id"
+            v-bind:params="params"
+    ></Machine>
+  </div>
+</div>
