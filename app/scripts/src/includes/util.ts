@@ -73,7 +73,7 @@ export namespace functions {
       return false;
     }
 
-    return document.getElementById('20s' + 'lot') !== null;
+    return document.getElementById('s' + 'lot20') !== null;
   }
 
   /**

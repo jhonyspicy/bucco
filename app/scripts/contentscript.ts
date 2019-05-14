@@ -21,7 +21,7 @@ if (isHallPage()) {
   /*
   設置機種一覧
    */
-  const $landmark = document.getElementById('20slot');
+  const $landmark = document.getElementById('slot20');
   const $target   = $landmark && $landmark.closest('table.slot');
   if ($target && $target.parentElement !== null) {
     $target.parentElement.insertBefore($app, $target);

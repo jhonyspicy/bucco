@@ -56,7 +56,7 @@ export default class Hall extends Vue {
     this.paramsList = [];
     if (this.ok) {
       let begin20 = false;
-      ch('#20slot').closest('table').find('tr').each((index, element): boolean|any => {
+      ch('#slot20').closest('table').find('tr').each((index, element): boolean|any => {
         // ch('#20slot').closest('table').find('tr:nth-child(2), tr:nth-child(3)').each((index, element) => {
         const $elem = Cheerio(element);
         const titleCellRegex = new RegExp('【.*】スロ');
