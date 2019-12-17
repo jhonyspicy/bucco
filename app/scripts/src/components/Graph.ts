@@ -14,7 +14,7 @@ export default class Graph extends Vue {
   @Prop() kind: string; // day or week 詳細グラフか、習慣グラフか
 
   private perCoin = 55; // 1pxあたりのコイン数
-  private perRotate = 90; // 1pxあたりの回転数
+  private perRotate = 80; // 1pxあたりの回転数
 
   // ライフサイクル
   @Emit() created() {

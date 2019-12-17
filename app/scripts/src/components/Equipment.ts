@@ -73,10 +73,13 @@ export default class Equipment extends Vue {
 
       ch('#ata0 .ind').each((index, element) => {
         const $elem            = Cheerio(element);
-        const datHref          = $elem.find('.det a').attr('href') || '';
+        const jsCode           = (() => {
+          let onclick = $elem.find('.det a').attr('onclick') || ''
+          return onclick.slice(onclick.indexOf(':') + 1);
+        })();
         const openDedamaDetail = this.getParams.bind(this);
 
-        const params: AjaxParams = eval(datHref); // openDedamaDetail() を実行している。
+        const params: AjaxParams = eval(jsCode); // openDedamaDetail() を実行している。
         params.id = parseInt($elem.find('.num').text());
 
         this.paramsList.push(params);
